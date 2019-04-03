@@ -17,34 +17,33 @@ import springfox.documentation.swagger2.annotations.EnableSwagger2;
 import java.util.Arrays;
 import java.util.List;
 
-// http://localhost:8089/swagger-ui.html
+// http://localhost:8081/swagger-ui.html
 @Configuration
 @EnableSwagger2
 public class Swagger2 {
 
     @Bean
-    public Docket background() {
+    public Docket system() {
 
         return new Docket(DocumentationType.SWAGGER_2)
-                .groupName("background")
+                .groupName("System")
                 .apiInfo(apiInfo())
                 .select()
-                .apis(RequestHandlerSelectors.basePackage("com.dentech.background"))
+                .apis(RequestHandlerSelectors.basePackage("com.denghb.simplex.sys"))
                 .paths(PathSelectors.any())
                 .build()
                 .securitySchemes(securitySchemes())
                 .securityContexts(securityContexts());
     }
 
-
     @Bean
-    public Docket miniprogram() {
+    public Docket business() {
 
         return new Docket(DocumentationType.SWAGGER_2)
-                .groupName("miniprogram")
+                .groupName("Business")
                 .apiInfo(apiInfo())
                 .select()
-                .apis(RequestHandlerSelectors.basePackage("com.dentech.miniprogram"))
+                .apis(RequestHandlerSelectors.basePackage("com.denghb.simplex.bu"))
                 .paths(PathSelectors.any())
                 .build();
     }
@@ -52,17 +51,17 @@ public class Swagger2 {
     private List<SecurityContext> securityContexts() {
         return Arrays.asList(SecurityContext.builder()
                 .securityReferences(Arrays.asList(new SecurityReference("Authorization", new AuthorizationScope[]{new AuthorizationScope("global", "accessEverything")})))
-                .forPaths(PathSelectors.regex("^/bg/.*$"))
+                .forPaths(PathSelectors.regex("^/sys/.*$"))
                 .build());
     }
 
     private List<ApiKey> securitySchemes() {
-        return Arrays.asList(new ApiKey("Authorization", "x-access-token", "header"));
+        return Arrays.asList(new ApiKey("Authorization", "X-Access-Token", "header"));
     }
 
     private ApiInfo apiInfo() {
         return new ApiInfoBuilder()
-                .title("HDE Project")
+                .title("Simplex Project")
                 .description("API Document")
                 .version("1.0")
                 .build();
