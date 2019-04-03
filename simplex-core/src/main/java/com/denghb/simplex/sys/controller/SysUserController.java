@@ -15,11 +15,8 @@ public class SysUserController {
     @Autowired
     private SysUserService sysUserService;
 
-    @GetMapping("/aaa")
-    public JSONModel<String> aaa(@RequestParam(value = "a", required = false) Integer a) {
-        if (null != a) {
-            int b = a / 0;
-        }
+    @PostMapping("/signIn")
+    public JSONModel<String> signIn(@RequestParam(value = "a", required = false) Integer a) {
 
         return JSONModel.buildSuccess("aaa");
     }
