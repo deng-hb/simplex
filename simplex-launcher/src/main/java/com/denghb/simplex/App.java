@@ -11,7 +11,8 @@ import org.springframework.cache.annotation.EnableCaching;
 @EnableCaching
 public class App {
     public static void main(String[] args) {
+        long start = System.currentTimeMillis();
         SpringApplication.run(App.class, args);
-        System.out.println("Hello World!");
+        System.out.println("started:" + (System.currentTimeMillis() - start) / 1000.0 + "s");
     }
 }
