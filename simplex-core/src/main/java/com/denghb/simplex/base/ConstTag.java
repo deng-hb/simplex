@@ -1,4 +1,4 @@
-package com.denghb.simplex.consts;
+package com.denghb.simplex.base;
 
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;

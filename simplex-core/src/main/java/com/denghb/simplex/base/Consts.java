@@ -1,5 +1,7 @@
-package com.denghb.simplex.consts;
+package com.denghb.simplex.base;
 
+
+import com.denghb.simplex.consts.ConstsTest;
 
 import java.lang.reflect.Field;
 import java.util.ArrayList;

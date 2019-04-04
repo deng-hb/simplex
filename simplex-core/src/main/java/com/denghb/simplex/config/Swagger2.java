@@ -37,6 +37,18 @@ public class Swagger2 {
     }
 
     @Bean
+    public Docket opened() {
+
+        return new Docket(DocumentationType.SWAGGER_2)
+                .groupName("Opened")
+                .apiInfo(apiInfo())
+                .select()
+                .apis(RequestHandlerSelectors.basePackage("com.denghb.simplex.controller"))
+                .paths(PathSelectors.any())
+                .build();
+    }
+
+    @Bean
     public Docket business() {
 
         return new Docket(DocumentationType.SWAGGER_2)

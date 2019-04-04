@@ -1,5 +1,7 @@
 package com.denghb.simplex.consts;
 
+import com.denghb.simplex.base.ConstTag;
+
 public class ConstsTest {
 
     @ConstTag("aaa")

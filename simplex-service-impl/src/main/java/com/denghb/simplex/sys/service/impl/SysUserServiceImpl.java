@@ -1,4 +1,4 @@
-package com.denghb.simplex.service.impl;
+package com.denghb.simplex.sys.service.impl;
 
 
 import com.denghb.simplex.sys.service.SysUserService;

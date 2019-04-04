@@ -13,8 +13,8 @@ public class SysUserSignInReq {
     private String password;
 
     @ApiModelProperty(value = "验证码", required = true)
-    private String captcha;
+    private String key;
 
     @ApiModelProperty(value = "验证码", required = true)
-    private String captchaKey;
+    private String code;
 }
