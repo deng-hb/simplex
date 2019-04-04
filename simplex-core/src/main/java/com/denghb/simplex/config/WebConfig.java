@@ -3,6 +3,8 @@ package com.denghb.simplex.config;
 import com.alibaba.fastjson.serializer.SerializerFeature;
 import com.alibaba.fastjson.support.config.FastJsonConfig;
 import com.alibaba.fastjson.support.spring.FastJsonHttpMessageConverter;
+import com.denghb.simplex.sys.service.SysUserService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.web.HttpMessageConverters;
 import org.springframework.boot.web.servlet.FilterRegistrationBean;
 import org.springframework.context.annotation.Bean;
@@ -12,6 +14,9 @@ import org.springframework.http.converter.HttpMessageConverter;
 
 @Configuration
 public class WebConfig {
+
+    @Autowired
+    private SysUserService sysUserService;
 
     @Bean
     public FilterRegistrationBean authFilter() {

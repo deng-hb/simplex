@@ -17,6 +17,20 @@ public class SysUserController {
     @Autowired
     private SysUserService sysUserService;
 
+    @Autowired
+    private CaptchaService captchaService;
+
+    @PostMapping("/signIn")
+    public JSONModel<String> signIn(@Valid @RequestBody SysUserSignInReq req) {
+
+        boolean valid = captchaService.validate(req.getKey(), req.getCode());
+        if (valid) {
+            return JSONModel.buildFailure("验证码校验失败");
+        }
+
+        return JSONModel.buildSuccess("aaa");
+    }
+
     @PostMapping("/save")
     public JSONModel<String> save(@Valid @RequestBody SysUserReq req) {
         sysUserService.save();
