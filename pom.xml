@@ -11,6 +11,7 @@
         <module>simplex-core</module>
         <module>simplex-launcher</module>
         <module>simplex-service-impl</module>
+        <module>simplex-test</module>
     </modules>
 
     <name>simplex</name>
