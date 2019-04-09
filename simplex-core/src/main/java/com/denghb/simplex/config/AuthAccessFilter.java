@@ -1,8 +1,9 @@
 package com.denghb.simplex.config;
 
 import com.denghb.simplex.base.Credential;
+import com.denghb.simplex.base.CredentialContext;
+import com.denghb.simplex.base.RequestCountContext;
 import com.denghb.simplex.sys.service.AuthAccessService;
-import com.denghb.simplex.sys.service.SysUserService;
 import com.denghb.simplex.utils.WebUtils;
 import lombok.extern.slf4j.Slf4j;
 
@@ -15,8 +16,6 @@ import java.io.IOException;
 public class AuthAccessFilter implements Filter {
 
     private long count = 0;
-
-    private final ThreadLocal<Long> localCount = new InheritableThreadLocal<>();
 
     private AuthAccessService authAccessService;
 
@@ -40,32 +39,32 @@ public class AuthAccessFilter implements Filter {
         String uri = req.getRequestURI();
         String ip = WebUtils.getIpAddr(req);
         String method = req.getMethod();
+        String userAgent = req.getHeader("User-Agent");
+        String accessToken = req.getHeader("X-Access-Token");
 
-        log.info("{},req:{},{}", ip, count, uri);
-        localCount.set(count);
+        log.info("req:{},{},{},{}", count, ip, uri, accessToken);
+        RequestCountContext.set(count);
 
         if (authAccessService.isOpened(method, uri)) {
-            String userAgent = req.getHeader("User-Agent");
-            String accessToken = req.getHeader("X-Access-Token");
 
             Credential credential = authAccessService.validate(accessToken, ip, userAgent);
             if (null == credential) {
                 res.setHeader("Content-Type", "application/json;charset=utf-8");
-                res.getWriter().write("{\"code\":2,\"msg\":\"登录过期或未登录\"}");
+                String result = "{\"code\":2,\"msg\":\"登录过期或未登录\"}";
+                res.getWriter().write(result);
 
-                log.info("{},res:{},{}", ip, localCount.get(), uri);
-                localCount.remove();
+                log.info("req:{},res:{}", RequestCountContext.get(), result);
+                RequestCountContext.remove();
                 return;
             }
-            Credential.set(credential);
+            CredentialContext.set(credential);
         }
 
 
         chain.doFilter(request, response);
-        log.info("{},res:{},{}", ip, localCount.get(), uri);
-        Credential.remove();
+        CredentialContext.remove();
 
-        localCount.remove();
+        RequestCountContext.remove();
     }
 
     @Override
