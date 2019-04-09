@@ -1,4 +1,4 @@
-# vue-heyui
+# simplex-admin-heyui
 
 ## Project setup
 ```

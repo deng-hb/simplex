@@ -1,5 +1,10 @@
 ## Simplex
 
+
+```
+mvn clean install -Dmaven.test.skip=true
+```
+
 - more
 
 ### 建表模板

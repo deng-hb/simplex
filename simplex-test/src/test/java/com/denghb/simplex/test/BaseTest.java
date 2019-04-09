@@ -1,4 +1,4 @@
-package com.denghb.simplex;
+package com.denghb.simplex.test;
 
 
 import lombok.extern.slf4j.Slf4j;
@@ -18,7 +18,7 @@ import org.springframework.test.web.servlet.result.MockMvcResultHandlers;
  */
 @RunWith(SpringRunner.class)
 @Slf4j
-@SpringBootTest(classes = App.class, webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
+@SpringBootTest(classes = com.denghb.simplex.App.class, webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @AutoConfigureMockMvc
 public class BaseTest {
 

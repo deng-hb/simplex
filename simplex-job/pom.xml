@@ -9,9 +9,9 @@
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
-    <artifactId>simplex-test</artifactId>
+    <artifactId>simplex-job</artifactId>
 
-    <name>simplex-test</name>
+    <name>simplex-job</name>
     <url>http://www.example.com</url>
 
     <properties>
@@ -22,20 +22,8 @@
 
     <dependencies>
 
-        <dependency>
-            <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-starter-test</artifactId>
-            <scope>test</scope>
-        </dependency>
-
-        <dependency>
-            <groupId>com.denghb</groupId>
-            <artifactId>simplex-launcher</artifactId>
-            <version>${project.version}</version>
-        </dependency>
     </dependencies>
 
     <build>
-
     </build>
 </project>
