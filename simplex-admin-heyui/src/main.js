@@ -6,7 +6,7 @@ import HeyUI from 'heyui'
 
 require("heyui/themes/index.css")
 
-Vue.use(HeyUI);
+Vue.use(HeyUI)
 
 Vue.config.productionTip = false
 

@@ -1,29 +1,111 @@
 <template>
   <div id="app">
-    <div id="nav">
-      <router-link to="/">Home</router-link> |
-      <router-link to="/about">About</router-link>
-    </div>
-    <router-view/>
+    <Layout v-if="signed" :headerFixed="headerFixed">
+      <HHeader theme="dark">
+        <div class="layout-logo"></div>
+         <router-link to="/">Home</router-link> |
+          <router-link to="/about">About</router-link>
+      </HHeader>
+      <Layout :siderFixed="siderFixed" :siderCollapsed="siderCollapsed">
+        <Sider theme="white">
+          <Menu style="margin-top: 40px;" class="h-menu-white" :datas="menuDatas" :inlineCollapsed="siderCollapsed"></Menu>
+        </Sider>
+        <Content style="padding: 0px 30px;">
+          <Breadcrumb :datas="datas" style="margin: 16px 0px;"></Breadcrumb>
+          <div style="background: rgb(255, 255, 255); padding: 24px; min-height: 280px;">
+            <p>
+              <h-switch v-model="headerFixed">固定header</h-switch>
+            </p>
+            <p>
+              <h-switch v-model="siderFixed" :disabled="!headerFixed">固定Sider</h-switch>
+            </p>
+            <p>
+              <h-switch v-model="siderCollapsed">收起菜单</h-switch>
+            </p>
+           
+              <Button @click="doSignOut"> 退出 </Button>
+            <router-view/>
+          </div>
+          <HFooter class="text-center">Copyright © 2019</HFooter>
+        </Content>
+      </Layout>
+    </Layout>
+    <Layout v-else>
+      <Button @click="doSignIn"> 登陆 </Button>
+    </Layout>
   </div>
 </template>
 
-<style lang="scss">
-#app {
-  font-family: 'Avenir', Helvetica, Arial, sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  text-align: center;
-  color: #2c3e50;
-}
-#nav {
-  padding: 30px;
-  a {
-    font-weight: bold;
-    color: #2c3e50;
-    &.router-link-exact-active {
-      color: #42b983;
-    }
+<style>
+  .h-layout {
+    background: #f0f2f5;
   }
-}
+  .layout-logo {
+    width: 120px;
+    height: 31px;
+    background: rgba(255, 255, 255, 0.2);
+    margin: 16px 24px 16px 0;
+    float: left;
+  }
+
+  .h-layout-header {
+    padding: 0 50px;
+  }
+
+  .h-layout-footer {
+    padding: 24px 50px;
+    color: rgba(0, 0, 0, 0.65);
+    font-size: 14px;
+  }
 </style>
+
+<script>
+export default {
+  data() {
+    return {
+      signed: true,
+      headerFixed: false,
+      siderFixed: false,
+      siderCollapsed: false,
+      menuDatas: [
+        { title: '首页', key: 'welcome', icon: 'h-icon-home' },
+        { title: '查询', key: 'search', icon: 'h-icon-search' },
+        { title: '收藏', key: 'favor', icon: 'h-icon-star', count: 100, children: [{ title: '收藏-1', key: 'favor2-1' }] },
+        { title: '任务', icon: 'h-icon-task', key: 'task' }
+      ],
+      datas: [
+        { icon: 'h-icon-home' },
+        { title: 'Component', icon: 'h-icon-complete', route: { name: 'Component' } },
+        { title: 'Breadcrumb', icon: 'h-icon-star' }
+      ]
+    };
+  },
+  watch: {
+    headerFixed() {
+      if (!this.headerFixed) {
+        this.siderFixed = false;
+      }
+    }
+  },
+  methods: {
+    doSignOut() {
+      window.localStorage.removeItem('token')
+      console.log(window.localStorage.getItem('token'))
+    },
+    doSignIn() {
+      window.localStorage.setItem('token','1231');
+
+    }
+  },
+  computed: {
+    
+  },
+  created() {
+    let _this = this;
+    setInterval(function() {
+      _this.signed = null != window.localStorage.getItem('token')
+    }, 1);
+    
+  },
+};
+</script>
