@@ -32,7 +32,7 @@
                             <goal>copy-resources</goal>
                         </goals>
                         <configuration>
-                            <outputDirectory>src/main/resources/public</outputDirectory>
+                            <outputDirectory>src/main/resources/public/admin</outputDirectory>
                             <overwrite>true</overwrite>
                             <resources>
                                 <resource>

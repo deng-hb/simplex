@@ -11,11 +11,14 @@ import javax.servlet.*;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.util.regex.Pattern;
 
 @Slf4j
 public class AuthAccessFilter implements Filter {
 
     private long count = 0;
+
+    private static Pattern IGNORE_EXT = Pattern.compile(".*(.html|.png|.svg|.txt|.js|.css|.ico|.ttf|.eot|.woff)$", Pattern.CASE_INSENSITIVE);
 
     private AuthAccessService authAccessService;
 
@@ -43,6 +46,11 @@ public class AuthAccessFilter implements Filter {
         String accessToken = req.getHeader("X-Access-Token");
 
         log.info("req:{},{},{},{}", count, ip, uri, accessToken);
+
+        if (IGNORE_EXT.matcher(uri).matches()) {
+            chain.doFilter(request, response);
+            return;
+        }
         RequestCountContext.set(count);
 
         if (authAccessService.isOpened(method, uri)) {
