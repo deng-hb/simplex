@@ -4,6 +4,7 @@ dist
 node
 etc
 src/main
+package-lock.json
 
 # local env files
 .env.local
