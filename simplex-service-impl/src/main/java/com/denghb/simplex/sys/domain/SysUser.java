@@ -12,7 +12,8 @@ CREATE TABLE `tb_sys_user` (
   `id` int(11) unsigned NOT NULL AUTO_INCREMENT COMMENT 'ID',
   `username` varchar(50) COLLATE utf8mb4_unicode_ci DEFAULT NULL COMMENT '账号',
   `name` varchar(20) COLLATE utf8mb4_unicode_ci DEFAULT NULL COMMENT '姓名',
-  `access_token` varchar(64) COLLATE utf8mb4_unicode_ci DEFAULT NULL COMMENT '授权令牌',
+  `sign_error_size` int(11) NOT NULL DEFAULT '0' COMMENT '登录错误次数',
+  `sign_error_limit` int(11) NOT NULL DEFAULT '5' COMMENT '登录错误上线',
   `operator` int(11) NOT NULL DEFAULT '0' COMMENT '操作人',
   `created_time` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '插入时间',
   `updated_time` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '更新时间',
@@ -26,7 +27,7 @@ CREATE TABLE `tb_sys_user` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci COMMENT='系统用户'
  <pre>
  * @author denghb
- * @generateTime Thu Apr 04 18:26:20 CST 2019
+ * @generateTime Fri Apr 12 00:55:43 CST 2019
  */
 @Etable(name="tb_sys_user",database="simplex")
 public class SysUser implements java.io.Serializable {
@@ -45,9 +46,13 @@ public class SysUser implements java.io.Serializable {
 	@Ecolumn(name="name")
 	private String name;
 	
-	/** 授权令牌 */
-	@Ecolumn(name="access_token")
-	private String accessToken;
+	/** 登录错误次数 */
+	@Ecolumn(name="sign_error_size")
+	private Integer signErrorSize;
+	
+	/** 登录错误上线 */
+	@Ecolumn(name="sign_error_limit")
+	private Integer signErrorLimit;
 	
 	/** 操作人 */
 	@Ecolumn(name="operator")
@@ -94,12 +99,20 @@ public class SysUser implements java.io.Serializable {
 		this.name = name;
 	}
 
-	public String getAccessToken() {
-		return accessToken;
+	public Integer getSignErrorSize() {
+		return signErrorSize;
 	}
 
-	public void setAccessToken(String accessToken) {
-		this.accessToken = accessToken;
+	public void setSignErrorSize(Integer signErrorSize) {
+		this.signErrorSize = signErrorSize;
+	}
+
+	public Integer getSignErrorLimit() {
+		return signErrorLimit;
+	}
+
+	public void setSignErrorLimit(Integer signErrorLimit) {
+		this.signErrorLimit = signErrorLimit;
 	}
 
 	public Integer getOperator() {
@@ -157,8 +170,12 @@ public class SysUser implements java.io.Serializable {
 		str.append(name);
 		str.append("\"");
 		str.append(",");
-		str.append("accessToken=\"");
-		str.append(accessToken);
+		str.append("signErrorSize=\"");
+		str.append(signErrorSize);
+		str.append("\"");
+		str.append(",");
+		str.append("signErrorLimit=\"");
+		str.append(signErrorLimit);
 		str.append("\"");
 		str.append(",");
 		str.append("operator=\"");

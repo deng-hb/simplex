@@ -25,8 +25,9 @@ public class RedisConfig extends CachingConfigurerSupport {
         return new KeyGenerator() {
             @Override
             public Object generate(Object target, java.lang.reflect.Method method, Object... params) {
-                StringBuffer sb = new StringBuffer();
+                StringBuilder sb = new StringBuilder();
                 sb.append(target.getClass().getName());
+                sb.append('#');
                 sb.append(method.getName());
                 for (Object obj : params) {
                     sb.append(obj.toString());
@@ -40,8 +41,8 @@ public class RedisConfig extends CachingConfigurerSupport {
     @Bean
     public CacheManager cacheManager(RedisTemplate redisTemplate) {
         RedisCacheManager cacheManager = new RedisCacheManager(redisTemplate);
-        //设置缓存过期时间 
-        cacheManager.setDefaultExpiration(10000);
+        //设置缓存过期时间 (秒)
+        cacheManager.setDefaultExpiration(60);
         return cacheManager;
     }
 

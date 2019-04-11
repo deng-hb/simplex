@@ -4,14 +4,14 @@ import com.denghb.eorm.annotation.Ecolumn;
 import com.denghb.eorm.annotation.Etable;
 
 /**
- * 系统角色菜单
+ * 系统菜单接口
  * DDL
  * 
  <pre>
-CREATE TABLE `tb_sys_role_menu` (
+CREATE TABLE `tb_sys_menu_api` (
   `id` int(11) unsigned NOT NULL AUTO_INCREMENT COMMENT 'ID',
-  `sys_role_id` int(11) DEFAULT NULL COMMENT '角色ID',
   `sys_menu_id` int(11) DEFAULT NULL COMMENT '菜单ID',
+  `sys_api_id` int(11) DEFAULT NULL COMMENT '接口ID',
   `operator` int(11) NOT NULL DEFAULT '0' COMMENT '操作人',
   `created_time` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
   `updated_time` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '更新时间',
@@ -21,13 +21,13 @@ CREATE TABLE `tb_sys_role_menu` (
   KEY `idx_created_time` (`created_time`),
   KEY `idx_updated_time` (`updated_time`),
   KEY `idx_deleted` (`deleted`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci COMMENT='系统角色菜单'
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci COMMENT='系统菜单接口'
  <pre>
  * @author denghb
  * @generateTime Fri Apr 12 00:55:43 CST 2019
  */
-@Etable(name="tb_sys_role_menu",database="simplex")
-public class SysRoleMenu implements java.io.Serializable {
+@Etable(name="tb_sys_menu_api",database="simplex")
+public class SysMenuApi implements java.io.Serializable {
 
 	private static final long serialVersionUID = 1L;
 	
@@ -35,13 +35,13 @@ public class SysRoleMenu implements java.io.Serializable {
 	@Ecolumn(name="id", primaryKey = true)
 	private Integer id;
 	
-	/** 角色ID */
-	@Ecolumn(name="sys_role_id")
-	private Integer sysRoleId;
-	
 	/** 菜单ID */
 	@Ecolumn(name="sys_menu_id")
 	private Integer sysMenuId;
+	
+	/** 接口ID */
+	@Ecolumn(name="sys_api_id")
+	private Integer sysApiId;
 	
 	/** 操作人 */
 	@Ecolumn(name="operator")
@@ -72,20 +72,20 @@ public class SysRoleMenu implements java.io.Serializable {
 		this.id = id;
 	}
 
-	public Integer getSysRoleId() {
-		return sysRoleId;
-	}
-
-	public void setSysRoleId(Integer sysRoleId) {
-		this.sysRoleId = sysRoleId;
-	}
-
 	public Integer getSysMenuId() {
 		return sysMenuId;
 	}
 
 	public void setSysMenuId(Integer sysMenuId) {
 		this.sysMenuId = sysMenuId;
+	}
+
+	public Integer getSysApiId() {
+		return sysApiId;
+	}
+
+	public void setSysApiId(Integer sysApiId) {
+		this.sysApiId = sysApiId;
 	}
 
 	public Integer getOperator() {
@@ -130,17 +130,17 @@ public class SysRoleMenu implements java.io.Serializable {
 
 	@Override
 	public String toString() {
-		StringBuffer str = new StringBuffer("SysRoleMenu [");
+		StringBuffer str = new StringBuffer("SysMenuApi [");
 		str.append("id=\"");
 		str.append(id);
 		str.append("\"");
 		str.append(",");
-		str.append("sysRoleId=\"");
-		str.append(sysRoleId);
-		str.append("\"");
-		str.append(",");
 		str.append("sysMenuId=\"");
 		str.append(sysMenuId);
+		str.append("\"");
+		str.append(",");
+		str.append("sysApiId=\"");
+		str.append(sysApiId);
 		str.append("\"");
 		str.append(",");
 		str.append("operator=\"");

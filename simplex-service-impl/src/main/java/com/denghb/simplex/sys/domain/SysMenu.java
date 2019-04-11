@@ -10,6 +10,11 @@ import com.denghb.eorm.annotation.Etable;
  <pre>
 CREATE TABLE `tb_sys_menu` (
   `id` int(11) unsigned NOT NULL AUTO_INCREMENT COMMENT 'ID',
+  `title` varchar(50) COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT '' COMMENT '标题',
+  `path` varchar(100) COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT '' COMMENT '路径',
+  `icon` varchar(50) COLLATE utf8mb4_unicode_ci DEFAULT NULL COMMENT '图标',
+  `parent_id` varchar(50) COLLATE utf8mb4_unicode_ci DEFAULT NULL COMMENT '父代码',
+  `seq` int(11) NOT NULL DEFAULT '0' COMMENT '排序,升序',
   `operator` int(11) NOT NULL DEFAULT '0' COMMENT '操作人',
   `created_time` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
   `updated_time` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '更新时间',
@@ -22,7 +27,7 @@ CREATE TABLE `tb_sys_menu` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci COMMENT='系统菜单'
  <pre>
  * @author denghb
- * @generateTime Thu Apr 04 18:26:20 CST 2019
+ * @generateTime Fri Apr 12 00:55:43 CST 2019
  */
 @Etable(name="tb_sys_menu",database="simplex")
 public class SysMenu implements java.io.Serializable {
@@ -32,6 +37,26 @@ public class SysMenu implements java.io.Serializable {
 	/** ID */
 	@Ecolumn(name="id", primaryKey = true)
 	private Integer id;
+	
+	/** 标题 */
+	@Ecolumn(name="title")
+	private String title;
+	
+	/** 路径 */
+	@Ecolumn(name="path")
+	private String path;
+	
+	/** 图标 */
+	@Ecolumn(name="icon")
+	private String icon;
+	
+	/** 父代码 */
+	@Ecolumn(name="parent_id")
+	private String parentId;
+	
+	/** 排序,升序 */
+	@Ecolumn(name="seq")
+	private Integer seq;
 	
 	/** 操作人 */
 	@Ecolumn(name="operator")
@@ -60,6 +85,46 @@ public class SysMenu implements java.io.Serializable {
 
 	public void setId(Integer id) {
 		this.id = id;
+	}
+
+	public String getTitle() {
+		return title;
+	}
+
+	public void setTitle(String title) {
+		this.title = title;
+	}
+
+	public String getPath() {
+		return path;
+	}
+
+	public void setPath(String path) {
+		this.path = path;
+	}
+
+	public String getIcon() {
+		return icon;
+	}
+
+	public void setIcon(String icon) {
+		this.icon = icon;
+	}
+
+	public String getParentId() {
+		return parentId;
+	}
+
+	public void setParentId(String parentId) {
+		this.parentId = parentId;
+	}
+
+	public Integer getSeq() {
+		return seq;
+	}
+
+	public void setSeq(Integer seq) {
+		this.seq = seq;
 	}
 
 	public Integer getOperator() {
@@ -107,6 +172,26 @@ public class SysMenu implements java.io.Serializable {
 		StringBuffer str = new StringBuffer("SysMenu [");
 		str.append("id=\"");
 		str.append(id);
+		str.append("\"");
+		str.append(",");
+		str.append("title=\"");
+		str.append(title);
+		str.append("\"");
+		str.append(",");
+		str.append("path=\"");
+		str.append(path);
+		str.append("\"");
+		str.append(",");
+		str.append("icon=\"");
+		str.append(icon);
+		str.append("\"");
+		str.append(",");
+		str.append("parentId=\"");
+		str.append(parentId);
+		str.append("\"");
+		str.append(",");
+		str.append("seq=\"");
+		str.append(seq);
 		str.append("\"");
 		str.append(",");
 		str.append("operator=\"");

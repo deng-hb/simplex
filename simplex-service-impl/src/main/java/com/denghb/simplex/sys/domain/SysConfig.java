@@ -11,7 +11,7 @@ import com.denghb.eorm.annotation.Etable;
 CREATE TABLE `tb_sys_config` (
   `id` int(11) unsigned NOT NULL AUTO_INCREMENT COMMENT 'ID',
   `code` varchar(50) COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT '' COMMENT '配置代码',
-  `value` text COLLATE utf8mb4_unicode_ci COMMENT '配置值',
+  `value` text COLLATE utf8mb4_unicode_ci NOT NULL COMMENT '配置值',
   `description` varchar(100) COLLATE utf8mb4_unicode_ci DEFAULT NULL COMMENT '配置描述',
   `operator` int(11) DEFAULT NULL COMMENT '操作人',
   `created_time` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '插入时间',
@@ -25,7 +25,7 @@ CREATE TABLE `tb_sys_config` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci COMMENT='系统配置'
  <pre>
  * @author denghb
- * @generateTime Thu Apr 04 18:26:20 CST 2019
+ * @generateTime Fri Apr 12 00:55:43 CST 2019
  */
 @Etable(name="tb_sys_config",database="simplex")
 public class SysConfig implements java.io.Serializable {

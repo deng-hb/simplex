@@ -10,9 +10,9 @@ import com.denghb.eorm.annotation.Etable;
  <pre>
 CREATE TABLE `tb_sys_user_sign_log` (
   `id` int(11) unsigned NOT NULL AUTO_INCREMENT COMMENT 'ID',
-  `ip_addr` varchar(50) COLLATE utf8mb4_unicode_ci DEFAULT NULL COMMENT 'IP',
-  `username` varchar(50) COLLATE utf8mb4_unicode_ci DEFAULT NULL COMMENT '用户名',
-  `user_agent` text COLLATE utf8mb4_unicode_ci COMMENT '浏览器代理',
+  `ip` varchar(50) COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT '' COMMENT 'IP',
+  `username` varchar(50) COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT '' COMMENT '用户名',
+  `user_agent` text COLLATE utf8mb4_unicode_ci NOT NULL COMMENT '浏览器代理',
   `status` int(11) NOT NULL DEFAULT '0' COMMENT '1成功,0失败',
   `created_time` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '插入时间',
   `updated_time` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '更新时间',
@@ -25,7 +25,7 @@ CREATE TABLE `tb_sys_user_sign_log` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci COMMENT='用户登录日志'
  <pre>
  * @author denghb
- * @generateTime Thu Apr 04 18:26:20 CST 2019
+ * @generateTime Fri Apr 12 00:55:43 CST 2019
  */
 @Etable(name="tb_sys_user_sign_log",database="simplex")
 public class SysUserSignLog implements java.io.Serializable {
@@ -37,8 +37,8 @@ public class SysUserSignLog implements java.io.Serializable {
 	private Integer id;
 	
 	/** IP */
-	@Ecolumn(name="ip_addr")
-	private String ipAddr;
+	@Ecolumn(name="ip")
+	private String ip;
 	
 	/** 用户名 */
 	@Ecolumn(name="username")
@@ -77,12 +77,12 @@ public class SysUserSignLog implements java.io.Serializable {
 		this.id = id;
 	}
 
-	public String getIpAddr() {
-		return ipAddr;
+	public String getIp() {
+		return ip;
 	}
 
-	public void setIpAddr(String ipAddr) {
-		this.ipAddr = ipAddr;
+	public void setIp(String ip) {
+		this.ip = ip;
 	}
 
 	public String getUsername() {
@@ -148,8 +148,8 @@ public class SysUserSignLog implements java.io.Serializable {
 		str.append(id);
 		str.append("\"");
 		str.append(",");
-		str.append("ipAddr=\"");
-		str.append(ipAddr);
+		str.append("ip=\"");
+		str.append(ip);
 		str.append("\"");
 		str.append(",");
 		str.append("username=\"");

@@ -10,6 +10,8 @@ import com.denghb.eorm.annotation.Etable;
  <pre>
 CREATE TABLE `tb_sys_role_api` (
   `id` int(11) unsigned NOT NULL AUTO_INCREMENT COMMENT 'ID',
+  `sys_role_id` int(11) NOT NULL COMMENT '角色ID',
+  `sys_api_id` int(11) NOT NULL COMMENT '接口ID',
   `operator` int(11) NOT NULL DEFAULT '0' COMMENT '操作人',
   `created_time` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
   `updated_time` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '更新时间',
@@ -22,7 +24,7 @@ CREATE TABLE `tb_sys_role_api` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci COMMENT='系统角色接口'
  <pre>
  * @author denghb
- * @generateTime Thu Apr 04 18:26:20 CST 2019
+ * @generateTime Fri Apr 12 00:55:43 CST 2019
  */
 @Etable(name="tb_sys_role_api",database="simplex")
 public class SysRoleApi implements java.io.Serializable {
@@ -32,6 +34,14 @@ public class SysRoleApi implements java.io.Serializable {
 	/** ID */
 	@Ecolumn(name="id", primaryKey = true)
 	private Integer id;
+	
+	/** 角色ID */
+	@Ecolumn(name="sys_role_id")
+	private Integer sysRoleId;
+	
+	/** 接口ID */
+	@Ecolumn(name="sys_api_id")
+	private Integer sysApiId;
 	
 	/** 操作人 */
 	@Ecolumn(name="operator")
@@ -60,6 +70,22 @@ public class SysRoleApi implements java.io.Serializable {
 
 	public void setId(Integer id) {
 		this.id = id;
+	}
+
+	public Integer getSysRoleId() {
+		return sysRoleId;
+	}
+
+	public void setSysRoleId(Integer sysRoleId) {
+		this.sysRoleId = sysRoleId;
+	}
+
+	public Integer getSysApiId() {
+		return sysApiId;
+	}
+
+	public void setSysApiId(Integer sysApiId) {
+		this.sysApiId = sysApiId;
 	}
 
 	public Integer getOperator() {
@@ -107,6 +133,14 @@ public class SysRoleApi implements java.io.Serializable {
 		StringBuffer str = new StringBuffer("SysRoleApi [");
 		str.append("id=\"");
 		str.append(id);
+		str.append("\"");
+		str.append(",");
+		str.append("sysRoleId=\"");
+		str.append(sysRoleId);
+		str.append("\"");
+		str.append(",");
+		str.append("sysApiId=\"");
+		str.append(sysApiId);
 		str.append("\"");
 		str.append(",");
 		str.append("operator=\"");

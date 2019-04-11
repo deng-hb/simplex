@@ -1,6 +1,8 @@
 package com.denghb.simplex.controller;
 
+import com.denghb.simplex.base.BizException;
 import com.denghb.simplex.base.JSONModel;
+import com.denghb.simplex.base.SysException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.boot.autoconfigure.web.ErrorController;
 import org.springframework.http.HttpStatus;
@@ -50,10 +52,15 @@ public class AppErrorController implements ErrorController {
     @ExceptionHandler
     @ResponseBody
     public JSONModel<String> error(HttpServletRequest request, Exception e) {
-        log.error(e.getMessage(), e);
-
         HttpStatus status = getStatus(request);
-        if (e instanceof MethodArgumentNotValidException) {
+
+        if (e instanceof BizException) {
+            log.warn(e.getMessage(), e);
+            return JSONModel.buildFailure(e.getMessage());
+        } else if (e instanceof SysException) {
+            log.error(e.getMessage(), e);
+            return JSONModel.buildFailure(e.getMessage());
+        } else if (e instanceof MethodArgumentNotValidException) {
             // 进来了肯定有错
             MethodArgumentNotValidException mane = (MethodArgumentNotValidException) e;
             List<ObjectError> errors = mane.getBindingResult().getAllErrors();
@@ -62,6 +69,7 @@ public class AppErrorController implements ErrorController {
         } else if (e instanceof HttpMessageNotReadableException) {
             return JSONModel.buildFailure(status.value(), "参数不匹配");
         }
+        log.error(e.getMessage(), e);
         // 未知错误
         return JSONModel.buildFailure("failure");
     }

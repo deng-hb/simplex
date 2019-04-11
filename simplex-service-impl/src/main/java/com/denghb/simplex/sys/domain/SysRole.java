@@ -10,6 +10,9 @@ import com.denghb.eorm.annotation.Etable;
  <pre>
 CREATE TABLE `tb_sys_role` (
   `id` int(11) unsigned NOT NULL AUTO_INCREMENT COMMENT 'ID',
+  `code` varchar(50) COLLATE utf8mb4_unicode_ci DEFAULT NULL COMMENT '代码（唯一）',
+  `name` varchar(20) COLLATE utf8mb4_unicode_ci DEFAULT NULL COMMENT '角色名称',
+  `description` varchar(100) COLLATE utf8mb4_unicode_ci DEFAULT NULL COMMENT '描述',
   `operator` int(11) NOT NULL DEFAULT '0' COMMENT '操作人',
   `created_time` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
   `updated_time` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '更新时间',
@@ -22,7 +25,7 @@ CREATE TABLE `tb_sys_role` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci COMMENT='系统角色'
  <pre>
  * @author denghb
- * @generateTime Thu Apr 04 18:26:20 CST 2019
+ * @generateTime Fri Apr 12 00:55:43 CST 2019
  */
 @Etable(name="tb_sys_role",database="simplex")
 public class SysRole implements java.io.Serializable {
@@ -32,6 +35,18 @@ public class SysRole implements java.io.Serializable {
 	/** ID */
 	@Ecolumn(name="id", primaryKey = true)
 	private Integer id;
+	
+	/** 代码（唯一） */
+	@Ecolumn(name="code")
+	private String code;
+	
+	/** 角色名称 */
+	@Ecolumn(name="name")
+	private String name;
+	
+	/** 描述 */
+	@Ecolumn(name="description")
+	private String description;
 	
 	/** 操作人 */
 	@Ecolumn(name="operator")
@@ -60,6 +75,30 @@ public class SysRole implements java.io.Serializable {
 
 	public void setId(Integer id) {
 		this.id = id;
+	}
+
+	public String getCode() {
+		return code;
+	}
+
+	public void setCode(String code) {
+		this.code = code;
+	}
+
+	public String getName() {
+		return name;
+	}
+
+	public void setName(String name) {
+		this.name = name;
+	}
+
+	public String getDescription() {
+		return description;
+	}
+
+	public void setDescription(String description) {
+		this.description = description;
 	}
 
 	public Integer getOperator() {
@@ -107,6 +146,18 @@ public class SysRole implements java.io.Serializable {
 		StringBuffer str = new StringBuffer("SysRole [");
 		str.append("id=\"");
 		str.append(id);
+		str.append("\"");
+		str.append(",");
+		str.append("code=\"");
+		str.append(code);
+		str.append("\"");
+		str.append(",");
+		str.append("name=\"");
+		str.append(name);
+		str.append("\"");
+		str.append(",");
+		str.append("description=\"");
+		str.append(description);
 		str.append("\"");
 		str.append(",");
 		str.append("operator=\"");

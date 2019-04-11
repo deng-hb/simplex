@@ -10,6 +10,8 @@ import com.denghb.eorm.annotation.Etable;
  <pre>
 CREATE TABLE `tb_sys_user_role` (
   `id` int(11) unsigned NOT NULL AUTO_INCREMENT COMMENT 'ID',
+  `sys_user_id` int(11) NOT NULL COMMENT '系统用户ID',
+  `sys_role_id` int(11) NOT NULL COMMENT '角色ID',
   `operator` int(11) NOT NULL DEFAULT '0' COMMENT '操作人',
   `created_time` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
   `updated_time` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '更新时间',
@@ -22,7 +24,7 @@ CREATE TABLE `tb_sys_user_role` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci COMMENT='系统用户角色'
  <pre>
  * @author denghb
- * @generateTime Thu Apr 04 18:26:20 CST 2019
+ * @generateTime Fri Apr 12 00:55:43 CST 2019
  */
 @Etable(name="tb_sys_user_role",database="simplex")
 public class SysUserRole implements java.io.Serializable {
@@ -32,6 +34,14 @@ public class SysUserRole implements java.io.Serializable {
 	/** ID */
 	@Ecolumn(name="id", primaryKey = true)
 	private Integer id;
+	
+	/** 系统用户ID */
+	@Ecolumn(name="sys_user_id")
+	private Integer sysUserId;
+	
+	/** 角色ID */
+	@Ecolumn(name="sys_role_id")
+	private Integer sysRoleId;
 	
 	/** 操作人 */
 	@Ecolumn(name="operator")
@@ -60,6 +70,22 @@ public class SysUserRole implements java.io.Serializable {
 
 	public void setId(Integer id) {
 		this.id = id;
+	}
+
+	public Integer getSysUserId() {
+		return sysUserId;
+	}
+
+	public void setSysUserId(Integer sysUserId) {
+		this.sysUserId = sysUserId;
+	}
+
+	public Integer getSysRoleId() {
+		return sysRoleId;
+	}
+
+	public void setSysRoleId(Integer sysRoleId) {
+		this.sysRoleId = sysRoleId;
 	}
 
 	public Integer getOperator() {
@@ -107,6 +133,14 @@ public class SysUserRole implements java.io.Serializable {
 		StringBuffer str = new StringBuffer("SysUserRole [");
 		str.append("id=\"");
 		str.append(id);
+		str.append("\"");
+		str.append(",");
+		str.append("sysUserId=\"");
+		str.append(sysUserId);
+		str.append("\"");
+		str.append(",");
+		str.append("sysRoleId=\"");
+		str.append(sysRoleId);
 		str.append("\"");
 		str.append(",");
 		str.append("operator=\"");
