@@ -2,6 +2,8 @@ package com.denghb.simplex.config;
 
 import com.alibaba.fastjson.JSON;
 import com.denghb.simplex.base.Consts;
+import com.denghb.simplex.base.JSONModel;
+import com.denghb.simplex.base.SysException;
 import com.denghb.simplex.holder.Credential;
 import com.denghb.simplex.holder.CredentialContextHolder;
 import com.denghb.simplex.holder.RequestInfo;
@@ -76,10 +78,13 @@ public class AuthAccessFilter implements Filter {
 
         if (!authAccessService.isOpened(method, uri)) {
 
-            Credential credential = authAccessService.validate(requestInfo);
-            if (null == credential) {
+            try {
+                Credential credential = authAccessService.validate(requestInfo);
+                CredentialContextHolder.set(credential);
+            } catch (SysException e) {
+                String result = JSON.toJSONString(JSONModel.buildFailure(e.getCode(), e.getMessage()));
+
                 res.setHeader("Content-Type", "application/json;charset=utf-8");
-                String result = "{\"code\":2,\"msg\":\"登录过期或未登录\"}";
                 res.getWriter().write(result);
 
                 log.info("reqId:{},response:{}", requestInfo.getReqId(), result);
@@ -89,7 +94,6 @@ public class AuthAccessFilter implements Filter {
                 log.info("reqId:{},end,{}ms", requestInfo.getReqId(), (System.currentTimeMillis() - start));
                 return;// *THE END
             }
-            CredentialContextHolder.set(credential);
 
         }
 

@@ -8,7 +8,7 @@
       </HHeader>
       <Layout :siderFixed="siderFixed" :siderCollapsed="siderCollapsed">
         <Sider theme="white">
-          <Menu style="margin-top: 40px;" class="h-menu-white" :datas="menuDatas" :inlineCollapsed="siderCollapsed"></Menu>
+          <Menu style="margin-top: 40px;" class="h-menu-white" :datas="menu" @click="onMenu" :option="{keyName:'path'}" :inlineCollapsed="siderCollapsed"></Menu>
         </Sider>
         <Content style="padding: 0px 30px;">
           <Breadcrumb :datas="datas" style="margin: 16px 0px;"></Breadcrumb>
@@ -76,7 +76,7 @@ export default {
       headerFixed: false,
       siderFixed: false,
       siderCollapsed: false,
-      menuDatas: [
+      menu: [
         { title: '首页', key: 'welcome', icon: 'h-icon-home' },
         { title: '查询', key: 'search', icon: 'h-icon-search' },
         { title: '收藏', key: 'favor', icon: 'h-icon-star', count: 100, children: [{ title: '收藏-1', key: 'favor2-1' }] },
@@ -143,6 +143,10 @@ export default {
         this.signIn.key = res.data.key;
         this.signIn.code = '';
       })
+    },
+    onMenu(data) {
+      console.log(data);
+      this.$router.push(data.key);
     }
   },
   computed: {
@@ -150,6 +154,11 @@ export default {
   },
   created() {
     this.reloadCaptcha();
+    if (this.signed) {
+      req.get('/sys/user/menu').then(res=>{
+        this.menu = res.data;
+      });
+    }
   },
 };
 </script>

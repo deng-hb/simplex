@@ -8,9 +8,8 @@ import com.denghb.simplex.holder.CredentialContextHolder;
 import com.denghb.simplex.model.IdReq;
 import com.denghb.simplex.model.PageReq;
 import com.denghb.simplex.model.PageRes;
-import com.denghb.simplex.sys.domain.SysUser;
-import com.denghb.simplex.sys.domain.SysUserPwd;
-import com.denghb.simplex.sys.domain.SysUserToken;
+import com.denghb.simplex.sys.domain.*;
+import com.denghb.simplex.sys.model.SysMenuRes;
 import com.denghb.simplex.sys.model.SysUserReq;
 import com.denghb.simplex.sys.model.SysUserRes;
 import com.denghb.simplex.sys.model.SysUserSignInRes;
@@ -24,6 +23,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Calendar;
+import java.util.List;
 import java.util.UUID;
 
 @Slf4j
@@ -144,5 +144,38 @@ public class SysUserServiceImpl extends BaseService implements SysUserService {
         if (1 != res) {
             throw new BizException("操作失败");
         }
+    }
+
+    @Override
+    public List<SysMenuRes> menu() {
+        Credential credential = CredentialContextHolder.get();
+        int sysUserId = credential.getId();
+        // 查询当前用户的菜单
+        String sql = "select sm.* from tb_sys_user_role sur left join tb_sys_role_menu srm on sur.sys_role_id = srm.sys_role_id " +
+                "left join tb_sys_menu sm on sm.id = srm.sys_menu_id " +
+                "where sur.sys_user_id = ? and sm.parent_id is null and srm.deleted = 0 and sur.deleted = 0 and sm.deleted = 0 order by seq";
+        List<SysMenuRes> list = db.select(SysMenuRes.class, sql, sysUserId);
+        if (null == list || list.isEmpty()) {
+            return null;
+        }
+        for (SysMenuRes res : list) {
+            res.setChildren(listSubMenu(sysUserId, res));
+        }
+        return list;
+    }
+
+    private List<SysMenuRes> listSubMenu(int sysUserId, SysMenuRes res) {
+        String sql = "select sm.* from tb_sys_user_role sur left join tb_sys_role_menu srm on sur.sys_role_id = srm.sys_role_id " +
+                "left join tb_sys_menu sm on sm.id = srm.sys_menu_id " +
+                "where sur.sys_user_id = ? and sm.parent_id = ? and srm.deleted = 0 and sur.deleted = 0 and sm.deleted = 0  order by seq";
+        List<SysMenuRes> list = db.select(SysMenuRes.class, sql, sysUserId, res.getId());
+        if (null == list || list.isEmpty()) {
+            return null;
+        }
+        for (SysMenuRes res2 : list) {
+            res2.setChildren(listSubMenu(sysUserId, res2));
+        }
+
+        return list;
     }
 }

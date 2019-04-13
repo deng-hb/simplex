@@ -13,12 +13,10 @@ import com.denghb.simplex.sys.service.SysUserService;
 import com.denghb.simplex.sys.service.SysUserSignLogService;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+import java.util.List;
 
 @RestController
 @RequestMapping("/sys/user")
@@ -75,6 +73,12 @@ public class SysUserController {
     public JSONModel<String> unlockSignError(@Valid @RequestBody IdReq req) {
         sysUserService.unlockSignError(req);
         return JSONModel.buildSuccess("操作成功");
+    }
+
+    @GetMapping("/menu")
+    public JSONModel<List<SysMenuRes>> menu() {
+        List<SysMenuRes> res = sysUserService.menu();
+        return JSONModel.buildSuccess("ok", res);
     }
 }
 

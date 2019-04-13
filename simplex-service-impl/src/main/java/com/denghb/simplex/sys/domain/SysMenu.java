@@ -13,7 +13,7 @@ CREATE TABLE `tb_sys_menu` (
   `title` varchar(50) COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT '' COMMENT '标题',
   `path` varchar(100) COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT '' COMMENT '路径',
   `icon` varchar(50) COLLATE utf8mb4_unicode_ci DEFAULT NULL COMMENT '图标',
-  `parent_id` varchar(50) COLLATE utf8mb4_unicode_ci DEFAULT NULL COMMENT '父代码',
+  `parent_id` int(11) DEFAULT NULL COMMENT '父ID',
   `seq` int(11) NOT NULL DEFAULT '0' COMMENT '排序,升序',
   `operator` int(11) NOT NULL DEFAULT '0' COMMENT '操作人',
   `created_time` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
@@ -24,10 +24,10 @@ CREATE TABLE `tb_sys_menu` (
   KEY `idx_created_time` (`created_time`),
   KEY `idx_updated_time` (`updated_time`),
   KEY `idx_deleted` (`deleted`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci COMMENT='系统菜单'
+) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci COMMENT='系统菜单'
  <pre>
  * @author denghb
- * @generateTime Fri Apr 12 00:55:43 CST 2019
+ * @generateTime Sat Apr 13 22:44:03 CST 2019
  */
 @Etable(name="tb_sys_menu",database="simplex")
 public class SysMenu implements java.io.Serializable {
@@ -50,9 +50,9 @@ public class SysMenu implements java.io.Serializable {
 	@Ecolumn(name="icon")
 	private String icon;
 	
-	/** 父代码 */
+	/** 父ID */
 	@Ecolumn(name="parent_id")
-	private String parentId;
+	private Integer parentId;
 	
 	/** 排序,升序 */
 	@Ecolumn(name="seq")
@@ -111,11 +111,11 @@ public class SysMenu implements java.io.Serializable {
 		this.icon = icon;
 	}
 
-	public String getParentId() {
+	public Integer getParentId() {
 		return parentId;
 	}
 
-	public void setParentId(String parentId) {
+	public void setParentId(Integer parentId) {
 		this.parentId = parentId;
 	}
 

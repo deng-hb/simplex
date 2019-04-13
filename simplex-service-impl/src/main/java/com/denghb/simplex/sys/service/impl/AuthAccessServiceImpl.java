@@ -1,10 +1,13 @@
 package com.denghb.simplex.sys.service.impl;
 
 import com.denghb.eorm.Eorm;
+import com.denghb.simplex.base.SysException;
+import com.denghb.simplex.consts.SysUserConsts;
 import com.denghb.simplex.holder.Credential;
 import com.denghb.simplex.holder.RequestInfo;
 import com.denghb.simplex.sys.domain.SysAccessLog;
 import com.denghb.simplex.sys.domain.SysUser;
+import com.denghb.simplex.sys.domain.SysUserToken;
 import com.denghb.simplex.sys.model.SysAccessLogReq;
 import com.denghb.simplex.sys.service.AuthAccessService;
 import org.springframework.beans.BeanUtils;
@@ -51,15 +54,23 @@ public class AuthAccessServiceImpl implements AuthAccessService {
     }
 
     @Override
-    public Credential validate(RequestInfo requestInfo) {
+    public Credential validate(RequestInfo requestInfo) throws SysException {
         String accessToken = requestInfo.getAccessToken();
         if (null == accessToken) {
-            return null;
+            throw new SysException(401, "非法访问");
         }
-        String sql = "select su.* from tb_sys_user su left join tb_sys_user_token sut on su.id = sut.sys_user_id where sut.access_token = ? and sut.ip = ? ";
-        SysUser sysUser = db.selectOne(SysUser.class, sql, accessToken, requestInfo.getIp());
-        if (null == sysUser) {
-            return null;
+        SysUserToken sysUserToken = db.selectOne(SysUserToken.class, "select * from tb_sys_user_token where access_token = ? and deleted = 0", accessToken);
+        if (null == sysUserToken) {
+            throw new SysException(401, "非法访问");
+        }
+
+        if (!requestInfo.getIp().equals(sysUserToken.getIp())) {
+            throw new SysException(401, "登录的IP变了，请重新登录");
+        }
+
+        SysUser sysUser = db.selectOne(SysUser.class, "select * from tb_sys_user where id = ? and deleted = 0", sysUserToken.getSysUserId());
+        if (null == sysUser || SysUserConsts.Status.NORMAL != sysUser.getStatus()) {
+            throw new SysException(401, "账户状态有误，请重新登录");
         }
         // TODO 校验uri权限
 

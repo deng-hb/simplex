@@ -1,5 +1,6 @@
 package com.denghb.simplex.sys.service;
 
+import com.denghb.simplex.base.SysException;
 import com.denghb.simplex.holder.Credential;
 import com.denghb.simplex.holder.RequestInfo;
 import com.denghb.simplex.sys.model.SysAccessLogReq;
@@ -15,6 +16,6 @@ public interface AuthAccessService {
     boolean isOpened(String method, String uri);
 
     @Cacheable(cacheNames = "AuthAccessService.validate", key = "'AuthAccessService.validate#' + #requestInfo.accessToken + #requestInfo.ip + #requestInfo.uri")
-    Credential validate(RequestInfo requestInfo);
+    Credential validate(RequestInfo requestInfo) throws SysException;
 
 }
