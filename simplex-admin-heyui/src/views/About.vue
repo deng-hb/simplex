@@ -26,7 +26,7 @@ export default {
       console.log(req);
       req.get('/captcha').then(res=>{
         console.log(res)
-        this.captcha = 'data:image/jpeg;base64,' + res.data.imageData;
+        this.captcha = res.data.imageData;
       })
     }
   },

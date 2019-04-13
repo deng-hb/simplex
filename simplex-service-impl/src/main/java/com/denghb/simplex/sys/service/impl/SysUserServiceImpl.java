@@ -94,7 +94,7 @@ public class SysUserServiceImpl extends BaseService implements SysUserService {
         SysUserPwd sysUserPwd = db.selectOne(SysUserPwd.class, validPwdSql, sysUser.getId());
         if (null == sysUserPwd || !sysUserPwd.getPwd().equals(Md5Utils.md5(password + sysUserPwd.getSalt()))) {
 
-            sysUser.setSignErrorLimit(sysUser.getSignErrorSize() + 1);
+            sysUser.setSignErrorSize(sysUser.getSignErrorSize() + 1);
             sysUser.setUpdatedTime(null);
 
             int diff = sysUser.getSignErrorLimit() - sysUser.getSignErrorSize();
@@ -102,7 +102,11 @@ public class SysUserServiceImpl extends BaseService implements SysUserService {
                 sysUser.setStatus(SysUserConsts.Status.LOCK_SIGN_ERR);
             }
             db.update(sysUser);
-            throw new BizException("密码输入错误，还有" + diff + "次机会");
+            if (0 >= diff) {
+                throw new BizException("密码输入错误过多，已锁住");
+            } else {
+                throw new BizException("密码输入错误，还有" + diff + "次机会");
+            }
         }
         // 将之前的token都删除
         db.execute("update tb_sys_user_token set deleted = 1 where deleted = 0 and sys_user_id = ?", sysUser.getId());
@@ -123,7 +127,7 @@ public class SysUserServiceImpl extends BaseService implements SysUserService {
         db.insert(sysUserToken);
 
         // 错误次数重置
-        sysUser.setSignErrorLimit(0);
+        sysUser.setSignErrorSize(0);
         sysUser.setUpdatedTime(null);
         db.update(sysUser);
 

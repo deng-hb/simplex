@@ -55,7 +55,7 @@ public class SysUserController {
     public JSONModel<SysUserSignInRes> signIn(@Valid @RequestBody SysUserSignInReq req) {
 
         boolean valid = captchaService.validate(req.getKey(), req.getCode());
-        if (valid) {
+        if (!valid) {
             throw new BizException("验证码输入有误");
         }
 
