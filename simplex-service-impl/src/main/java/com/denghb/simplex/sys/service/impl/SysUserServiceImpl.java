@@ -151,7 +151,7 @@ public class SysUserServiceImpl extends BaseService implements SysUserService {
         Credential credential = CredentialContextHolder.get();
         int sysUserId = credential.getId();
         // 查询当前用户的菜单
-        String sql = "select sm.* from tb_sys_user_role sur left join tb_sys_role_menu srm on sur.sys_role_id = srm.sys_role_id " +
+        String sql = "select distinct sm.* from tb_sys_user_role sur left join tb_sys_role_menu srm on sur.sys_role_id = srm.sys_role_id " +
                 "left join tb_sys_menu sm on sm.id = srm.sys_menu_id " +
                 "where sur.sys_user_id = ? and sm.parent_id is null and srm.deleted = 0 and sur.deleted = 0 and sm.deleted = 0 order by seq";
         List<SysMenuRes> list = db.select(SysMenuRes.class, sql, sysUserId);
@@ -165,7 +165,7 @@ public class SysUserServiceImpl extends BaseService implements SysUserService {
     }
 
     private List<SysMenuRes> listSubMenu(int sysUserId, SysMenuRes res) {
-        String sql = "select sm.* from tb_sys_user_role sur left join tb_sys_role_menu srm on sur.sys_role_id = srm.sys_role_id " +
+        String sql = "select distinct sm.* from tb_sys_user_role sur left join tb_sys_role_menu srm on sur.sys_role_id = srm.sys_role_id " +
                 "left join tb_sys_menu sm on sm.id = srm.sys_menu_id " +
                 "where sur.sys_user_id = ? and sm.parent_id = ? and srm.deleted = 0 and sur.deleted = 0 and sm.deleted = 0  order by seq";
         List<SysMenuRes> list = db.select(SysMenuRes.class, sql, sysUserId, res.getId());
