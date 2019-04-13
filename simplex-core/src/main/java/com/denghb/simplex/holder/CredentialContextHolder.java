@@ -1,13 +1,16 @@
-package com.denghb.simplex.base;
+package com.denghb.simplex.holder;
 
-public class CredentialContext {
+/**
+ * @see com.denghb.simplex.config.AuthAccessFilter
+ */
+public class CredentialContextHolder {
 
     private static final ThreadLocal<Credential> local = new InheritableThreadLocal<>();
 
     /**
      * 移除
      */
-    public static void remove() {
+    public static void reset() {
         local.remove();
     }
 

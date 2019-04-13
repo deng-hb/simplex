@@ -1,8 +1,9 @@
-package com.denghb.simplex.aspect;
+package com.denghb.simplex.config;
 
-import com.alibaba.fastjson.JSONObject;
+import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.serializer.SerializerFeature;
-import com.denghb.simplex.base.RequestCountContext;
+import com.denghb.simplex.holder.RequestInfo;
+import com.denghb.simplex.holder.RequestInfoContextHolder;
 import org.apache.commons.lang3.StringUtils;
 import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.annotation.Around;
@@ -16,7 +17,7 @@ import java.lang.reflect.Method;
 
 @Component
 @Aspect
-public class RequestAdvice {
+public class RequestAroundLogConfig {
 
     @Around("@annotation(org.springframework.web.bind.annotation.RequestMapping)")
     public Object requestMapping(ProceedingJoinPoint joinPoint) throws Throwable {
@@ -42,10 +43,13 @@ public class RequestAdvice {
         MethodSignature signature = (MethodSignature) joinPoint.getSignature();
         Method method = signature.getMethod();
         Logger log = LoggerFactory.getLogger(method.getDeclaringClass());
+
+        RequestInfo requestInfo = RequestInfoContextHolder.get();
+        Long reqId = null != requestInfo ? requestInfo.getReqId() : null;
         // join arguments.
-        log.info("req:{},params:{} ", RequestCountContext.get(), StringUtils.join(args, " ; "));
+        log.info("reqId:{},params:{} ", reqId, StringUtils.join(args, ","));
         Object result = joinPoint.proceed();
-        log.info("req:{},res:{} ", RequestCountContext.get(), JSONObject.toJSONString(result, SerializerFeature.WriteMapNullValue));
+        log.info("reqId:{},response:{} ", reqId, JSON.toJSONString(result, SerializerFeature.WriteMapNullValue));
 
         return result;
     }

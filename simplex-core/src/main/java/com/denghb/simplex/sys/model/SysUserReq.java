@@ -8,7 +8,7 @@ import javax.validation.constraints.NotNull;
 @Data
 public class SysUserReq {
 
-    @ApiModelProperty("id<=0为创建，其他为编辑")
+    @ApiModelProperty(value = "null为创建，其他为编辑")
     private Integer id;
 
     @NotNull
@@ -16,4 +16,7 @@ public class SysUserReq {
 
     @NotNull
     private String name;
+
+    @NotNull
+    private String username;
 }

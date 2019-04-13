@@ -9,7 +9,7 @@ import org.hibernate.validator.constraints.Range;
 @ToString
 public class IdReq {
 
-    @Range(min = 1, message = "参数错误")
+    @Range(min = 1, message = "ID错误")
     @ApiModelProperty(value = "ID", required = true)
     private Integer id;
 

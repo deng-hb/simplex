@@ -1,7 +1,15 @@
 package com.denghb.simplex.test;
 
 
+import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.TypeReference;
+import com.denghb.eorm.Eorm;
+import com.denghb.simplex.base.JSONModel;
+import com.denghb.simplex.base.SysException;
+import com.denghb.simplex.model.CaptchaRes;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang3.StringUtils;
+import org.junit.Assert;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,17 +30,35 @@ import org.springframework.test.web.servlet.result.MockMvcResultHandlers;
 @AutoConfigureMockMvc
 public class BaseTest {
 
+    public static String USER_AGENT = "Mozilla/5.0 TEST";
+
     @Autowired
-    MockMvc mockMvc;
+    public MockMvc mockMvc;
+
+    @Autowired
+    private Eorm db;
+
+    /**
+     * 获取有效的Token用于测试
+     */
+    public String getAccessToken() {
+        String sql = "select access_token from tb_sys_user_token where expire_time > now() limit 1";
+        String accessToken = db.selectOne(String.class, sql);
+        if (StringUtils.isBlank(accessToken)) {
+            throw new SysException("暂无有效Access Token");
+        }
+        return accessToken;
+    }
 
     @Test
-    public void testGet() throws Exception {
-
+    public void captcha() throws Exception {
         MockHttpServletRequestBuilder builder = MockMvcRequestBuilders.get("/captcha");
+        builder.header("User-Agent", USER_AGENT);
+        String result = mockMvc.perform(builder).andDo(MockMvcResultHandlers.log()).andReturn().getResponse().getContentAsString();
 
-        mockMvc.perform(builder).andDo(MockMvcResultHandlers.log());
-//        String res = mockMvc.perform(builder).andReturn().getResponse().getContentAsString();
-//        log.info(res);
+        JSONModel<CaptchaRes> res = JSON.parseObject(result, new TypeReference<JSONModel<CaptchaRes>>() {
+        });
 
+        Assert.assertEquals(1, res.getCode());
     }
 }

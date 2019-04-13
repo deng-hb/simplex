@@ -15,10 +15,10 @@ public class Consts {
 
     private static final Map<String, List<Map<String, String>>> _cache = new ConcurrentHashMap<>();
 
-    public static final String TOKEN = "X-Token";
+    public static final String ACCESS_TOKEN = "X-Access-Token";
 
-    public static final String _label = "label";
-    public static final String _value = "value";
+    private static final String _label = "label";
+    private static final String _value = "value";
 
     /**
      * 翻译类型

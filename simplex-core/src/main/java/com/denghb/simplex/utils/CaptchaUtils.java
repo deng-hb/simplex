@@ -200,7 +200,7 @@ public class CaptchaUtils {
 
         String imageData = Base64.encodeBase64String(captcha.getImgData());
         imageData = imageData.replaceAll("\r\n", "");
-        result.setImageData(imageData);
+        result.setImageData("data:image/jpeg;base64," + imageData);
 
         return result;
     }

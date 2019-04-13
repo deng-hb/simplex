@@ -1,8 +1,11 @@
 package com.denghb.simplex.config;
 
-import com.denghb.simplex.base.Credential;
-import com.denghb.simplex.base.CredentialContext;
-import com.denghb.simplex.base.RequestCountContext;
+import com.alibaba.fastjson.JSON;
+import com.denghb.simplex.base.Consts;
+import com.denghb.simplex.holder.Credential;
+import com.denghb.simplex.holder.CredentialContextHolder;
+import com.denghb.simplex.holder.RequestInfo;
+import com.denghb.simplex.holder.RequestInfoContextHolder;
 import com.denghb.simplex.sys.model.SysAccessLogReq;
 import com.denghb.simplex.sys.service.AuthAccessService;
 import com.denghb.simplex.utils.WebUtils;
@@ -12,14 +15,12 @@ import javax.servlet.*;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
-import java.util.regex.Pattern;
+import java.util.concurrent.atomic.AtomicLong;
 
 @Slf4j
 public class AuthAccessFilter implements Filter {
 
-    private long count = 0;
-
-    private static Pattern IGNORE_EXT = Pattern.compile(".*(.html|.png|.svg|.txt|.js|.css|.ico|.ttf|.eot|.woff)$", Pattern.CASE_INSENSITIVE);
+    private final static AtomicLong REQUEST_COUNT = new AtomicLong(100000000);
 
     private AuthAccessService authAccessService;
 
@@ -35,7 +36,7 @@ public class AuthAccessFilter implements Filter {
 
     @Override
     public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain) throws IOException, ServletException {
-        ++count;
+        long start = System.currentTimeMillis();
 
         HttpServletRequest req = (HttpServletRequest) request;
         HttpServletResponse res = (HttpServletResponse) response;
@@ -50,43 +51,56 @@ public class AuthAccessFilter implements Filter {
         String ip = WebUtils.getIpAddr(req);
         String method = req.getMethod();
         String userAgent = req.getHeader("User-Agent");
-        String accessToken = req.getHeader("X-Access-Token");
+        String accessToken = req.getHeader(Consts.ACCESS_TOKEN);
 
-        log.info("req:{},{},{},{},{}", count, ip, method, uri, accessToken);
+        RequestInfo requestInfo = RequestInfo.builder()
+                .ip(ip)
+                .uri(uri)
+                .method(method)
+                .userAgent(userAgent)
+                .accessToken(accessToken)
+                .reqId(REQUEST_COUNT.incrementAndGet())
+                .build();
 
-        int id = authAccessService.addLog(SysAccessLogReq.builder().ip(ip).method(method).url(url).accessToken(accessToken).userAgent(userAgent).build());
+        log.info("reqId:{},start,{}", requestInfo.getReqId(), JSON.toJSONString(requestInfo));
+        RequestInfoContextHolder.set(requestInfo);
 
-        if (IGNORE_EXT.matcher(uri).matches()) {
-
-            // 放行
-            chain.doFilter(request, response);
-            authAccessService.setEndTime(id);
-            return;// *THE END
-        }
-        RequestCountContext.set(count);
+        SysAccessLogReq logReq = SysAccessLogReq.builder()
+                .ip(ip)
+                .url(url)
+                .method(method)
+                .userAgent(userAgent)
+                .accessToken(accessToken)
+                .build();
+        int id = authAccessService.addLog(logReq);
 
         if (!authAccessService.isOpened(method, uri)) {
 
-            Credential credential = authAccessService.validate(accessToken, ip, userAgent);
+            Credential credential = authAccessService.validate(requestInfo);
             if (null == credential) {
                 res.setHeader("Content-Type", "application/json;charset=utf-8");
                 String result = "{\"code\":2,\"msg\":\"登录过期或未登录\"}";
                 res.getWriter().write(result);
 
-                log.info("req:{},res:{}", RequestCountContext.get(), result);
-                RequestCountContext.remove();
+                log.info("reqId:{},response:{}", requestInfo.getReqId(), result);
+                RequestInfoContextHolder.reset();
                 authAccessService.setEndTime(id);
+
+                log.info("reqId:{},end,{}ms", requestInfo.getReqId(), (System.currentTimeMillis() - start));
                 return;// *THE END
             }
-            CredentialContext.set(credential);
+            CredentialContextHolder.set(credential);
+
         }
 
         // 放行
         chain.doFilter(request, response);
 
-        CredentialContext.remove();
-        RequestCountContext.remove();
+        CredentialContextHolder.reset();
+        RequestInfoContextHolder.reset();
         authAccessService.setEndTime(id);
+
+        log.info("reqId:{},end,{}ms", requestInfo.getReqId(), (System.currentTimeMillis() - start));
     }
 
     @Override

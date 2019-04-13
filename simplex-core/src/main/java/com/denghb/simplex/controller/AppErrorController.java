@@ -61,6 +61,7 @@ public class AppErrorController implements ErrorController {
             log.error(e.getMessage(), e);
             return JSONModel.buildFailure(e.getMessage());
         } else if (e instanceof MethodArgumentNotValidException) {
+            log.warn(e.getMessage(), e);
             // 进来了肯定有错
             MethodArgumentNotValidException mane = (MethodArgumentNotValidException) e;
             List<ObjectError> errors = mane.getBindingResult().getAllErrors();
@@ -71,7 +72,7 @@ public class AppErrorController implements ErrorController {
         }
         log.error(e.getMessage(), e);
         // 未知错误
-        return JSONModel.buildFailure("failure");
+        return JSONModel.buildFailure("服务器忙，请稍后重试");
     }
 
     @Override

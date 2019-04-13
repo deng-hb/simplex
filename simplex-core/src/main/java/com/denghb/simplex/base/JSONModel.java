@@ -1,10 +1,5 @@
 package com.denghb.simplex.base;
 
-import lombok.Data;
-import lombok.ToString;
-
-@Data
-@ToString
 public class JSONModel<T> {
 
     private int code;
@@ -12,6 +7,10 @@ public class JSONModel<T> {
     private String msg;
 
     private T data;
+
+    public JSONModel() {
+
+    }
 
     private JSONModel(int code, String msg, T data) {
         this.code = code;
@@ -64,5 +63,12 @@ public class JSONModel<T> {
         this.data = data;
     }
 
-
+    @Override
+    public String toString() {
+        return "JSONModel{" +
+                "code=" + code +
+                ", msg='" + msg + '\'' +
+                ", data=" + data +
+                '}';
+    }
 }

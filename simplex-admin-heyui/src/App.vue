@@ -63,7 +63,7 @@
 export default {
   data() {
     return {
-      signed: true,
+      signed: null != window.localStorage.getItem('token'),
       headerFixed: false,
       siderFixed: false,
       siderCollapsed: false,
@@ -90,21 +90,17 @@ export default {
   methods: {
     doSignOut() {
       window.localStorage.removeItem('token')
-      console.log(window.localStorage.getItem('token'))
+      this.signed = false;
     },
     doSignIn() {
       window.localStorage.setItem('token','1231');
-
+      this.signed = true;
     }
   },
   computed: {
     
   },
   created() {
-    let _this = this;
-    setInterval(function() {
-      _this.signed = null != window.localStorage.getItem('token')
-    }, 1);
     
   },
 };
