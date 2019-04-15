@@ -12,6 +12,7 @@ import com.denghb.simplex.sys.service.SysMenuService;
 import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -46,27 +47,32 @@ public class SysMenuServiceImpl extends BaseService implements SysMenuService {
 
     @Override
     public List<SysMenuRes> list() {
-
-        List<SysMenuRes> list = db.select(SysMenuRes.class, "select * from tb_sys_menu where parent_id is null and deleted = 0 order by seq");
+        List<SysMenuRes> list = db.select(SysMenuRes.class, "select * from tb_sys_menu where deleted = 0 order by parent_id, seq asc");
         if (null == list || list.isEmpty()) {
             return null;
         }
+        List<SysMenuRes> menu = new ArrayList<>();
         for (SysMenuRes res : list) {
-
-            res.setChildren(listSubMenu(res));
+            if (null == res.getParentId()) {
+                menu.add(res);
+                findChildren(res, list);
+            }
         }
 
-        return list;
+        return menu;
     }
 
-    private List<SysMenuRes> listSubMenu(SysMenuRes res) {
-        List<SysMenuRes> list = db.select(SysMenuRes.class, "select * from tb_sys_menu where parent_id = ? and deleted = 0 order by seq", res.getId());
-        if (null == list || list.isEmpty()) {
-            return null;
+    @Override
+    public void findChildren(SysMenuRes res, List<SysMenuRes> list) {
+        if (null == res.getChildren()) {
+            res.setChildren(new ArrayList<SysMenuRes>());
         }
         for (SysMenuRes res2 : list) {
-            res2.setChildren(listSubMenu(res2));
+            if (res.getId().equals(res2.getParentId())) {
+                res.getChildren().add(res2);
+                findChildren(res2, list);
+            }
+
         }
-        return list;
     }
 }

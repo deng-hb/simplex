@@ -31,25 +31,25 @@ public class SysUserController {
     @Autowired
     private SysUserSignLogService sysUserSignLogService;
 
-    @PostMapping("/save")
+    @PostMapping(name = "保存用户", value = "/save")
     public JSONModel<String> save(@Valid @RequestBody SysUserReq req) {
         sysUserService.save(req);
         return JSONModel.buildSuccess("操作成功");
     }
 
-    @PostMapping("/del")
+    @PostMapping(name = "删除用户", value = "/del")
     public JSONModel<String> del(@Valid @RequestBody IdReq req) {
         sysUserService.del(req);
         return JSONModel.buildSuccess("操作成功");
     }
 
-    @PostMapping("/list")
+    @PostMapping(name = "用户列表", value = "/list")
     public JSONModel<PageRes<SysUserRes>> list(@Valid @RequestBody PageReq req) {
         PageRes<SysUserRes> res = sysUserService.list(req);
         return JSONModel.buildSuccess("ok", res);
     }
 
-    @PostMapping("/signIn")
+    @PostMapping(name = "登录", value = "/signIn")
     public JSONModel<SysUserSignInRes> signIn(@Valid @RequestBody SysUserSignInReq req) {
 
         boolean valid = captchaService.validate(req.getKey(), req.getCode());
@@ -69,13 +69,13 @@ public class SysUserController {
         return JSONModel.buildSuccess("ok", res);
     }
 
-    @PostMapping("/unlockSignError")
+    @PostMapping(name = "解锁用户登录", value = "/unlockSignError")
     public JSONModel<String> unlockSignError(@Valid @RequestBody IdReq req) {
         sysUserService.unlockSignError(req);
         return JSONModel.buildSuccess("操作成功");
     }
 
-    @GetMapping("/menu")
+    @GetMapping(name = "用户菜单", value = "/menu")
     public JSONModel<List<SysMenuRes>> menu() {
         List<SysMenuRes> res = sysUserService.menu();
         return JSONModel.buildSuccess("ok", res);

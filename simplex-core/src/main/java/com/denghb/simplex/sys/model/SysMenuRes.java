@@ -13,6 +13,8 @@ public class SysMenuRes {
 
     private Integer id;
 
+    private Integer parentId;
+
     private String title;
 
     private String path;

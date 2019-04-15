@@ -14,7 +14,7 @@ public class BaseController {
     @Autowired
     private CaptchaService captchaService;
 
-    @GetMapping("/captcha")
+    @GetMapping(name = "验证码", value = "/captcha")
     public JSONModel<CaptchaRes> captcha() {
         CaptchaRes res = captchaService.generate();
 

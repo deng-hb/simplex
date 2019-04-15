@@ -8,20 +8,25 @@ import com.denghb.simplex.holder.CredentialContextHolder;
 import com.denghb.simplex.model.IdReq;
 import com.denghb.simplex.model.PageReq;
 import com.denghb.simplex.model.PageRes;
-import com.denghb.simplex.sys.domain.*;
+import com.denghb.simplex.sys.domain.SysUser;
+import com.denghb.simplex.sys.domain.SysUserPwd;
+import com.denghb.simplex.sys.domain.SysUserToken;
 import com.denghb.simplex.sys.model.SysMenuRes;
 import com.denghb.simplex.sys.model.SysUserReq;
 import com.denghb.simplex.sys.model.SysUserRes;
 import com.denghb.simplex.sys.model.SysUserSignInRes;
 import com.denghb.simplex.sys.service.BaseService;
+import com.denghb.simplex.sys.service.SysMenuService;
 import com.denghb.simplex.sys.service.SysUserService;
 import com.denghb.simplex.utils.Md5Utils;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.RandomStringUtils;
 import org.springframework.beans.BeanUtils;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
 import java.util.UUID;
@@ -29,6 +34,9 @@ import java.util.UUID;
 @Slf4j
 @Service
 public class SysUserServiceImpl extends BaseService implements SysUserService {
+
+    @Autowired
+    private SysMenuService sysMenuService;
 
     @Override
     public void save(SysUserReq req) {
@@ -153,29 +161,18 @@ public class SysUserServiceImpl extends BaseService implements SysUserService {
         // 查询当前用户的菜单
         String sql = "select distinct sm.* from tb_sys_user_role sur left join tb_sys_role_menu srm on sur.sys_role_id = srm.sys_role_id " +
                 "left join tb_sys_menu sm on sm.id = srm.sys_menu_id " +
-                "where sur.sys_user_id = ? and sm.parent_id is null and srm.deleted = 0 and sur.deleted = 0 and sm.deleted = 0 order by seq";
+                "where sur.sys_user_id = ? and srm.deleted = 0 and sur.deleted = 0 and sm.deleted = 0 order by parent_id, seq asc";
         List<SysMenuRes> list = db.select(SysMenuRes.class, sql, sysUserId);
         if (null == list || list.isEmpty()) {
             return null;
         }
+        List<SysMenuRes> menu = new ArrayList<>();
         for (SysMenuRes res : list) {
-            res.setChildren(listSubMenu(sysUserId, res));
+            if (null == res.getParentId()) {
+                menu.add(res);
+                sysMenuService.findChildren(res, list);
+            }
         }
-        return list;
-    }
-
-    private List<SysMenuRes> listSubMenu(int sysUserId, SysMenuRes res) {
-        String sql = "select distinct sm.* from tb_sys_user_role sur left join tb_sys_role_menu srm on sur.sys_role_id = srm.sys_role_id " +
-                "left join tb_sys_menu sm on sm.id = srm.sys_menu_id " +
-                "where sur.sys_user_id = ? and sm.parent_id = ? and srm.deleted = 0 and sur.deleted = 0 and sm.deleted = 0  order by seq";
-        List<SysMenuRes> list = db.select(SysMenuRes.class, sql, sysUserId, res.getId());
-        if (null == list || list.isEmpty()) {
-            return null;
-        }
-        for (SysMenuRes res2 : list) {
-            res2.setChildren(listSubMenu(sysUserId, res2));
-        }
-
-        return list;
+        return menu;
     }
 }

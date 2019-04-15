@@ -39,7 +39,7 @@ public class AppErrorController implements ErrorController {
     /**
      * Supports other formats like JSON, XML
      */
-    @RequestMapping(value = ERROR_PATH)
+    @RequestMapping(name = "系统异常", value = ERROR_PATH)
     @ResponseBody
     public JSONModel error(HttpServletRequest request) {
         HttpStatus status = getStatus(request);

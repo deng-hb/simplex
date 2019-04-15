@@ -6,10 +6,14 @@ import com.alibaba.fastjson.TypeReference;
 import com.denghb.eorm.Eorm;
 import com.denghb.simplex.base.JSONModel;
 import com.denghb.simplex.base.SysException;
+import com.denghb.simplex.holder.Credential;
+import com.denghb.simplex.holder.CredentialContextHolder;
 import com.denghb.simplex.model.CaptchaRes;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
+import org.junit.After;
 import org.junit.Assert;
+import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -30,18 +34,18 @@ import org.springframework.test.web.servlet.result.MockMvcResultHandlers;
 @AutoConfigureMockMvc
 public class BaseTest {
 
-    public static String USER_AGENT = "Mozilla/5.0 TEST";
+    protected static String USER_AGENT = "Mozilla/5.0 TEST";
 
     @Autowired
-    public MockMvc mockMvc;
+    protected MockMvc mockMvc;
 
     @Autowired
-    private Eorm db;
+    protected Eorm db;
 
     /**
      * 获取有效的Token用于测试
      */
-    public String getAccessToken() {
+    protected String getAccessToken() {
         String sql = "select access_token from tb_sys_user_token where expire_time > now() limit 1";
         String accessToken = db.selectOne(String.class, sql);
         if (StringUtils.isBlank(accessToken)) {
@@ -49,6 +53,26 @@ public class BaseTest {
         }
         return accessToken;
     }
+
+    @Before
+    public void before() {
+        log.info("before");
+    }
+
+    @After
+    public void after() {
+        log.info("after");
+    }
+
+    protected void initTestCredential() {
+
+        Credential credential = new Credential();
+        credential.setId(100001);
+        credential.setName("管理员");
+        credential.setUsername("su");
+        CredentialContextHolder.set(credential);
+    }
+
 
     @Test
     public void captcha() throws Exception {

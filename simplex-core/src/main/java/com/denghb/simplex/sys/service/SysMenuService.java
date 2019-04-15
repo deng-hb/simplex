@@ -22,4 +22,6 @@ public interface SysMenuService {
 
     @Cacheable(cacheNames = {"sys-menu"})
     List<SysMenuRes> list();
+
+    void findChildren(SysMenuRes res, List<SysMenuRes> list);
 }
