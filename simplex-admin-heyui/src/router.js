@@ -18,9 +18,9 @@ export default new Router({
       // which is lazy-loaded when the route is visited.
       component: () => import(/* webpackChunkName: "about" */ './views/About.vue')
     }, {
-      path: '/sys/menu',
-      name: '系统菜单',
-      component: () => import('./views/sys/menu.vue')
+      path: '/sys/resource',
+      name: '系统资源',
+      component: () => import('./views/sys/resource.vue')
     }
     
   ]

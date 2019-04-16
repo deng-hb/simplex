@@ -1,7 +1,5 @@
 package com.denghb.simplex.test.service;
 
-import com.denghb.simplex.sys.model.SysApiReq;
-import com.denghb.simplex.sys.service.SysApiService;
 import com.denghb.simplex.test.BaseTest;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;

@@ -2,13 +2,20 @@ package com.denghb.simplex.sys.controller;
 
 import com.denghb.simplex.base.BizException;
 import com.denghb.simplex.base.JSONModel;
+import com.denghb.simplex.holder.Credential;
+import com.denghb.simplex.holder.CredentialContextHolder;
 import com.denghb.simplex.holder.RequestInfo;
 import com.denghb.simplex.holder.RequestInfoContextHolder;
 import com.denghb.simplex.model.IdReq;
 import com.denghb.simplex.model.PageReq;
 import com.denghb.simplex.model.PageRes;
 import com.denghb.simplex.service.CaptchaService;
-import com.denghb.simplex.sys.model.*;
+import com.denghb.simplex.sys.model.req.SysUserReq;
+import com.denghb.simplex.sys.model.req.SysUserSignInReq;
+import com.denghb.simplex.sys.model.req.SysUserSignLogReq;
+import com.denghb.simplex.sys.model.res.SysMenuRes;
+import com.denghb.simplex.sys.model.res.SysUserRes;
+import com.denghb.simplex.sys.model.res.SysUserSignInRes;
 import com.denghb.simplex.sys.service.SysUserService;
 import com.denghb.simplex.sys.service.SysUserSignLogService;
 import org.springframework.beans.BeanUtils;
@@ -77,7 +84,8 @@ public class SysUserController {
 
     @GetMapping(name = "用户菜单", value = "/menu")
     public JSONModel<List<SysMenuRes>> menu() {
-        List<SysMenuRes> res = sysUserService.menu();
+        Credential credential = CredentialContextHolder.get();
+        List<SysMenuRes> res = sysUserService.menu(credential.getId());
         return JSONModel.buildSuccess("ok", res);
     }
 }

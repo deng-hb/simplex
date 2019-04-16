@@ -4,17 +4,14 @@ import com.denghb.eorm.annotation.Ecolumn;
 import com.denghb.eorm.annotation.Etable;
 
 /**
- * 系统菜单
+ * 系统角色资源
  * DDL
  * 
  <pre>
-CREATE TABLE `tb_sys_menu` (
+CREATE TABLE `tb_sys_role_resource` (
   `id` int(11) unsigned NOT NULL AUTO_INCREMENT COMMENT 'ID',
-  `title` varchar(50) COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT '' COMMENT '标题',
-  `path` varchar(100) COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT '' COMMENT '路径',
-  `icon` varchar(50) COLLATE utf8mb4_unicode_ci DEFAULT NULL COMMENT '图标',
-  `parent_id` int(11) DEFAULT NULL COMMENT '父ID',
-  `seq` int(11) NOT NULL DEFAULT '0' COMMENT '排序,升序',
+  `sys_role_id` int(11) DEFAULT NULL COMMENT '角色ID',
+  `sys_resource_id` int(11) DEFAULT NULL COMMENT '资源ID',
   `operator` int(11) NOT NULL DEFAULT '0' COMMENT '操作人',
   `created_time` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
   `updated_time` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '更新时间',
@@ -24,13 +21,13 @@ CREATE TABLE `tb_sys_menu` (
   KEY `idx_created_time` (`created_time`),
   KEY `idx_updated_time` (`updated_time`),
   KEY `idx_deleted` (`deleted`)
-) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci COMMENT='系统菜单'
+) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci COMMENT='系统角色资源'
  <pre>
  * @author denghb
- * @generateTime Sat Apr 13 22:44:03 CST 2019
+ * @generateTime Tue Apr 16 21:00:00 CST 2019
  */
-@Etable(name="tb_sys_menu",database="simplex")
-public class SysMenu implements java.io.Serializable {
+@Etable(name="tb_sys_role_resource",database="simplex")
+public class SysRoleResource implements java.io.Serializable {
 
 	private static final long serialVersionUID = 1L;
 	
@@ -38,25 +35,13 @@ public class SysMenu implements java.io.Serializable {
 	@Ecolumn(name="id", primaryKey = true)
 	private Integer id;
 	
-	/** 标题 */
-	@Ecolumn(name="title")
-	private String title;
+	/** 角色ID */
+	@Ecolumn(name="sys_role_id")
+	private Integer sysRoleId;
 	
-	/** 路径 */
-	@Ecolumn(name="path")
-	private String path;
-	
-	/** 图标 */
-	@Ecolumn(name="icon")
-	private String icon;
-	
-	/** 父ID */
-	@Ecolumn(name="parent_id")
-	private Integer parentId;
-	
-	/** 排序,升序 */
-	@Ecolumn(name="seq")
-	private Integer seq;
+	/** 资源ID */
+	@Ecolumn(name="sys_resource_id")
+	private Integer sysResourceId;
 	
 	/** 操作人 */
 	@Ecolumn(name="operator")
@@ -87,44 +72,20 @@ public class SysMenu implements java.io.Serializable {
 		this.id = id;
 	}
 
-	public String getTitle() {
-		return title;
+	public Integer getSysRoleId() {
+		return sysRoleId;
 	}
 
-	public void setTitle(String title) {
-		this.title = title;
+	public void setSysRoleId(Integer sysRoleId) {
+		this.sysRoleId = sysRoleId;
 	}
 
-	public String getPath() {
-		return path;
+	public Integer getSysResourceId() {
+		return sysResourceId;
 	}
 
-	public void setPath(String path) {
-		this.path = path;
-	}
-
-	public String getIcon() {
-		return icon;
-	}
-
-	public void setIcon(String icon) {
-		this.icon = icon;
-	}
-
-	public Integer getParentId() {
-		return parentId;
-	}
-
-	public void setParentId(Integer parentId) {
-		this.parentId = parentId;
-	}
-
-	public Integer getSeq() {
-		return seq;
-	}
-
-	public void setSeq(Integer seq) {
-		this.seq = seq;
+	public void setSysResourceId(Integer sysResourceId) {
+		this.sysResourceId = sysResourceId;
 	}
 
 	public Integer getOperator() {
@@ -169,29 +130,17 @@ public class SysMenu implements java.io.Serializable {
 
 	@Override
 	public String toString() {
-		StringBuffer str = new StringBuffer("SysMenu [");
+		StringBuffer str = new StringBuffer("SysRoleResource [");
 		str.append("id=\"");
 		str.append(id);
 		str.append("\"");
 		str.append(",");
-		str.append("title=\"");
-		str.append(title);
+		str.append("sysRoleId=\"");
+		str.append(sysRoleId);
 		str.append("\"");
 		str.append(",");
-		str.append("path=\"");
-		str.append(path);
-		str.append("\"");
-		str.append(",");
-		str.append("icon=\"");
-		str.append(icon);
-		str.append("\"");
-		str.append(",");
-		str.append("parentId=\"");
-		str.append(parentId);
-		str.append("\"");
-		str.append(",");
-		str.append("seq=\"");
-		str.append(seq);
+		str.append("sysResourceId=\"");
+		str.append(sysResourceId);
 		str.append("\"");
 		str.append(",");
 		str.append("operator=\"");

@@ -22,10 +22,10 @@ CREATE TABLE `tb_sys_role` (
   KEY `idx_created_time` (`created_time`),
   KEY `idx_updated_time` (`updated_time`),
   KEY `idx_deleted` (`deleted`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci COMMENT='系统角色'
+) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci COMMENT='系统角色'
  <pre>
  * @author denghb
- * @generateTime Fri Apr 12 00:55:43 CST 2019
+ * @generateTime Tue Apr 16 20:37:55 CST 2019
  */
 @Etable(name="tb_sys_role",database="simplex")
 public class SysRole implements java.io.Serializable {

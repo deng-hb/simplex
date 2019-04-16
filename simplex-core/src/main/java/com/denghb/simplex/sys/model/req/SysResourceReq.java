@@ -1,19 +1,19 @@
-package com.denghb.simplex.sys.model;
+package com.denghb.simplex.sys.model.req;
 
 import lombok.Data;
-
-import java.util.List;
 
 /**
  * @Auther: denghb
  * @Date: 2019/4/13 21:38
  */
 @Data
-public class SysMenuRes {
+public class SysResourceReq {
 
     private Integer id;
 
     private Integer parentId;
+
+    private String type;
 
     private String title;
 
@@ -21,7 +21,7 @@ public class SysMenuRes {
 
     private String icon;
 
-    private List<SysMenuRes> children;
-
     private Integer seq;
+
+    private Integer opened;
 }

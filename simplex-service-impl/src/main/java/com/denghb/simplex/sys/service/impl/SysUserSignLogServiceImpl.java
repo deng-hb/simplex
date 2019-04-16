@@ -1,7 +1,7 @@
 package com.denghb.simplex.sys.service.impl;
 
 import com.denghb.simplex.sys.domain.SysUserSignLog;
-import com.denghb.simplex.sys.model.SysUserSignLogReq;
+import com.denghb.simplex.sys.model.req.SysUserSignLogReq;
 import com.denghb.simplex.sys.service.BaseService;
 import com.denghb.simplex.sys.service.SysUserSignLogService;
 import org.springframework.beans.BeanUtils;

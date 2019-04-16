@@ -4,14 +4,19 @@ import com.denghb.eorm.annotation.Ecolumn;
 import com.denghb.eorm.annotation.Etable;
 
 /**
- * 系统角色菜单
+ * 系统资源
  * DDL
  * 
  <pre>
-CREATE TABLE `tb_sys_role_menu` (
+CREATE TABLE `tb_sys_resource` (
   `id` int(11) unsigned NOT NULL AUTO_INCREMENT COMMENT 'ID',
-  `sys_role_id` int(11) DEFAULT NULL COMMENT '角色ID',
-  `sys_menu_id` int(11) DEFAULT NULL COMMENT '菜单ID',
+  `type` varchar(10) COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT '' COMMENT '类型',
+  `title` varchar(50) COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT '' COMMENT '标题',
+  `path` varchar(100) COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT '' COMMENT '路径',
+  `icon` varchar(50) COLLATE utf8mb4_unicode_ci DEFAULT NULL COMMENT '图标',
+  `parent_id` int(11) DEFAULT NULL COMMENT '父ID',
+  `opened` int(11) NOT NULL DEFAULT '0' COMMENT '公开',
+  `seq` int(11) NOT NULL DEFAULT '0' COMMENT '排序,升序',
   `operator` int(11) NOT NULL DEFAULT '0' COMMENT '操作人',
   `created_time` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
   `updated_time` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '更新时间',
@@ -21,13 +26,13 @@ CREATE TABLE `tb_sys_role_menu` (
   KEY `idx_created_time` (`created_time`),
   KEY `idx_updated_time` (`updated_time`),
   KEY `idx_deleted` (`deleted`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci COMMENT='系统角色菜单'
+) ENGINE=InnoDB AUTO_INCREMENT=12 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci COMMENT='系统资源'
  <pre>
  * @author denghb
- * @generateTime Fri Apr 12 00:55:43 CST 2019
+ * @generateTime Wed Apr 17 00:00:05 CST 2019
  */
-@Etable(name="tb_sys_role_menu",database="simplex")
-public class SysRoleMenu implements java.io.Serializable {
+@Etable(name="tb_sys_resource",database="simplex")
+public class SysResource implements java.io.Serializable {
 
 	private static final long serialVersionUID = 1L;
 	
@@ -35,13 +40,33 @@ public class SysRoleMenu implements java.io.Serializable {
 	@Ecolumn(name="id", primaryKey = true)
 	private Integer id;
 	
-	/** 角色ID */
-	@Ecolumn(name="sys_role_id")
-	private Integer sysRoleId;
+	/** 类型 */
+	@Ecolumn(name="type")
+	private String type;
 	
-	/** 菜单ID */
-	@Ecolumn(name="sys_menu_id")
-	private Integer sysMenuId;
+	/** 标题 */
+	@Ecolumn(name="title")
+	private String title;
+	
+	/** 路径 */
+	@Ecolumn(name="path")
+	private String path;
+	
+	/** 图标 */
+	@Ecolumn(name="icon")
+	private String icon;
+	
+	/** 父ID */
+	@Ecolumn(name="parent_id")
+	private Integer parentId;
+	
+	/** 公开 */
+	@Ecolumn(name="opened")
+	private Integer opened;
+	
+	/** 排序,升序 */
+	@Ecolumn(name="seq")
+	private Integer seq;
 	
 	/** 操作人 */
 	@Ecolumn(name="operator")
@@ -72,20 +97,60 @@ public class SysRoleMenu implements java.io.Serializable {
 		this.id = id;
 	}
 
-	public Integer getSysRoleId() {
-		return sysRoleId;
+	public String getType() {
+		return type;
 	}
 
-	public void setSysRoleId(Integer sysRoleId) {
-		this.sysRoleId = sysRoleId;
+	public void setType(String type) {
+		this.type = type;
 	}
 
-	public Integer getSysMenuId() {
-		return sysMenuId;
+	public String getTitle() {
+		return title;
 	}
 
-	public void setSysMenuId(Integer sysMenuId) {
-		this.sysMenuId = sysMenuId;
+	public void setTitle(String title) {
+		this.title = title;
+	}
+
+	public String getPath() {
+		return path;
+	}
+
+	public void setPath(String path) {
+		this.path = path;
+	}
+
+	public String getIcon() {
+		return icon;
+	}
+
+	public void setIcon(String icon) {
+		this.icon = icon;
+	}
+
+	public Integer getParentId() {
+		return parentId;
+	}
+
+	public void setParentId(Integer parentId) {
+		this.parentId = parentId;
+	}
+
+	public Integer getOpened() {
+		return opened;
+	}
+
+	public void setOpened(Integer opened) {
+		this.opened = opened;
+	}
+
+	public Integer getSeq() {
+		return seq;
+	}
+
+	public void setSeq(Integer seq) {
+		this.seq = seq;
 	}
 
 	public Integer getOperator() {
@@ -130,17 +195,37 @@ public class SysRoleMenu implements java.io.Serializable {
 
 	@Override
 	public String toString() {
-		StringBuffer str = new StringBuffer("SysRoleMenu [");
+		StringBuffer str = new StringBuffer("SysResource [");
 		str.append("id=\"");
 		str.append(id);
 		str.append("\"");
 		str.append(",");
-		str.append("sysRoleId=\"");
-		str.append(sysRoleId);
+		str.append("type=\"");
+		str.append(type);
 		str.append("\"");
 		str.append(",");
-		str.append("sysMenuId=\"");
-		str.append(sysMenuId);
+		str.append("title=\"");
+		str.append(title);
+		str.append("\"");
+		str.append(",");
+		str.append("path=\"");
+		str.append(path);
+		str.append("\"");
+		str.append(",");
+		str.append("icon=\"");
+		str.append(icon);
+		str.append("\"");
+		str.append(",");
+		str.append("parentId=\"");
+		str.append(parentId);
+		str.append("\"");
+		str.append(",");
+		str.append("opened=\"");
+		str.append(opened);
+		str.append("\"");
+		str.append(",");
+		str.append("seq=\"");
+		str.append(seq);
 		str.append("\"");
 		str.append(",");
 		str.append("operator=\"");

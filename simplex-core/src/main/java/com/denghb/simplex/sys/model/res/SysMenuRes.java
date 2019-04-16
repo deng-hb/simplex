@@ -1,4 +1,4 @@
-package com.denghb.simplex.sys.model;
+package com.denghb.simplex.sys.model.res;
 
 import lombok.Data;
 
@@ -7,7 +7,7 @@ import lombok.Data;
  * @Date: 2019/4/13 21:38
  */
 @Data
-public class SysMenuReq {
+public class SysMenuRes {
 
     private Integer id;
 

@@ -8,7 +8,7 @@ import com.denghb.simplex.holder.Credential;
 import com.denghb.simplex.holder.CredentialContextHolder;
 import com.denghb.simplex.holder.RequestInfo;
 import com.denghb.simplex.holder.RequestInfoContextHolder;
-import com.denghb.simplex.sys.model.SysAccessLogReq;
+import com.denghb.simplex.sys.model.req.SysAccessLogReq;
 import com.denghb.simplex.sys.service.AuthAccessService;
 import com.denghb.simplex.utils.WebUtils;
 import lombok.extern.slf4j.Slf4j;

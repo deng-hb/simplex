@@ -1,6 +1,6 @@
 package com.denghb.simplex.sys.service;
 
-import com.denghb.simplex.sys.model.SysUserSignLogReq;
+import com.denghb.simplex.sys.model.req.SysUserSignLogReq;
 
 /**
  * @Auther: denghb

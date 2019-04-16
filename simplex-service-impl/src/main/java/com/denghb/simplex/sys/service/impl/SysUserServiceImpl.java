@@ -2,6 +2,7 @@ package com.denghb.simplex.sys.service.impl;
 
 
 import com.denghb.simplex.base.BizException;
+import com.denghb.simplex.consts.SysResourceConsts;
 import com.denghb.simplex.consts.SysUserConsts;
 import com.denghb.simplex.holder.Credential;
 import com.denghb.simplex.holder.CredentialContextHolder;
@@ -11,12 +12,12 @@ import com.denghb.simplex.model.PageRes;
 import com.denghb.simplex.sys.domain.SysUser;
 import com.denghb.simplex.sys.domain.SysUserPwd;
 import com.denghb.simplex.sys.domain.SysUserToken;
-import com.denghb.simplex.sys.model.SysMenuRes;
-import com.denghb.simplex.sys.model.SysUserReq;
-import com.denghb.simplex.sys.model.SysUserRes;
-import com.denghb.simplex.sys.model.SysUserSignInRes;
+import com.denghb.simplex.sys.model.res.SysMenuRes;
+import com.denghb.simplex.sys.model.req.SysUserReq;
+import com.denghb.simplex.sys.model.res.SysUserRes;
+import com.denghb.simplex.sys.model.res.SysUserSignInRes;
 import com.denghb.simplex.sys.service.BaseService;
-import com.denghb.simplex.sys.service.SysMenuService;
+import com.denghb.simplex.sys.service.SysResourceService;
 import com.denghb.simplex.sys.service.SysUserService;
 import com.denghb.simplex.utils.Md5Utils;
 import lombok.extern.slf4j.Slf4j;
@@ -26,7 +27,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
 import java.util.UUID;
@@ -36,7 +36,7 @@ import java.util.UUID;
 public class SysUserServiceImpl extends BaseService implements SysUserService {
 
     @Autowired
-    private SysMenuService sysMenuService;
+    private SysResourceService sysResourceService;
 
     @Override
     public void save(SysUserReq req) {
@@ -155,24 +155,11 @@ public class SysUserServiceImpl extends BaseService implements SysUserService {
     }
 
     @Override
-    public List<SysMenuRes> menu() {
-        Credential credential = CredentialContextHolder.get();
-        int sysUserId = credential.getId();
+    public List<SysMenuRes> menu(int sysUserId) {
         // 查询当前用户的菜单
-        String sql = "select distinct sm.* from tb_sys_user_role sur left join tb_sys_role_menu srm on sur.sys_role_id = srm.sys_role_id " +
-                "left join tb_sys_menu sm on sm.id = srm.sys_menu_id " +
-                "where sur.sys_user_id = ? and srm.deleted = 0 and sur.deleted = 0 and sm.deleted = 0 order by parent_id, seq asc";
-        List<SysMenuRes> list = db.select(SysMenuRes.class, sql, sysUserId);
-        if (null == list || list.isEmpty()) {
-            return null;
-        }
-        List<SysMenuRes> menu = new ArrayList<>();
-        for (SysMenuRes res : list) {
-            if (null == res.getParentId()) {
-                menu.add(res);
-                sysMenuService.findChildren(res, list);
-            }
-        }
-        return menu;
+        String sql = "select distinct sr.* from tb_sys_user_role sur left join tb_sys_role_resource srr on sur.sys_role_id = srr.sys_role_id " +
+                "left join tb_sys_resource sr on sr.id = srr.sys_resource_id " +
+                "where sur.sys_user_id = ? and sr.type = ? and sur.deleted = 0 and sr.deleted = 0 and srr.deleted = 0 order by parent_id, seq asc";
+        return db.select(SysMenuRes.class, sql, sysUserId, SysResourceConsts.Type.MENU);
     }
 }

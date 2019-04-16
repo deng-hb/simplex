@@ -1,4 +1,4 @@
-package com.denghb.simplex.sys.model;
+package com.denghb.simplex.sys.model.res;
 
 import lombok.Data;
 

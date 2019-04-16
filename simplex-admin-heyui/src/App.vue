@@ -135,7 +135,39 @@ export default {
     },
     onMenu(data) {
       console.log(data);
-      this.$router.push(data.key);
+      if (data.children.length == 0)
+        this.$router.push(data.key);
+    },
+    initMenu() {
+      req.get('/sys/user/menu').then(res=>{
+        if (1 != res.code) {
+          return;
+        }
+        let list = res.data;
+        list = null == list ? [] : list;
+
+        function findChildren(item, list) {
+          item.children = [];
+          for (let i in list) {
+            let item2 = list[i];
+            if (item.id == item2.parentId) {
+              item.children.push(item2);
+              findChildren(item2, list)
+            }
+          }
+        }
+
+        let menu = [];
+        for (let i in list) {
+          let item = list[i];
+          if (null == item.parentId) {
+            findChildren(item, list);
+            menu.push(item);
+          }
+        }
+
+        this.menu = menu;
+      });
     }
   },
   computed: {
@@ -144,9 +176,7 @@ export default {
   created() {
     this.reloadCaptcha();
     if (this.signed) {
-      req.get('/sys/user/menu').then(res=>{
-        this.menu = res.data;
-      });
+      this.initMenu();
     }
   },
 };
