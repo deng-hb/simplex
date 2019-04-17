@@ -74,6 +74,7 @@ public class SysRoleServiceImpl extends BaseService implements SysRoleService {
 
         SysRoleResource ssr = new SysRoleResource();
         ssr.setOperator(sysUserId);
+        ssr.setSysRoleId(sysRoleId);
         for (Integer sysResourceId : sysResourceIds) {
             ssr.setId(null);
             ssr.setSysResourceId(sysResourceId);
