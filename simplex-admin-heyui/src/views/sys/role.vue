@@ -16,7 +16,7 @@
       </TableItem>
     </Table>
 
-    <Pagination  v-model="search" @change="onPageChange"></Pagination>
+    <Pagination  :cur="search.page" :total="total" @change="onPageChange"></Pagination>
 
     <Modal v-model="roleModal.opened" :closeOnMask="false" :hasCloseIcon="true" :hasDivider="true">
       <div slot="header">{{'' == roleModal.data.id?'编辑':'新建'}}角色</div>
@@ -56,9 +56,9 @@ export default {
     return {
       search: {
         page: 1,
-        total: 0,
         pageSize: 10
       },
+      total: 0,
       list: [],
       roleModal: {
         opened: false,
@@ -132,7 +132,7 @@ export default {
           return;
         }
         this.list = res.data.list;
-        this.search.total = res.data.total;
+        this.total = res.data.total;
       })
     },
     showAdd() {
@@ -157,8 +157,9 @@ export default {
       });
     },
     onPageChange(e) {
-      console.log(e);
-      this.search.page = 2;
+      this.search.page = e.cur;
+      this.search.pageSize = e.size;
+      this.initData();
     },
     showDel(id) {
       this.$Confirm('确定删除？', '删除后无法恢复').then(() => {
