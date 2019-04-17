@@ -1,6 +1,5 @@
 package com.denghb.simplex.sys.service.impl;
 
-import com.denghb.simplex.base.BizException;
 import com.denghb.simplex.holder.Credential;
 import com.denghb.simplex.holder.CredentialContextHolder;
 import com.denghb.simplex.sys.domain.SysResource;
@@ -38,9 +37,7 @@ public class SysResourceServiceImpl extends BaseService implements SysResourceSe
     public void del(int id) {
         Credential credential = CredentialContextHolder.get();
         int res = db.execute("update tb_sys_resource set operator = ?, deleted = 1 where id = ? and deleted = 0 ", credential.getId(), id);
-        if (1 != res) {
-            throw new BizException("删除失败");
-        }
+        assertChangeOne(res);
     }
 
     @Override

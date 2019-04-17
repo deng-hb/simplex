@@ -9,6 +9,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.ObjectError;
+import org.springframework.web.HttpRequestMethodNotSupportedException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -68,7 +69,11 @@ public class AppErrorController implements ErrorController {
 
             return JSONModel.buildFailure(status.value(), errors.get(0).getDefaultMessage());
         } else if (e instanceof HttpMessageNotReadableException) {
+            log.warn(e.getMessage(), e);
             return JSONModel.buildFailure(status.value(), "参数不匹配");
+        } else if (e instanceof HttpRequestMethodNotSupportedException) {
+            log.warn(e.getMessage(), e);
+            return JSONModel.buildFailure(status.value(), "请求方法错误");
         }
         log.error(e.getMessage(), e);
         // 未知错误

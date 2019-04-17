@@ -7,7 +7,7 @@ import lombok.Data;
  * @Date: 2019/4/13 21:38
  */
 @Data
-public class SysResourceRes {
+public class SysResourceRes extends SysBaseRes {
 
     private Integer id;
 

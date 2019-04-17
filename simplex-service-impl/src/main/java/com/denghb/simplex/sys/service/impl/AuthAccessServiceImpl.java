@@ -76,7 +76,7 @@ public class AuthAccessServiceImpl implements AuthAccessService {
         }
         // 校验uri权限
 
-        String sql = "select distinct sr.path from tb_sys_user_role sur left join tb_sys_role_resource srr on sur.sys_role_id = srr.sys_role_id left join tb_sys_resource sr on sr.id = srr.sys_resource_id where sur.sys_user_id = ? and sr.type = ? and sur.deleted = 0 and sr.opened = 0 and sr.deleted = 0 and srr.deleted = 0 and sr.path = ? ";
+        String sql = "select distinct sr.path from tb_sys_user su left join tb_sys_role_resource srr on su.sys_role_id = srr.sys_role_id left join tb_sys_resource sr on sr.id = srr.sys_resource_id where su.id = ? and sr.type = ? and su.deleted = 0 and sr.opened = 0 and sr.deleted = 0 and srr.deleted = 0 and sr.path = ? ";
         String s = db.selectOne(String.class, sql, sysUser.getId(), SysResourceConsts.Type.API, path);
         if (null == s) {
             throw new SysException(403, "账户无访问权限");

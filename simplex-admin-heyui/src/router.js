@@ -21,6 +21,14 @@ export default new Router({
       path: '/sys/resource',
       name: '系统资源',
       component: () => import('./views/sys/resource.vue')
+    }, {
+      path: '/sys/role',
+      name: '系统角色',
+      component: () => import('./views/sys/role.vue')
+    }, {
+      path: '/sys/user',
+      name: '系统用户',
+      component: () => import('./views/sys/user.vue')
     }
     
   ]

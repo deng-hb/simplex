@@ -1,10 +1,10 @@
 <template>
   <div>
     <p>
-      <Button @click="onCreate(0)" size="xs">新增顶级资源</Button>
-      <Button :disabled="null == current" @click="onCreate(1)" size="xs">新增子资源</Button>
-      <Button :disabled="null == current" @click="onUpdate" size="xs">编辑</Button>
-      <Button :disabled="null == current" @click="onDelete" size="xs">删除</Button>
+      <Button @click="showAdd(0)" size="xs">新增顶级资源</Button>
+      <Button :disabled="null == current" @click="showAdd(1)" size="xs">新增子资源</Button>
+      <Button :disabled="null == current" @click="showEdit" size="xs">编辑</Button>
+      <Button :disabled="null == current" @click="showDel" size="xs">删除</Button>
     </p>
     <Tree :option="param" ref="myTree" @select="select" :toggleOnSelect="false"></Tree>
 
@@ -66,7 +66,7 @@ export default {
 
             function showTitle(item) {
               item.treeIcon = item.icon
-              item.showTitle = item.title + (1 == item.opened?'公开':'') + ' ---- ' + item.seq;
+              item.showTitle = (1 == item.opened?'【已公开】':'') + item.title + ' ---- ' + item.seq;
               return item;
             }
 
@@ -124,7 +124,7 @@ export default {
       this.current = data;
       console.log(data);
     },
-    onCreate(e) {
+    showAdd(e) {
       this.resourceModal.data.id = ''
       this.resourceModal.data.title = ''
       this.resourceModal.data.path = ''
@@ -141,7 +141,7 @@ export default {
       }
       this.resourceModal.opened = true;
     },
-    onUpdate() {
+    showEdit() {
       this.resourceModal.data.id = this.current.id;
       this.resourceModal.data.title = this.current.title;
       this.resourceModal.data.path = this.current.path;
@@ -163,7 +163,7 @@ export default {
         }
       })
     },
-    onDelete() {
+    showDel() {
       this.$Confirm('确定删除？', '删除后无法恢复').then(() => {
         req.post('/sys/resource/del', {id:this.current.id}).then(res=>{
           this.$Message(res.msg);

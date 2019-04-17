@@ -1,6 +1,8 @@
 package com.denghb.simplex.sys.service.impl;
 
 
+import com.denghb.eorm.domain.Paging;
+import com.denghb.eorm.domain.PagingResult;
 import com.denghb.simplex.base.BizException;
 import com.denghb.simplex.consts.SysResourceConsts;
 import com.denghb.simplex.consts.SysUserConsts;
@@ -12,8 +14,8 @@ import com.denghb.simplex.model.PageRes;
 import com.denghb.simplex.sys.domain.SysUser;
 import com.denghb.simplex.sys.domain.SysUserPwd;
 import com.denghb.simplex.sys.domain.SysUserToken;
-import com.denghb.simplex.sys.model.res.SysMenuRes;
 import com.denghb.simplex.sys.model.req.SysUserReq;
+import com.denghb.simplex.sys.model.res.SysMenuRes;
 import com.denghb.simplex.sys.model.res.SysUserRes;
 import com.denghb.simplex.sys.model.res.SysUserSignInRes;
 import com.denghb.simplex.sys.service.BaseService;
@@ -83,7 +85,19 @@ public class SysUserServiceImpl extends BaseService implements SysUserService {
 
     @Override
     public PageRes<SysUserRes> list(PageReq req) {
-        return null;
+        Paging paging = new Paging() {
+            @Override
+            public String[] getSorts() {
+                return new String[]{};
+            }
+        };
+        paging.setPage(req.getPage());
+        paging.setPageSize(req.getPageSize());
+
+        String sql = "select su.*,su2.name operatorName from tb_sys_user su left join tb_sys_user su2 on su2.id = su.operator where su.deleted = 0 ";
+        PagingResult<SysUserRes> result = db.page(SysUserRes.class, new StringBuffer(sql), paging);
+
+        return new PageRes<SysUserRes>(result.getList(), result.getPaging().getTotal());
     }
 
     // 不需要加事务
@@ -157,9 +171,9 @@ public class SysUserServiceImpl extends BaseService implements SysUserService {
     @Override
     public List<SysMenuRes> menu(int sysUserId) {
         // 查询当前用户的菜单
-        String sql = "select distinct sr.* from tb_sys_user_role sur left join tb_sys_role_resource srr on sur.sys_role_id = srr.sys_role_id " +
+        String sql = "select distinct sr.* from tb_sys_user su left join tb_sys_role_resource srr on su.sys_role_id = srr.sys_role_id " +
                 "left join tb_sys_resource sr on sr.id = srr.sys_resource_id " +
-                "where sur.sys_user_id = ? and sr.type = ? and sur.deleted = 0 and sr.deleted = 0 and srr.deleted = 0 order by parent_id, seq asc";
+                "where su.id = ? and sr.type = ? and su.deleted = 0 and sr.deleted = 0 and srr.deleted = 0 order by parent_id, seq asc";
         return db.select(SysMenuRes.class, sql, sysUserId, SysResourceConsts.Type.MENU);
     }
 }
