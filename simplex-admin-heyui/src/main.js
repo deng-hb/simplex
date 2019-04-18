@@ -1,12 +1,14 @@
 import Vue from 'vue'
-import App from './App.vue'
-import router from './router'
-import store from './store'
 import HeyUI from 'heyui'
+import App from '@/App.vue'
+import router from '@/router'
+import store from '@/store'
+import { hasApi } from '@/hasApi'
 
 require("heyui/themes/index.css")
 
 Vue.use(HeyUI)
+Vue.use(hasApi)
 
 Vue.config.productionTip = false
 

@@ -67,13 +67,13 @@ public class AppErrorController implements ErrorController {
             MethodArgumentNotValidException mane = (MethodArgumentNotValidException) e;
             List<ObjectError> errors = mane.getBindingResult().getAllErrors();
 
-            return JSONModel.buildFailure(status.value(), errors.get(0).getDefaultMessage());
+            return JSONModel.buildFailure(errors.get(0).getDefaultMessage());
         } else if (e instanceof HttpMessageNotReadableException) {
             log.warn(e.getMessage(), e);
-            return JSONModel.buildFailure(status.value(), "参数不匹配");
+            return JSONModel.buildFailure("参数不匹配");
         } else if (e instanceof HttpRequestMethodNotSupportedException) {
             log.warn(e.getMessage(), e);
-            return JSONModel.buildFailure(status.value(), "请求方法错误");
+            return JSONModel.buildFailure("请求方法错误");
         }
         log.error(e.getMessage(), e);
         // 未知错误

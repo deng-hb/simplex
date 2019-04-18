@@ -2,8 +2,6 @@ package com.denghb.simplex.sys.controller;
 
 import com.denghb.simplex.base.BizException;
 import com.denghb.simplex.base.JSONModel;
-import com.denghb.simplex.holder.Credential;
-import com.denghb.simplex.holder.CredentialContextHolder;
 import com.denghb.simplex.holder.RequestInfo;
 import com.denghb.simplex.holder.RequestInfoContextHolder;
 import com.denghb.simplex.model.IdReq;
@@ -84,8 +82,13 @@ public class SysUserController {
 
     @GetMapping(name = "用户菜单", value = "/menu")
     public JSONModel<List<SysMenuRes>> menu() {
-        Credential credential = CredentialContextHolder.get();
-        List<SysMenuRes> res = sysUserService.menu(credential.getId());
+        List<SysMenuRes> res = sysUserService.menu();
+        return JSONModel.buildSuccess("ok", res);
+    }
+
+    @GetMapping(name = "用户接口", value = "/api")
+    public JSONModel<List<String>> api() {
+        List<String> res = sysUserService.api();
         return JSONModel.buildSuccess("ok", res);
     }
 }

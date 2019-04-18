@@ -1,6 +1,6 @@
 <template>
   <div>
-    <p><Button color="blue" icon="h-icon-plus" @click="showAdd()">新建</Button></p>
+    <p><Button v-hasApi="'POST/sys/role/save'" color="blue" icon="h-icon-plus" @click="showAdd()">新建</Button></p>
 
 
     <Table :datas="list" stripe checkbox>
@@ -9,9 +9,9 @@
       <TableItem title="描述" prop="description"></TableItem>
       <TableItem title="操作" align="center">
         <template slot-scope="{data}">
-          <Button @click="showEdit(data)">编辑</Button>
-          <Button @click="showDel(data.id)">删除</Button>
-          <Button @click="showResource(data)">分配菜单资源</Button>
+          <Button v-hasApi="'POST/sys/role/save'" @click="showEdit(data)">编辑</Button>
+          <Button v-hasApi="'POST/sys/role/del'" @click="showDel(data.id)">删除</Button>
+          <Button v-hasApi="'POST/sys/role/setSysResourceIds'" @click="showResource(data)">分配菜单资源</Button>
         </template>
       </TableItem>
     </Table>
@@ -148,6 +148,10 @@ export default {
       this.roleModal.opened = true;
     },
     doSave() {
+      let validResult = this.$refs.form.valid();
+      if (!validResult.result) {
+        return;
+      }
       req.post('/sys/role/save',this.roleModal.data).then(res=>{
         this.$Message(res.msg);
         if (1 == res.code) {

@@ -60,9 +60,9 @@ public class AuthAccessServiceImpl implements AuthAccessService {
         if (null == accessToken) {
             throw new SysException(403, "非法访问");
         }
-        SysUserToken sysUserToken = db.selectOne(SysUserToken.class, "select * from tb_sys_user_token where access_token = ? and deleted = 0", accessToken);
+        SysUserToken sysUserToken = db.selectOne(SysUserToken.class, "select * from tb_sys_user_token where access_token = ? and expire_time > now() and deleted = 0", accessToken);
         if (null == sysUserToken) {
-            throw new SysException(403, "非法访问");
+            throw new SysException(403, "登录失效，请重新登录");
         }
 
         if (!requestInfo.getIp().equals(sysUserToken.getIp())) {

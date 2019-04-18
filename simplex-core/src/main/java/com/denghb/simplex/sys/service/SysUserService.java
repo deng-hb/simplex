@@ -22,6 +22,8 @@ public interface SysUserService {
 
     void unlockSignError(IdReq req);
 
-    List<SysMenuRes> menu(int sysUserId);
+    List<SysMenuRes> menu();
+
+    List<String> api();
 
 }

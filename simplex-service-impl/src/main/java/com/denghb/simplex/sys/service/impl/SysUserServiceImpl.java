@@ -169,11 +169,19 @@ public class SysUserServiceImpl extends BaseService implements SysUserService {
     }
 
     @Override
-    public List<SysMenuRes> menu(int sysUserId) {
+    public List<SysMenuRes> menu() {
+        Credential credential = CredentialContextHolder.get();
         // 查询当前用户的菜单
         String sql = "select distinct sr.* from tb_sys_user su left join tb_sys_role_resource srr on su.sys_role_id = srr.sys_role_id " +
                 "left join tb_sys_resource sr on sr.id = srr.sys_resource_id " +
                 "where su.id = ? and sr.type = ? and su.deleted = 0 and sr.deleted = 0 and srr.deleted = 0 order by parent_id, seq asc";
-        return db.select(SysMenuRes.class, sql, sysUserId, SysResourceConsts.Type.MENU);
+        return db.select(SysMenuRes.class, sql, credential.getId(), SysResourceConsts.Type.MENU);
+    }
+
+    @Override
+    public List<String> api() {
+        Credential credential = CredentialContextHolder.get();
+        String sql = "select distinct sr.path from tb_sys_user su left join tb_sys_role_resource srr on su.sys_role_id = srr.sys_role_id left join tb_sys_resource sr on sr.id = srr.sys_resource_id where su.id = ? and sr.type = ? and su.deleted = 0 and sr.opened = 0 and sr.deleted = 0 and srr.deleted = 0 ";
+        return db.select(String.class, sql, credential.getId(), SysResourceConsts.Type.API);
     }
 }

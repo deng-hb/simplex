@@ -4,7 +4,7 @@ import Home from './views/Home.vue'
 
 Vue.use(Router)
 
-export default new Router({
+let router = new Router({
   routes: [
     {
       path: '/',
@@ -30,6 +30,21 @@ export default new Router({
       name: '系统用户',
       component: () => import('./views/sys/user.vue')
     }
-    
   ]
-})
+});
+
+router.beforeEach((to, from, next) => {
+  HeyUI.$LoadingBar.start();
+  if (to.meta && to.meta.title) {
+    document.title = to.meta.title + ' - 管理应用';
+  } else {
+    document.title = '管理系统';
+  }
+  next();
+});
+
+router.afterEach(() => {
+  HeyUI.$LoadingBar.success();
+});
+
+export default router;

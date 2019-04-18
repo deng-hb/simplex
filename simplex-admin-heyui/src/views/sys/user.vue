@@ -1,6 +1,6 @@
 <template>
   <div>
-    <p><Button color="blue" icon="h-icon-plus" @click="showAdd()">新建</Button></p>
+    <p><Button v-hasApi="'POST/sys/user/save'" color="blue" icon="h-icon-plus" @click="showAdd()">新建</Button></p>
 
 
     <Table :datas="list" stripe checkbox>
@@ -11,8 +11,8 @@
       <TableItem title="生日" prop="birthday"></TableItem>
       <TableItem title="操作" align="center">
         <template slot-scope="{data}">
-          <Button @click="showEdit(data)">编辑</Button>
-          <Button @click="showDel(data.id)">删除</Button>
+          <Button v-hasApi="'POST/sys/user/save'" @click="showEdit(data)">编辑</Button>
+          <Button v-hasApi="'POST/sys/user/del'" @click="showDel(data.id)">删除</Button>
         </template>
       </TableItem>
     </Table>
@@ -27,7 +27,7 @@
             <input type="text" v-model="userModal.data.name">
           </FormItem>
           <FormItem label="用户名" prop="username">
-            <input :disabled="'' != userModal.data.id" type="text" v-model="userModal.data.username">
+            <input :disabled="null != userModal.data.id" type="text" v-model="userModal.data.username">
           </FormItem>
           <FormItem label="邮箱" prop="email">
             <input type="text" v-model="userModal.data.email">
@@ -113,6 +113,10 @@ export default {
       this.userModal.opened = true;
     },
     doSave() {
+      let validResult = this.$refs.form.valid();
+      if (!validResult.result) {
+        return;
+      }
       req.post('/sys/user/save',this.userModal.data).then(res=>{
         this.$Message(res.msg);
         if (1 == res.code) {

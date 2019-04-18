@@ -1,12 +1,12 @@
 <template>
   <div>
     <p>
-      <Button @click="showAdd(0)" size="xs">新增顶级资源</Button>
-      <Button :disabled="null == current" @click="showAdd(1)" size="xs">新增子资源</Button>
-      <Button :disabled="null == current" @click="showEdit" size="xs">编辑</Button>
-      <Button :disabled="null == current" @click="showDel" size="xs">删除</Button>
+      <Button v-hasApi="'POST/sys/resource/save'" @click="showAdd(0)" size="xs">新增顶级资源</Button>
+      <Button v-hasApi="'POST/sys/resource/save'" :disabled="null == current" @click="showAdd(1)" size="xs">新增子资源</Button>
+      <Button v-hasApi="'POST/sys/resource/save'" :disabled="null == current" @click="showEdit" size="xs">编辑</Button>
+      <Button v-hasApi="'POST/sys/resource/del'" :disabled="null == current" @click="showDel" size="xs">删除</Button>
     </p>
-    <Tree :option="param" ref="myTree" @select="select" :toggleOnSelect="false"></Tree>
+    <Tree v-hasApi="'GET/sys/resource/list'" :option="param" ref="myTree" @select="select" :toggleOnSelect="false"></Tree>
 
 
     <Modal v-model="resourceModal.opened" :closeOnMask="false" :hasCloseIcon="true" :hasDivider="true">
@@ -155,6 +155,10 @@ export default {
     },
     doSave() {
 
+      let validResult = this.$refs.form.valid();
+      if (!validResult.result) {
+        return;
+      }
       req.post('/sys/resource/save',this.resourceModal.data).then(res=>{
         this.$Message(res.msg);
         if (1 == res.code) {

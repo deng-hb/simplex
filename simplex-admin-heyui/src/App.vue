@@ -53,7 +53,7 @@
 
 
 <script>
-const md5 = require('md5');
+const MD5 = require('md5.js')
 
 export default {
   data() {
@@ -88,6 +88,7 @@ export default {
   methods: {
     doSignOut() {
       window.localStorage.removeItem('token')
+      window.localStorage.removeItem('APIs')
       this.signed = false;
     },
     doSignIn() {
@@ -106,8 +107,8 @@ export default {
         this.$Message.error('请输入验证码');
         return;
       }
-      let password2 = md5(password);
-      password2 = md5(password2);
+      let password2 = new MD5().update(password).digest('hex')
+      password2 = new MD5().update(password2).digest('hex')
       
       let data = {username:username,password:password2,code:code,key:this.signIn.key};
 
@@ -120,6 +121,7 @@ export default {
         this.signIn.password = '';
         window.localStorage.setItem('token', res.data.token);
         this.signed = true;
+        this.initMenu();
       })
     },
     reloadCaptcha() {
@@ -177,7 +179,14 @@ export default {
     this.reloadCaptcha();
     if (this.signed) {
       this.initMenu();
+      req.get('/sys/user/api').then(res=>{
+        window.localStorage.setItem('APIs', res.data);
+      })
     }
+    let _this = this;
+    setInterval(() => {
+      _this.signed = null != window.localStorage.getItem('token')
+    }, 1);
   },
 };
 </script>

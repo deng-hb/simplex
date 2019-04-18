@@ -23,6 +23,11 @@ axios.interceptors.request.use(
 axios.interceptors.response.use(
   response => {
     console.log(response);
+    let res = response.data;
+    if (res.code > 2) {
+      window.localStorage.removeItem('token');
+      
+    }
     return response;
   },
   error => {

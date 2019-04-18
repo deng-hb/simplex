@@ -3,6 +3,7 @@ package com.denghb.simplex.sys.model.req;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
+import org.hibernate.validator.constraints.Email;
 
 import javax.validation.constraints.NotNull;
 import java.util.Date;
@@ -24,6 +25,7 @@ public class SysUserReq {
     private Date birthday;
 
     @NotNull(message = "邮箱不能为空")
+    @Email(message = "邮箱格式错误")
     private String email;
 
     @NotNull(message = "角色不能为空")
