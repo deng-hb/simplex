@@ -5,6 +5,7 @@ import com.denghb.simplex.model.IdReq;
 import com.denghb.simplex.model.PageReq;
 import com.denghb.simplex.model.PageRes;
 import com.denghb.simplex.sys.model.req.SysRoleReq;
+import com.denghb.simplex.sys.model.res.SysRoleInfoRes;
 import com.denghb.simplex.sys.model.res.SysRoleRes;
 import com.denghb.simplex.sys.service.SysRoleService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -55,5 +56,11 @@ public class SysRoleController {
         return JSONModel.buildSuccess("ok", list);
     }
 
+    @GetMapping(name = "角", value = "/list")
+    public JSONModel<List<SysRoleInfoRes>> list() {
+
+        List<SysRoleInfoRes> res = sysRoleService.list();
+        return JSONModel.buildSuccess("ok", res);
+    }
 
 }

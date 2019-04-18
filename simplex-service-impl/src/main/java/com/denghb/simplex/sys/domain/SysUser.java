@@ -10,11 +10,14 @@ import com.denghb.eorm.annotation.Etable;
  <pre>
 CREATE TABLE `tb_sys_user` (
   `id` int(11) unsigned NOT NULL AUTO_INCREMENT COMMENT 'ID',
-  `username` varchar(50) COLLATE utf8mb4_unicode_ci DEFAULT NULL COMMENT '账号',
-  `name` varchar(20) COLLATE utf8mb4_unicode_ci DEFAULT NULL COMMENT '姓名',
-  `status` int(11) NOT NULL COMMENT '状态1正常，2:冻结',
+  `username` varchar(50) COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT '' COMMENT '账号',
+  `name` varchar(20) COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT '' COMMENT '姓名',
+  `birthday` date DEFAULT NULL COMMENT '生日',
+  `email` varchar(50) COLLATE utf8mb4_unicode_ci DEFAULT NULL COMMENT '邮箱',
+  `status` int(11) NOT NULL DEFAULT '1' COMMENT '状态1正常，2:冻结',
   `sign_error_size` int(11) NOT NULL DEFAULT '0' COMMENT '登录错误次数',
-  `sign_error_limit` int(11) NOT NULL DEFAULT '5' COMMENT '登录错误上线',
+  `sign_error_limit` int(11) NOT NULL DEFAULT '5' COMMENT '登录错误上限',
+  `sys_role_id` int(11) DEFAULT NULL COMMENT '角色ID',
   `operator` int(11) NOT NULL DEFAULT '0' COMMENT '操作人',
   `created_time` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '插入时间',
   `updated_time` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '更新时间',
@@ -25,10 +28,10 @@ CREATE TABLE `tb_sys_user` (
   KEY `idx_created_time` (`created_time`),
   KEY `idx_updated_time` (`updated_time`),
   KEY `idx_deleted` (`deleted`)
-) ENGINE=InnoDB AUTO_INCREMENT=100001 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci COMMENT='系统用户'
+) ENGINE=InnoDB AUTO_INCREMENT=100002 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci COMMENT='系统用户'
  <pre>
  * @author denghb
- * @generateTime Sat Apr 13 17:03:21 CST 2019
+ * @generateTime Thu Apr 18 23:10:38 CST 2019
  */
 @Etable(name="tb_sys_user",database="simplex")
 public class SysUser implements java.io.Serializable {
@@ -47,6 +50,14 @@ public class SysUser implements java.io.Serializable {
 	@Ecolumn(name="name")
 	private String name;
 	
+	/** 生日 */
+	@Ecolumn(name="birthday")
+	private java.util.Date birthday;
+	
+	/** 邮箱 */
+	@Ecolumn(name="email")
+	private String email;
+	
 	/** 状态1正常，2:冻结 */
 	@Ecolumn(name="status")
 	private Integer status;
@@ -55,9 +66,13 @@ public class SysUser implements java.io.Serializable {
 	@Ecolumn(name="sign_error_size")
 	private Integer signErrorSize;
 	
-	/** 登录错误上线 */
+	/** 登录错误上限 */
 	@Ecolumn(name="sign_error_limit")
 	private Integer signErrorLimit;
+	
+	/** 角色ID */
+	@Ecolumn(name="sys_role_id")
+	private Integer sysRoleId;
 	
 	/** 操作人 */
 	@Ecolumn(name="operator")
@@ -104,6 +119,22 @@ public class SysUser implements java.io.Serializable {
 		this.name = name;
 	}
 
+	public java.util.Date getBirthday() {
+		return birthday;
+	}
+
+	public void setBirthday(java.util.Date birthday) {
+		this.birthday = birthday;
+	}
+
+	public String getEmail() {
+		return email;
+	}
+
+	public void setEmail(String email) {
+		this.email = email;
+	}
+
 	public Integer getStatus() {
 		return status;
 	}
@@ -126,6 +157,14 @@ public class SysUser implements java.io.Serializable {
 
 	public void setSignErrorLimit(Integer signErrorLimit) {
 		this.signErrorLimit = signErrorLimit;
+	}
+
+	public Integer getSysRoleId() {
+		return sysRoleId;
+	}
+
+	public void setSysRoleId(Integer sysRoleId) {
+		this.sysRoleId = sysRoleId;
 	}
 
 	public Integer getOperator() {
@@ -183,6 +222,14 @@ public class SysUser implements java.io.Serializable {
 		str.append(name);
 		str.append("\"");
 		str.append(",");
+		str.append("birthday=\"");
+		str.append(birthday);
+		str.append("\"");
+		str.append(",");
+		str.append("email=\"");
+		str.append(email);
+		str.append("\"");
+		str.append(",");
 		str.append("status=\"");
 		str.append(status);
 		str.append("\"");
@@ -193,6 +240,10 @@ public class SysUser implements java.io.Serializable {
 		str.append(",");
 		str.append("signErrorLimit=\"");
 		str.append(signErrorLimit);
+		str.append("\"");
+		str.append(",");
+		str.append("sysRoleId=\"");
+		str.append(sysRoleId);
 		str.append("\"");
 		str.append(",");
 		str.append("operator=\"");

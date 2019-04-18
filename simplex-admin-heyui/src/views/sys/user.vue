@@ -5,13 +5,14 @@
 
     <Table :datas="list" stripe checkbox>
       <TableItem title="No." :tooltip="true"><template slot-scope="{index}">{{(search.page - 1) * search.pageSize + index + 1}}</template></TableItem>
-      <TableItem title="姓名" prop="name" sort="auto"></TableItem>
+      <TableItem title="姓名" prop="name" ></TableItem>
       <TableItem title="用户名" prop="username"></TableItem>
+      <TableItem title="邮箱" prop="email"></TableItem>
+      <TableItem title="生日" prop="birthday"></TableItem>
       <TableItem title="操作" align="center">
         <template slot-scope="{data}">
           <Button @click="showEdit(data)">编辑</Button>
           <Button @click="showDel(data.id)">删除</Button>
-          <Button @click="showRole(data)">设置角色</Button>
         </template>
       </TableItem>
     </Table>
@@ -22,11 +23,20 @@
       <div slot="header">{{'' == userModal.data.id?'编辑':'新建'}}用户</div>
       <div >
         <Form ref="form" :labelWidth="110" :rules="userModal.rules" :model="userModal.data" >
-          <FormItem label="名称" prop="name">
+          <FormItem label="姓名" prop="name">
             <input type="text" v-model="userModal.data.name">
           </FormItem>
-          <FormItem label="描述" prop="description">
-            <input type="text" v-model="userModal.data.description">
+          <FormItem label="用户名" prop="username">
+            <input :disabled="'' != userModal.data.id" type="text" v-model="userModal.data.username">
+          </FormItem>
+          <FormItem label="邮箱" prop="email">
+            <input type="text" v-model="userModal.data.email">
+          </FormItem>
+          <FormItem label="生日" prop="birthday">
+            <DatePicker v-model="userModal.data.birthday"></DatePicker>
+          </FormItem>
+          <FormItem label="角色" prop="sysRoleId">
+            <Select v-model="userModal.data.sysRoleId" keyName="id" titleName="name" :datas="sysRoles" ></Select>
           </FormItem>
           
         </Form>
@@ -53,17 +63,25 @@ export default {
       userModal: {
         opened: false,
         data: {
-          name:'',
-          description:''
+          name: '',
+          username: '',
+          email: '',
+          birthday: '',
+          sysRoleId: ''
         },
         rules: {
-          required: ['name', 'description']
+          required: ['name', 'username', 'email', 'birthday', 'sysRoleId']
         }
-      }
+      },
+      sysRoles: []
     };
   },
   created() {
     this.initData();
+
+    req.get('/sys/role/list').then(res=>{
+      this.sysRoles = res.data;
+    })
   },
   methods: {
     initData() {
@@ -79,13 +97,19 @@ export default {
     showAdd() {
       this.userModal.data.id = null;
       this.userModal.data.name = '';
-      this.userModal.data.description = '';
+      this.userModal.data.username = '';
+      this.userModal.data.email = '';
+      this.userModal.data.birthday = '';
+      this.userModal.data.sysRoleId = '';
       this.userModal.opened = true;
     },
     showEdit(item) {
       this.userModal.data.id = item.id;
       this.userModal.data.name = item.name;
-      this.userModal.data.description = item.description;
+      this.userModal.data.username = item.username;
+      this.userModal.data.email = item.email;
+      this.userModal.data.birthday = item.birthday;
+      this.userModal.data.sysRoleId = item.sysRoleId;
       this.userModal.opened = true;
     },
     doSave() {

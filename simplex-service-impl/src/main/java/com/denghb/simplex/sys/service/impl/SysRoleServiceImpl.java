@@ -9,6 +9,7 @@ import com.denghb.simplex.model.PageRes;
 import com.denghb.simplex.sys.domain.SysRole;
 import com.denghb.simplex.sys.domain.SysRoleResource;
 import com.denghb.simplex.sys.model.req.SysRoleReq;
+import com.denghb.simplex.sys.model.res.SysRoleInfoRes;
 import com.denghb.simplex.sys.model.res.SysRoleRes;
 import com.denghb.simplex.sys.service.BaseService;
 import com.denghb.simplex.sys.service.SysRoleService;
@@ -87,5 +88,10 @@ public class SysRoleServiceImpl extends BaseService implements SysRoleService {
     public List<Integer> listSysResourceId(int sysRoleId) {
         String sql = "select sys_resource_id from tb_sys_role_resource where sys_role_id = ? and deleted = 0";
         return db.select(Integer.class, sql, sysRoleId);
+    }
+
+    @Override
+    public List<SysRoleInfoRes> list() {
+        return db.select(SysRoleInfoRes.class, "select id,name from tb_sys_role where deleted = 0");
     }
 }

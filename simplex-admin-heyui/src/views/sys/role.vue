@@ -187,7 +187,7 @@ export default {
         this.roleResourceModal.resourceIds).then(res=>{
         this.$Message(res.msg);
         if (1 == res.code) {
-          this.roleResourceModal.opened = true;
+          this.roleResourceModal.opened = false;
         }
       })
       
