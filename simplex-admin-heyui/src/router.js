@@ -29,6 +29,10 @@ let router = new Router({
       path: '/sys/user',
       name: '系统用户',
       component: () => import('./views/sys/user.vue')
+    }, {
+      path: '/sys/accessLog',
+      name: '访问日志',
+      component: () => import('./views/sys/accessLog.vue')
     }
   ]
 });

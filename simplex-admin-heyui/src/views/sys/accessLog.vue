@@ -1,0 +1,58 @@
+<template>
+  <div>
+
+    <Table :datas="list" stripe checkbox>
+      <TableItem title="No." :tooltip="true"><template slot-scope="{index}">{{(search.page - 1) * search.pageSize + index + 1}}</template></TableItem>
+      <TableItem title="链接" prop="url" ></TableItem>
+      <TableItem title="方法" prop="method"></TableItem>
+      <TableItem title="IP" prop="ip"></TableItem>
+      <TableItem title="开始时间" prop="startTime"></TableItem>
+      <TableItem title="结束时间" prop="endTime"></TableItem>
+      <TableItem title="Token" prop="accessToken"></TableItem>
+      <template slot="expand" slot-scope="{index, data}">
+        {{data.userAgent}}
+      </template>
+    </Table>
+
+    <Pagination  :cur="search.page" :total="total" @change="onPageChange"></Pagination>
+  </div>
+</template>
+
+<script>
+export default {
+  data() {
+    return {
+      search: {
+        page: 1,
+        pageSize: 10
+      },
+      total: 0,
+      list: []
+    };
+  },
+  created() {
+    this.initData();
+  },
+  methods: {
+    initData() {
+      req.post('/sys/access/log/list',this.search).then(res=>{
+        if (1 != res.code) {
+          this.$Message(res.msg);
+          return;
+        }
+        let list = res.data.list;
+        for (let i in list) {
+          list[i]._expand = true;
+        }
+        this.list = list;
+        this.total = res.data.total;
+      })
+    },
+    onPageChange(e) {
+      this.search.page = e.cur;
+      this.search.pageSize = e.size;
+      this.initData();
+    }
+  }
+};
+</script>

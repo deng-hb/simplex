@@ -1,5 +1,6 @@
 package com.denghb.simplex.sys.model.res;
 
+import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 
 /**
@@ -12,4 +13,7 @@ public class SysRoleRes extends SysBaseRes {
     private String name;
 
     private String description;
+
+    @ApiModelProperty("操作人姓名")
+    private String operatorName;
 }

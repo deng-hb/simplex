@@ -56,7 +56,7 @@ public class SysRoleController {
         return JSONModel.buildSuccess("ok", list);
     }
 
-    @GetMapping(name = "角", value = "/list")
+    @GetMapping(name = "角基本信息", value = "/list")
     public JSONModel<List<SysRoleInfoRes>> list() {
 
         List<SysRoleInfoRes> res = sysRoleService.list();

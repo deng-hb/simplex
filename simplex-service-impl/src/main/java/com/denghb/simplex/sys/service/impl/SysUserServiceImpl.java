@@ -96,6 +96,8 @@ public class SysUserServiceImpl extends BaseService implements SysUserService {
         assertChangeOne(res);
         res = db.execute("update tb_sys_user_pwd set deleted = 1 where sys_user_id = ? and deleted = 0 ", sysUserId);
         assertChangeOne(res);
+
+        signOut(sysUserId);
     }
 
     @Override
@@ -111,8 +113,14 @@ public class SysUserServiceImpl extends BaseService implements SysUserService {
 
         String sql = "select su.*,su2.name operatorName from tb_sys_user su left join tb_sys_user su2 on su2.id = su.operator where su.deleted = 0 ";
         PagingResult<SysUserRes> result = db.page(SysUserRes.class, new StringBuffer(sql), paging);
+        List<SysUserRes> list = result.getList();
+        if (null != list) {
+            for (SysUserRes res : list) {
+                res.setStatusName(Consts.get(SysUserConsts.Status.class, res.getStatus()));
+            }
+        }
 
-        return new PageRes<SysUserRes>(result.getList(), result.getPaging().getTotal());
+        return new PageRes<SysUserRes>(list, result.getPaging().getTotal());
     }
 
     private boolean validatePassword(int sysUserId, String password) {
@@ -231,12 +239,14 @@ public class SysUserServiceImpl extends BaseService implements SysUserService {
         signOut(sysUserId);
     }
 
+    @Transactional
     @Override
     public void disabled(int sysUserId) {
+        Credential credential = CredentialContextHolder.get();
         signOut(sysUserId);
 
-        String sql = "update tb_sys_user_pwd set status = ? where sys_user_id = ? and status = ? and deleted = 0";
-        int res = db.execute(sql, SysUserConsts.Status.DISABLED, sysUserId, SysUserConsts.Status.NORMAL);
+        String sql = "update tb_sys_user set status = ?, operator = ? where id = ? and status = ? and deleted = 0";
+        int res = db.execute(sql, SysUserConsts.Status.DISABLED, credential.getId(), sysUserId, SysUserConsts.Status.NORMAL);
         assertChangeOne(res);
     }
 
@@ -247,8 +257,9 @@ public class SysUserServiceImpl extends BaseService implements SysUserService {
 
     @Override
     public void enabled(int sysUserId) {
-        String sql = "update tb_sys_user_pwd set status = ? where sys_user_id = ? and status = ? and deleted = 0";
-        int res = db.execute(sql, SysUserConsts.Status.NORMAL, sysUserId, SysUserConsts.Status.DISABLED);
+        Credential credential = CredentialContextHolder.get();
+        String sql = "update tb_sys_user set status = ?, operator = ? where id = ? and status = ? and deleted = 0";
+        int res = db.execute(sql, SysUserConsts.Status.NORMAL, credential.getId(), sysUserId, SysUserConsts.Status.DISABLED);
         assertChangeOne(res);
     }
 }

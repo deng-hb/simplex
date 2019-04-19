@@ -1,6 +1,7 @@
 package com.denghb.simplex.sys.model.res;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
+import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 
 import java.util.Date;
@@ -22,4 +23,11 @@ public class SysUserRes extends SysBaseRes {
     private String email;
 
     private Integer sysRoleId;
+
+    private Integer status;
+
+    private String statusName;
+
+    @ApiModelProperty("操作人姓名")
+    private String operatorName;
 }

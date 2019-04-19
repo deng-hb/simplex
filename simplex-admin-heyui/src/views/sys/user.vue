@@ -13,6 +13,9 @@
         <template slot-scope="{data}">
           <Button v-hasApi="'POST/sys/user/save'" @click="showEdit(data)">编辑</Button>
           <Button v-hasApi="'POST/sys/user/del'" @click="showDel(data.id)">删除</Button>
+          <Button v-hasApi="'POST/sys/user/unlockSignError'" v-if="data.status == 2" @click="showUnlockSignError(data.id)">解锁</Button>
+          <Button v-hasApi="'POST/sys/user/enabled'" v-if="data.status == 3" @click="showEnabled(data.id)">启用</Button>
+          <Button v-hasApi="'POST/sys/user/disabled'" v-if="data.status != 3" @click="showDisabled(data.id)">禁用</Button>
         </template>
       </TableItem>
     </Table>
@@ -135,14 +138,44 @@ export default {
         req.post('/sys/user/del', {id:id}).then(res=>{
           this.$Message(res.msg);
           if (1 == res.code) {
-            this.$refs.myTree.refresh();
+            this.initData();
           }
         })
       }).catch(() => {
       });
     },
-    showRole(id) {
-
+    showDisabled(id) {
+      this.$Confirm('确定禁用用户？', '').then(() => {
+        req.post('/sys/user/disabled', {id:id}).then(res=>{
+          this.$Message(res.msg);
+          if (1 == res.code) {
+            this.initData();
+          }
+        })
+      }).catch(() => {
+      });
+    },
+    showEnabled(id) {
+      this.$Confirm('确定启用用户？', '').then(() => {
+        req.post('/sys/user/enabled', {id:id}).then(res=>{
+          this.$Message(res.msg);
+          if (1 == res.code) {
+            this.initData();
+          }
+        })
+      }).catch(() => {
+      });
+    },
+    showUnlockSignError(id) {
+      this.$Confirm('确定解锁用户？', '').then(() => {
+        req.post('/sys/user/unlockSignError', {id:id}).then(res=>{
+          this.$Message(res.msg);
+          if (1 == res.code) {
+            this.initData();
+          }
+        })
+      }).catch(() => {
+      });
     }
   }
 };
