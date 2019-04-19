@@ -15,7 +15,7 @@ public interface AuthAccessService {
     @Cacheable(cacheNames = "AuthAccessService.isOpened", key = "'AuthAccessService.isOpened#' + #method + #uri")
     boolean isOpened(String method, String uri);
 
-    @Cacheable(cacheNames = "AuthAccessService.validate", key = "'AuthAccessService.validate#' + #requestInfo.accessToken + #requestInfo.ip + #requestInfo.uri")
-    Credential validate(RequestInfo requestInfo) throws SysException;
+    @Cacheable(cacheNames = "AuthAccessService.validate", key = "'AuthAccessService.validate#' + #req.accessToken + #req.ip + #req.method + #req.uri")
+    Credential validate(RequestInfo req) throws SysException;
 
 }

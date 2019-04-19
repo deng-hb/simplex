@@ -1,6 +1,5 @@
 package com.denghb.simplex.sys.service.impl;
 
-import com.denghb.eorm.Eorm;
 import com.denghb.simplex.base.SysException;
 import com.denghb.simplex.consts.SysResourceConsts;
 import com.denghb.simplex.consts.SysUserConsts;
@@ -11,20 +10,17 @@ import com.denghb.simplex.sys.domain.SysUser;
 import com.denghb.simplex.sys.domain.SysUserToken;
 import com.denghb.simplex.sys.model.req.SysAccessLogReq;
 import com.denghb.simplex.sys.service.AuthAccessService;
+import com.denghb.simplex.sys.service.BaseService;
 import org.springframework.beans.BeanUtils;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.Date;
 import java.util.regex.Pattern;
 
 @Service
-public class AuthAccessServiceImpl implements AuthAccessService {
+public class AuthAccessServiceImpl extends BaseService implements AuthAccessService {
 
     private final static Pattern IGNORE_EXT = Pattern.compile(".*(.html|.png|.svg|.txt|.js|.css|.ico|.ttf|.eot|.woff|.map)$", Pattern.CASE_INSENSITIVE);
-
-    @Autowired
-    private Eorm db;
 
     @Override
     public int addLog(SysAccessLogReq req) {
