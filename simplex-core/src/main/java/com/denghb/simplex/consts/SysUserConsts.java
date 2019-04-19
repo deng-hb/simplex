@@ -15,5 +15,8 @@ public class SysUserConsts {
 
         @ConstTag("登录密码错误过多锁住")
         public static int LOCK_SIGN_ERR = 2;
+
+        @ConstTag("禁用")
+        public static int DISABLED = 3;
     }
 }

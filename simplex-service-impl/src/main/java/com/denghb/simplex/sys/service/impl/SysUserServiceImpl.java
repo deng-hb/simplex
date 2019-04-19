@@ -4,17 +4,18 @@ package com.denghb.simplex.sys.service.impl;
 import com.denghb.eorm.domain.Paging;
 import com.denghb.eorm.domain.PagingResult;
 import com.denghb.simplex.base.BizException;
+import com.denghb.simplex.base.Consts;
 import com.denghb.simplex.consts.SysResourceConsts;
 import com.denghb.simplex.consts.SysUserConsts;
 import com.denghb.simplex.holder.Credential;
 import com.denghb.simplex.holder.CredentialContextHolder;
-import com.denghb.simplex.model.IdReq;
 import com.denghb.simplex.model.PageReq;
 import com.denghb.simplex.model.PageRes;
 import com.denghb.simplex.sys.domain.SysUser;
 import com.denghb.simplex.sys.domain.SysUserPwd;
 import com.denghb.simplex.sys.domain.SysUserToken;
 import com.denghb.simplex.sys.model.req.SysUserReq;
+import com.denghb.simplex.sys.model.req.SysUserUpdatePasswordReq;
 import com.denghb.simplex.sys.model.res.SysMenuRes;
 import com.denghb.simplex.sys.model.res.SysUserRes;
 import com.denghb.simplex.sys.model.res.SysUserSignInRes;
@@ -40,10 +41,13 @@ public class SysUserServiceImpl extends BaseService implements SysUserService {
     @Autowired
     private SysResourceService sysResourceService;
 
+    @Transactional
     @Override
     public void save(SysUserReq req) {
+        Credential credential = CredentialContextHolder.get();
         SysUser sysUser = new SysUser();
         BeanUtils.copyProperties(req, sysUser);
+        sysUser.setOperator(credential.getId());
 
         if (null == req.getId()) {
             Integer id = db.selectOne(Integer.class, "select id from tb_sys_user where username = ? ", sysUser.getUsername());
@@ -53,34 +57,45 @@ public class SysUserServiceImpl extends BaseService implements SysUserService {
             // 创建账户
             db.insert(sysUser);
 
-            // FIXME 初始化密码
-            String password = RandomStringUtils.randomAlphanumeric(8);
-            log.info("init password:{}", password);
+            randomPassword(sysUser.getId());
 
-            password = Md5Utils.md5(password);
-            password = Md5Utils.md5(password);
-            String salt = RandomStringUtils.randomAlphanumeric(10);
-
-            SysUserPwd sysUserPwd = new SysUserPwd();
-            sysUserPwd.setSysUserId(sysUser.getId());
-            sysUserPwd.setPwd(Md5Utils.md5(password + salt));
-            sysUserPwd.setSalt(salt);
-            db.insert(sysUserPwd);
         } else {
             sysUser.setUsername(null);
             db.update(sysUser);
         }
     }
 
+
+    // FIXME 初始化密码 发邮件告知用户
+    private void randomPassword(int sysUserId) {
+
+        String password = RandomStringUtils.randomAlphanumeric(8);
+        log.info("init password:{}", password);
+        password = Md5Utils.md5(password);
+        password = Md5Utils.md5(password);
+
+        savePassword(sysUserId, password);
+    }
+
+    private void savePassword(int sysUserId, String password) {
+
+        String salt = RandomStringUtils.randomAlphanumeric(10);
+
+        SysUserPwd sysUserPwd = new SysUserPwd();
+        sysUserPwd.setSysUserId(sysUserId);
+        sysUserPwd.setPwd(Md5Utils.md5(password + salt));
+        sysUserPwd.setSalt(salt);
+        db.insert(sysUserPwd);
+    }
+
     @Transactional
     @Override
-    public void del(IdReq req) {
+    public void del(int sysUserId) {
         Credential credential = CredentialContextHolder.get();
-        int res = db.execute("update tb_sys_user set operator = ?, deleted = 1 where id = ? and deleted = 0 ", credential.getId(), req.getId());
-        if (1 != res) {
-            throw new BizException("删除失败");
-        }
-        db.execute("update tb_sys_user_pwd set deleted = 1 where sys_user_id = ? and deleted = 0 ", req.getId());
+        int res = db.execute("update tb_sys_user set operator = ?, deleted = 1 where id = ? and deleted = 0 ", credential.getId(), sysUserId);
+        assertChangeOne(res);
+        res = db.execute("update tb_sys_user_pwd set deleted = 1 where sys_user_id = ? and deleted = 0 ", sysUserId);
+        assertChangeOne(res);
     }
 
     @Override
@@ -100,21 +115,26 @@ public class SysUserServiceImpl extends BaseService implements SysUserService {
         return new PageRes<SysUserRes>(result.getList(), result.getPaging().getTotal());
     }
 
+    private boolean validatePassword(int sysUserId, String password) {
+        // 验证密码
+        String validPwdSql = "select * from tb_sys_user_pwd where sys_user_id = ? and deleted = 0";
+        SysUserPwd sysUserPwd = db.selectOne(SysUserPwd.class, validPwdSql, sysUserId);
+        return (null != sysUserPwd && sysUserPwd.getPwd().equalsIgnoreCase(Md5Utils.md5(password + sysUserPwd.getSalt())));
+    }
+
     // 不需要加事务
     @Override
     public SysUserSignInRes signIn(String username, String password, String ip, String userAgent) {
         // 查询用户名
-        SysUser sysUser = db.selectOne(SysUser.class, "select * from tb_sys_user where username = ? ", username);
+        SysUser sysUser = db.selectOne(SysUser.class, "select * from tb_sys_user where username = ? and deleted = 0 ", username);
         if (null == sysUser) {
             throw new BizException("用户名不存在");// 可以模糊提示
         }
         if (SysUserConsts.Status.LOCK_SIGN_ERR == sysUser.getStatus()) {
-            throw new BizException("密码输入错误过多，已锁住");
+            throw new BizException(Consts.get(SysUserConsts.Status.class, sysUser.getStatus()));
         }
         // 验证密码
-        String validPwdSql = "select * from tb_sys_user_pwd where sys_user_id = ? and deleted = 0";
-        SysUserPwd sysUserPwd = db.selectOne(SysUserPwd.class, validPwdSql, sysUser.getId());
-        if (null == sysUserPwd || !sysUserPwd.getPwd().equals(Md5Utils.md5(password + sysUserPwd.getSalt()))) {
+        if (!validatePassword(sysUser.getId(), password)) {
 
             sysUser.setSignErrorSize(sysUser.getSignErrorSize() + 1);
             sysUser.setUpdatedTime(null);
@@ -130,11 +150,11 @@ public class SysUserServiceImpl extends BaseService implements SysUserService {
                 throw new BizException("密码输入错误，还有" + diff + "次机会");
             }
         }
-        // 将之前的token都删除
-        db.execute("update tb_sys_user_token set deleted = 1 where deleted = 0 and sys_user_id = ?", sysUser.getId());
+        // 将以前的退出
+        signOut(sysUser.getId());
+
         // 生成token
         String accessToken = UUID.randomUUID().toString().replaceAll("-", "");
-
 
         SysUserToken sysUserToken = new SysUserToken();
         sysUserToken.setAccessToken(accessToken);
@@ -159,13 +179,11 @@ public class SysUserServiceImpl extends BaseService implements SysUserService {
     }
 
     @Override
-    public void unlockSignError(IdReq req) {
+    public void unlockSignError(int sysUserId) {
         Credential credential = CredentialContextHolder.get();
-        String sql = "update tb_sys_user set sign_error_size = 0, status = ? where id = ? ";
-        int res = db.execute(sql, SysUserConsts.Status.NORMAL, req.getId(), credential.getId());
-        if (1 != res) {
-            throw new BizException("操作失败");
-        }
+        String sql = "update tb_sys_user set sign_error_size = 0, status = ?, operator = ? where id = ? and status = ?";
+        int res = db.execute(sql, SysUserConsts.Status.NORMAL, credential.getId(), sysUserId, SysUserConsts.Status.LOCK_SIGN_ERR);
+        assertChangeOne(res);
     }
 
     @Override
@@ -181,7 +199,56 @@ public class SysUserServiceImpl extends BaseService implements SysUserService {
     @Override
     public List<String> api() {
         Credential credential = CredentialContextHolder.get();
-        String sql = "select distinct sr.path from tb_sys_user su left join tb_sys_role_resource srr on su.sys_role_id = srr.sys_role_id left join tb_sys_resource sr on sr.id = srr.sys_resource_id where su.id = ? and sr.type = ? and su.deleted = 0 and sr.opened = 0 and sr.deleted = 0 and srr.deleted = 0 ";
+        String sql = "select distinct sr.path from tb_sys_user su " +
+                "left join tb_sys_role_resource srr on su.sys_role_id = srr.sys_role_id " +
+                "left join tb_sys_resource sr on sr.id = srr.sys_resource_id " +
+                "where su.id = ? and sr.type = ? and su.deleted = 0 and sr.opened = 0 and sr.deleted = 0 and srr.deleted = 0 ";
         return db.select(String.class, sql, credential.getId(), SysResourceConsts.Type.API);
+    }
+
+    @Override
+    public void updatePassword(SysUserUpdatePasswordReq req) {
+        Credential credential = CredentialContextHolder.get();
+        int sysUserId = credential.getId();
+        // 验证密码
+        if (!validatePassword(sysUserId, req.getOldPassword())) {
+            throw new BizException("原密码输入错误");
+        }
+        savePassword(sysUserId, req.getNewPassword());
+
+        signOut(sysUserId);
+    }
+
+    @Transactional
+    @Override
+    public void resetPassword(int sysUserId) {
+
+        // 先将以前的删除
+        db.execute("update tb_sys_user_pwd set deleted = 1 where sys_user_id = ? and deleted = 0", sysUserId);
+
+        randomPassword(sysUserId);
+
+        signOut(sysUserId);
+    }
+
+    @Override
+    public void disabled(int sysUserId) {
+        signOut(sysUserId);
+
+        String sql = "update tb_sys_user_pwd set status = ? where sys_user_id = ? and status = ? and deleted = 0";
+        int res = db.execute(sql, SysUserConsts.Status.DISABLED, sysUserId, SysUserConsts.Status.NORMAL);
+        assertChangeOne(res);
+    }
+
+    @Override
+    public void signOut(int sysUserId) {
+        db.execute("update tb_sys_user_token set deleted = 1 where sys_user_id = ? and deleted = 0", sysUserId);
+    }
+
+    @Override
+    public void enabled(int sysUserId) {
+        String sql = "update tb_sys_user_pwd set status = ? where sys_user_id = ? and status = ? and deleted = 0";
+        int res = db.execute(sql, SysUserConsts.Status.NORMAL, sysUserId, SysUserConsts.Status.DISABLED);
+        assertChangeOne(res);
     }
 }

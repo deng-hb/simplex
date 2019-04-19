@@ -2,6 +2,7 @@ package com.denghb.simplex.sys.controller;
 
 import com.denghb.simplex.base.BizException;
 import com.denghb.simplex.base.JSONModel;
+import com.denghb.simplex.holder.CredentialContextHolder;
 import com.denghb.simplex.holder.RequestInfo;
 import com.denghb.simplex.holder.RequestInfoContextHolder;
 import com.denghb.simplex.model.IdReq;
@@ -11,6 +12,7 @@ import com.denghb.simplex.service.CaptchaService;
 import com.denghb.simplex.sys.model.req.SysUserReq;
 import com.denghb.simplex.sys.model.req.SysUserSignInReq;
 import com.denghb.simplex.sys.model.req.SysUserSignLogReq;
+import com.denghb.simplex.sys.model.req.SysUserUpdatePasswordReq;
 import com.denghb.simplex.sys.model.res.SysMenuRes;
 import com.denghb.simplex.sys.model.res.SysUserRes;
 import com.denghb.simplex.sys.model.res.SysUserSignInRes;
@@ -44,7 +46,7 @@ public class SysUserController {
 
     @PostMapping(name = "删除用户", value = "/del")
     public JSONModel<String> del(@Valid @RequestBody IdReq req) {
-        sysUserService.del(req);
+        sysUserService.del(req.getId());
         return JSONModel.buildSuccess("操作成功");
     }
 
@@ -76,7 +78,7 @@ public class SysUserController {
 
     @PostMapping(name = "解锁用户登录", value = "/unlockSignError")
     public JSONModel<String> unlockSignError(@Valid @RequestBody IdReq req) {
-        sysUserService.unlockSignError(req);
+        sysUserService.unlockSignError(req.getId());
         return JSONModel.buildSuccess("操作成功");
     }
 
@@ -90,6 +92,37 @@ public class SysUserController {
     public JSONModel<List<String>> api() {
         List<String> res = sysUserService.api();
         return JSONModel.buildSuccess("ok", res);
+    }
+
+    @PostMapping(name = "修改密码", value = "/updatePassword")
+    public JSONModel<String> updatePassword(@Valid @RequestBody SysUserUpdatePasswordReq req) {
+        sysUserService.updatePassword(req);
+        return JSONModel.buildSuccess("修改成功，请重新登录");
+    }
+
+    @PostMapping(name = "重置密码", value = "/resetPassword")
+    public JSONModel<String> resetPassword(@Valid @RequestBody IdReq req) {
+        sysUserService.resetPassword(req.getId());
+        return JSONModel.buildSuccess("操作成功");
+    }
+
+    @PostMapping(name = "禁用用户", value = "/disabled")
+    public JSONModel<String> disabled(@Valid @RequestBody IdReq req) {
+        sysUserService.disabled(req.getId());
+        return JSONModel.buildSuccess("操作成功");
+    }
+
+    @PostMapping(name = "启用用户", value = "/enabled")
+    public JSONModel<String> enabled(@Valid @RequestBody IdReq req) {
+        sysUserService.enabled(req.getId());
+        return JSONModel.buildSuccess("操作成功");
+    }
+
+    @GetMapping(name = "安全登出", value = "/signOut")
+    public JSONModel<String> signOut() {
+        int sysUserId = CredentialContextHolder.get().getId();
+        sysUserService.signOut(sysUserId);
+        return JSONModel.buildSuccess("登出成功");
     }
 }
 

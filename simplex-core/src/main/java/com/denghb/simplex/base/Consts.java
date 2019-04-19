@@ -1,8 +1,6 @@
 package com.denghb.simplex.base;
 
 
-import com.denghb.simplex.consts.ConstsTest;
-
 import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -11,7 +9,6 @@ import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
 public class Consts {
-
 
     private static final Map<String, List<Map<String, String>>> _cache = new ConcurrentHashMap<>();
 
@@ -75,12 +72,21 @@ public class Consts {
 
     }
 
+    public static class Test {
+
+        @ConstTag("Test1")
+        public static int TEST1 = 1;
+
+        @ConstTag("Test2")
+        public static int TEST2 = 2;
+    }
+
     public static void main(String[] args) {
 
-        List<Map<String, String>> list = list(ConstsTest.class);
+        List<Map<String, String>> list = list(Test.class);
         System.out.println(list);
 
-        String tag = get(ConstsTest.class, ConstsTest.b);
+        String tag = get(Test.class, Test.TEST1);
         System.out.println(tag);
     }
 }
