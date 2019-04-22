@@ -1,5 +1,5 @@
 // 是否有这个API，没有的隐藏
-export const hasApi = {
+export default {
   install (Vue) {
     Vue.directive('hasApi', {
       bind (el, binding, vnode) {

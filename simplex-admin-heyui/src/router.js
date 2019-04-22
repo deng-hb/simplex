@@ -39,10 +39,10 @@ let router = new Router({
 
 router.beforeEach((to, from, next) => {
   HeyUI.$LoadingBar.start();
-  if (to.meta && to.meta.title) {
-    document.title = to.meta.title + ' - 管理应用';
+  if (to.name) {
+    document.title = to.name + ' - SimpleX';
   } else {
-    document.title = '管理系统';
+    document.title = 'SimpleX';
   }
   next();
 });

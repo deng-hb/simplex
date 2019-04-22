@@ -3,12 +3,12 @@ import HeyUI from 'heyui'
 import App from '@/App.vue'
 import router from '@/router'
 import store from '@/store'
-import { hasApi } from '@/hasApi'
+import HasApi from '@/api/hasApi'
 
 require("heyui/themes/index.css")
 
 Vue.use(HeyUI)
-Vue.use(hasApi)
+Vue.use(HasApi)
 
 Vue.config.productionTip = false
 
