@@ -8,8 +8,8 @@ export default {
           return;
         }
         let api = binding.value;
-        let flag = apis.split(',').indexOf(api) > -1
-        if (flag) {
+        let hasApi = apis.split(',').indexOf(api) > -1
+        if (!hasApi) {
           el.style.display = 'none'
         }
       }
