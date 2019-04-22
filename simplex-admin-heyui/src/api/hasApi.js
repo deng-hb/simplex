@@ -3,19 +3,14 @@ export default {
   install (Vue) {
     Vue.directive('hasApi', {
       bind (el, binding, vnode) {
-        console.log('%o,%o,%o',el,binding,vnode);
-        let api = binding.value;
         let apis = window.localStorage.getItem('APIs');
-        let flag = false;
-        if (null != apis) {
-          flag = apis.split(',').indexOf(api) > -1
+        if (null == apis) {
+          return;
         }
-        if (!flag) {
-          if (!el.parentNode) {
-            el.style.display = 'none'
-          } else {
-            el.parentNode.removeChild(el)
-          }
+        let api = binding.value;
+        let flag = apis.split(',').indexOf(api) > -1
+        if (flag) {
+          el.style.display = 'none'
         }
       }
     })
