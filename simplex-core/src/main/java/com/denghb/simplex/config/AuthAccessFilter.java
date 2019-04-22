@@ -76,25 +76,21 @@ public class AuthAccessFilter implements Filter {
                 .build();
         int id = authAccessService.addLog(logReq);
 
-        if (!authAccessService.isOpened(method, uri)) {
+        try {
+            Credential credential = authAccessService.validate(requestInfo);
+            CredentialContextHolder.set(credential);
+        } catch (SysException e) {
+            String result = JSON.toJSONString(JSONModel.buildFailure(e.getCode(), e.getMessage()));
 
-            try {
-                Credential credential = authAccessService.validate(requestInfo);
-                CredentialContextHolder.set(credential);
-            } catch (SysException e) {
-                String result = JSON.toJSONString(JSONModel.buildFailure(e.getCode(), e.getMessage()));
+            res.setHeader("Content-Type", "application/json;charset=utf-8");
+            res.getWriter().write(result);
 
-                res.setHeader("Content-Type", "application/json;charset=utf-8");
-                res.getWriter().write(result);
+            log.info("ReqId:{},response:{}", requestInfo.getReqId(), result);
+            RequestInfoContextHolder.reset();
+            authAccessService.setEndTime(id);
 
-                log.info("ReqId:{},response:{}", requestInfo.getReqId(), result);
-                RequestInfoContextHolder.reset();
-                authAccessService.setEndTime(id);
-
-                log.info("ReqId:{},end,{}ms", requestInfo.getReqId(), (System.currentTimeMillis() - start));
-                return;// *THE END
-            }
-
+            log.info("ReqId:{},end,{}ms", requestInfo.getReqId(), (System.currentTimeMillis() - start));
+            return;// *THE END
         }
 
         // 放行

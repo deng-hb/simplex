@@ -12,6 +12,7 @@ import com.denghb.simplex.sys.model.req.SysAccessLogReq;
 import com.denghb.simplex.sys.service.AuthAccessService;
 import com.denghb.simplex.sys.service.BaseService;
 import org.springframework.beans.BeanUtils;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.Date;
@@ -21,6 +22,9 @@ import java.util.regex.Pattern;
 public class AuthAccessServiceImpl extends BaseService implements AuthAccessService {
 
     private final static Pattern IGNORE_EXT = Pattern.compile(".*(.html|.png|.svg|.txt|.js|.css|.ico|.ttf|.eot|.woff|.woff2|.map)$", Pattern.CASE_INSENSITIVE);
+
+    @Autowired
+    private AuthAccessService authAccessService;
 
     @Override
     public int addLog(SysAccessLogReq req) {
@@ -52,6 +56,10 @@ public class AuthAccessServiceImpl extends BaseService implements AuthAccessServ
 
     @Override
     public Credential validate(RequestInfo requestInfo) throws SysException {
+        if (authAccessService.isOpened(requestInfo.getMethod(), requestInfo.getUri())) {
+            return null;
+        }
+
         String accessToken = requestInfo.getAccessToken();
         if (null == accessToken) {
             throw new SysException(403, "非法访问");
