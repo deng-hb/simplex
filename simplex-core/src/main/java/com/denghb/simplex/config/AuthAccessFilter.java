@@ -64,7 +64,7 @@ public class AuthAccessFilter implements Filter {
                 .reqId(REQUEST_COUNT.incrementAndGet())
                 .build();
 
-        log.info("reqId:{},start,{}", requestInfo.getReqId(), JSON.toJSONString(requestInfo));
+        log.info("ReqId:{},start,{}", requestInfo.getReqId(), JSON.toJSONString(requestInfo));
         RequestInfoContextHolder.set(requestInfo);
 
         SysAccessLogReq logReq = SysAccessLogReq.builder()
@@ -87,11 +87,11 @@ public class AuthAccessFilter implements Filter {
                 res.setHeader("Content-Type", "application/json;charset=utf-8");
                 res.getWriter().write(result);
 
-                log.info("reqId:{},response:{}", requestInfo.getReqId(), result);
+                log.info("ReqId:{},response:{}", requestInfo.getReqId(), result);
                 RequestInfoContextHolder.reset();
                 authAccessService.setEndTime(id);
 
-                log.info("reqId:{},end,{}ms", requestInfo.getReqId(), (System.currentTimeMillis() - start));
+                log.info("ReqId:{},end,{}ms", requestInfo.getReqId(), (System.currentTimeMillis() - start));
                 return;// *THE END
             }
 
@@ -104,7 +104,7 @@ public class AuthAccessFilter implements Filter {
         RequestInfoContextHolder.reset();
         authAccessService.setEndTime(id);
 
-        log.info("reqId:{},end,{}ms", requestInfo.getReqId(), (System.currentTimeMillis() - start));
+        log.info("ReqId:{},end,{}ms", requestInfo.getReqId(), (System.currentTimeMillis() - start));
     }
 
     @Override

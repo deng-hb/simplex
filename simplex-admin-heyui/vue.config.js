@@ -22,7 +22,7 @@ module.exports = {
     },
     plugins: [
       new webpack.ProvidePlugin({
-        'req': ['@/req', 'default'],
+        'Api': ['@/api', 'default'],
         'HeyUI': 'heyui'
       })
     ]

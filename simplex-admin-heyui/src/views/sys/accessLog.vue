@@ -35,7 +35,7 @@ export default {
   },
   methods: {
     initData() {
-      req.post('/sys/access/log/list',this.search).then(res=>{
+      Api.post('/sys/access/log/list',this.search).then(res=>{
         if (1 != res.code) {
           this.$Message(res.msg);
           return;

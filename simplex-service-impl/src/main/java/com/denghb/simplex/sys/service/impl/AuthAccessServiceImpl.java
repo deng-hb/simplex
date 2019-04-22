@@ -20,7 +20,7 @@ import java.util.regex.Pattern;
 @Service
 public class AuthAccessServiceImpl extends BaseService implements AuthAccessService {
 
-    private final static Pattern IGNORE_EXT = Pattern.compile(".*(.html|.png|.svg|.txt|.js|.css|.ico|.ttf|.eot|.woff|.map)$", Pattern.CASE_INSENSITIVE);
+    private final static Pattern IGNORE_EXT = Pattern.compile(".*(.html|.png|.svg|.txt|.js|.css|.ico|.ttf|.eot|.woff|.woff2|.map)$", Pattern.CASE_INSENSITIVE);
 
     @Override
     public int addLog(SysAccessLogReq req) {

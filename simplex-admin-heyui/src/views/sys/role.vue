@@ -79,7 +79,7 @@ export default {
           titleName: 'showTitle',
           dataMode: 'list',
           getTotalDatas: (resolve) => {
-            req.get('/sys/resource/list').then(res=>{
+            Api.get('/sys/resource/list').then(res=>{
               if (1 != res.code) {
                 return;
               }
@@ -126,7 +126,7 @@ export default {
   },
   methods: {
     initData() {
-      req.post('/sys/role/list',this.search).then(res=>{
+      Api.post('/sys/role/list',this.search).then(res=>{
         if (1 != res.code) {
           this.$Message(res.msg);
           return;
@@ -152,7 +152,7 @@ export default {
       if (!validResult.result) {
         return;
       }
-      req.post('/sys/role/save',this.roleModal.data).then(res=>{
+      Api.post('/sys/role/save',this.roleModal.data).then(res=>{
         this.$Message(res.msg);
         if (1 == res.code) {
           this.initData();
@@ -167,7 +167,7 @@ export default {
     },
     showDel(id) {
       this.$Confirm('确定删除？', '删除后无法恢复').then(() => {
-        req.post('/sys/role/del', {id:id}).then(res=>{
+        Api.post('/sys/role/del', {id:id}).then(res=>{
           this.$Message(res.msg);
           if (1 == res.code) {
             this.$refs.myTree.refresh();
@@ -182,12 +182,12 @@ export default {
       this.roleResourceModal.roleId = item.id;
       this.roleResourceModal.resourceIds = [];
 
-      req.get(`/sys/role/listSysResourceId?roleId=${item.id}`).then(res=>{
+      Api.get(`/sys/role/listSysResourceId?roleId=${item.id}`).then(res=>{
         this.roleResourceModal.resourceIds = res.data;
       })
     },
     doSetResource() {
-      req.post(`/sys/role/setSysResourceIds?roleId=${this.roleResourceModal.roleId}`,
+      Api.post(`/sys/role/setSysResourceIds?roleId=${this.roleResourceModal.roleId}`,
         this.roleResourceModal.resourceIds).then(res=>{
         this.$Message(res.msg);
         if (1 == res.code) {

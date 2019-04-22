@@ -57,7 +57,7 @@ export default {
         titleName: 'showTitle',
         dataMode: 'list',
         getTotalDatas: (resolve) => {
-          req.get('/sys/resource/list').then(res=>{
+          Api.get('/sys/resource/list').then(res=>{
             if (1 != res.code) {
               return;
             }
@@ -116,7 +116,7 @@ export default {
   },
   methods: {
     initData(){
-      req.get('/sys/resource/type').then(res=>{
+      Api.get('/sys/resource/type').then(res=>{
         this.types = res.data;
       })
     },
@@ -159,7 +159,7 @@ export default {
       if (!validResult.result) {
         return;
       }
-      req.post('/sys/resource/save',this.resourceModal.data).then(res=>{
+      Api.post('/sys/resource/save',this.resourceModal.data).then(res=>{
         this.$Message(res.msg);
         if (1 == res.code) {
           this.resourceModal.opened = false;
@@ -169,7 +169,7 @@ export default {
     },
     showDel() {
       this.$Confirm('确定删除？', '删除后无法恢复').then(() => {
-        req.post('/sys/resource/del', {id:this.current.id}).then(res=>{
+        Api.post('/sys/resource/del', {id:this.current.id}).then(res=>{
           this.$Message(res.msg);
           if (1 == res.code) {
             this.$refs.myTree.refresh();

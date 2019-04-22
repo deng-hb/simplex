@@ -24,7 +24,7 @@ export default {
     show() {
       this.$Message('这是一个普通的提醒');
       console.log(req);
-      req.get('/captcha').then(res=>{
+      Api.get('/captcha').then(res=>{
         console.log(res)
         this.captcha = res.data.imageData;
       })

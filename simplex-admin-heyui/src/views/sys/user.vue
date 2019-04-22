@@ -82,13 +82,13 @@ export default {
   created() {
     this.initData();
 
-    req.get('/sys/role/list').then(res=>{
+    Api.get('/sys/role/list').then(res=>{
       this.sysRoles = res.data;
     })
   },
   methods: {
     initData() {
-      req.post('/sys/user/list',this.search).then(res=>{
+      Api.post('/sys/user/list',this.search).then(res=>{
         if (1 != res.code) {
           this.$Message(res.msg);
           return;
@@ -120,7 +120,7 @@ export default {
       if (!validResult.result) {
         return;
       }
-      req.post('/sys/user/save',this.userModal.data).then(res=>{
+      Api.post('/sys/user/save',this.userModal.data).then(res=>{
         this.$Message(res.msg);
         if (1 == res.code) {
           this.initData();
@@ -135,7 +135,7 @@ export default {
     },
     showDel(id) {
       this.$Confirm('确定删除？', '删除后无法恢复').then(() => {
-        req.post('/sys/user/del', {id:id}).then(res=>{
+        Api.post('/sys/user/del', {id:id}).then(res=>{
           this.$Message(res.msg);
           if (1 == res.code) {
             this.initData();
@@ -146,7 +146,7 @@ export default {
     },
     showDisabled(id) {
       this.$Confirm('确定禁用用户？', '').then(() => {
-        req.post('/sys/user/disabled', {id:id}).then(res=>{
+        Api.post('/sys/user/disabled', {id:id}).then(res=>{
           this.$Message(res.msg);
           if (1 == res.code) {
             this.initData();
@@ -157,7 +157,7 @@ export default {
     },
     showEnabled(id) {
       this.$Confirm('确定启用用户？', '').then(() => {
-        req.post('/sys/user/enabled', {id:id}).then(res=>{
+        Api.post('/sys/user/enabled', {id:id}).then(res=>{
           this.$Message(res.msg);
           if (1 == res.code) {
             this.initData();
@@ -168,7 +168,7 @@ export default {
     },
     showUnlockSignError(id) {
       this.$Confirm('确定解锁用户？', '').then(() => {
-        req.post('/sys/user/unlockSignError', {id:id}).then(res=>{
+        Api.post('/sys/user/unlockSignError', {id:id}).then(res=>{
           this.$Message(res.msg);
           if (1 == res.code) {
             this.initData();

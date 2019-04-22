@@ -18,9 +18,6 @@ import java.util.*;
 public class SysApiServiceImplTest extends BaseTest {
 
     @Autowired
-    private SysApiService sysApiService;
-
-    @Autowired
     public void printMapping(List<RequestMappingInfoHandlerMapping> handlerMappingList) {
 
         initTestCredential();
@@ -45,16 +42,7 @@ public class SysApiServiceImplTest extends BaseTest {
 
     private void save(String description, String method, String uri) {
 
-        int exist = db.selectOne(Integer.class, "select count(*) from tb_sys_api where method = ? and uri = ? ", method, uri);
-        if (0 == exist) {
-
-
-            SysApiReq sysApiReq = new SysApiReq();
-            sysApiReq.setUri(uri);
-            sysApiReq.setMethod(method);
-            sysApiReq.setDescription(description);
-            sysApiService.save(sysApiReq);
-        }
+        log.info("{},{},{}", description, method, uri);
     }
 
 }

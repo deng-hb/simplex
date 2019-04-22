@@ -33,7 +33,6 @@ public class SysUserServiceTest extends BaseTest {
     public void save() throws Exception {
 
         SysUserReq req = new SysUserReq();
-        req.setAge(22);
         req.setName("超级管理员");
         req.setUsername("su");
 

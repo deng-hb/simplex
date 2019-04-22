@@ -47,9 +47,9 @@ public class RequestAroundLogConfig {
         RequestInfo requestInfo = RequestInfoContextHolder.get();
         Long reqId = null != requestInfo ? requestInfo.getReqId() : null;
         // join arguments.
-        log.info("reqId:{},params:{} ", reqId, StringUtils.join(args, ","));
+        log.info("ReqId:{},params:{} ", reqId, StringUtils.join(args, ","));
         Object result = joinPoint.proceed();
-        log.info("reqId:{},response:{} ", reqId, JSON.toJSONString(result, SerializerFeature.WriteMapNullValue));
+        log.info("ReqId:{},response:{} ", reqId, JSON.toJSONString(result, SerializerFeature.WriteMapNullValue));
 
         return result;
     }

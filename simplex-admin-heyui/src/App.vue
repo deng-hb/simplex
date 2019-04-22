@@ -112,7 +112,7 @@ export default {
       
       let data = {username:username,password:password2,code:code,key:this.signIn.key};
 
-      req.post('/sys/user/signIn', data).then(res=>{
+      Api.post('/sys/user/signIn', data).then(res=>{
         if (1 != res.code) {
           this.reloadCaptcha();
           this.$Message.error(res.msg);
@@ -128,7 +128,7 @@ export default {
       if (this.signed) {
         return;
       }
-      req.get('/captcha').then(res=>{
+      Api.get('/captcha').then(res=>{
         console.log(res)
         this.captcha = res.data.imageData;
         this.signIn.key = res.data.key;
@@ -141,7 +141,7 @@ export default {
         this.$router.push(data.key);
     },
     initMenu() {
-      req.get('/sys/user/menu').then(res=>{
+      Api.get('/sys/user/menu').then(res=>{
         if (1 != res.code) {
           return;
         }
@@ -179,7 +179,7 @@ export default {
     this.reloadCaptcha();
     if (this.signed) {
       this.initMenu();
-      req.get('/sys/user/api').then(res=>{
+      Api.get('/sys/user/api').then(res=>{
         window.localStorage.setItem('APIs', res.data);
       })
     }
