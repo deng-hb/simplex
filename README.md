@@ -28,4 +28,4 @@ CREATE TABLE `tb_表名` (
 + 字符编码utf8mb4
 
 ### note
-service 方法超过3个考虑使用对象来传递
+service 方法超过3个参数考虑使用对象来传递
