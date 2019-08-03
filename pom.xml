@@ -8,12 +8,10 @@
     <packaging>pom</packaging>
     <version>1.0-SNAPSHOT</version>
     <modules>
-        <module>simplex-admin-heyui</module>
-        <module>simplex-core</module>
         <module>simplex-launcher</module>
-        <module>simplex-job</module>
-        <module>simplex-service-impl</module>
         <module>simplex-test</module>
+        <module>simplex-backend</module>
+        <module>simplex-frontend-vue-heyui</module>
     </modules>
 
     <name>simplex</name>
@@ -54,9 +52,14 @@
         </dependency>
 
         <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-actuator</artifactId>
+        </dependency>
+
+        <dependency>
             <groupId>com.alibaba</groupId>
             <artifactId>fastjson</artifactId>
-            <version>LATEST</version>
+            <version>1.2.58</version>
         </dependency>
 
         <dependency>
@@ -74,13 +77,13 @@
         <dependency>
             <groupId>commons-codec</groupId>
             <artifactId>commons-codec</artifactId>
-            <version>LATEST</version>
+            <version>1.12</version>
         </dependency>
 
         <dependency>
             <groupId>org.apache.commons</groupId>
             <artifactId>commons-lang3</artifactId>
-            <version>LATEST</version>
+            <version>3.9</version>
         </dependency>
 
         <dependency>

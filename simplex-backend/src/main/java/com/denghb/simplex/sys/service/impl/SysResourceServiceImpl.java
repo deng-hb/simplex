@@ -1,0 +1,65 @@
+package com.denghb.simplex.sys.service.impl;
+
+import com.denghb.simplex.holder.Credential;
+import com.denghb.simplex.holder.CredentialContextHolder;
+import com.denghb.simplex.service.BaseService;
+import com.denghb.simplex.sys.domain.SysResource;
+import com.denghb.simplex.sys.model.req.SysResourceQueryReq;
+import com.denghb.simplex.sys.model.req.SysResourceReq;
+import com.denghb.simplex.sys.model.res.SysResourceRes;
+import com.denghb.simplex.sys.service.SysResourceService;
+import org.springframework.beans.BeanUtils;
+import org.springframework.stereotype.Service;
+
+import java.util.List;
+
+/**
+ * @author denghb
+ * @since 2019/4/13 21:55
+ */
+@Service
+public class SysResourceServiceImpl extends BaseService implements SysResourceService {
+
+    @Override
+    public void save(SysResourceReq req) {
+        Credential credential = CredentialContextHolder.get();
+        SysResource sysResource = new SysResource();
+        BeanUtils.copyProperties(req, sysResource);
+
+        sysResource.setOperator(credential.getId());
+        if (null == req.getId()) {
+            db.insert(sysResource);
+        } else {
+            db.update(sysResource);
+        }
+    }
+
+    @Override
+    public void del(int id) {
+        Credential credential = CredentialContextHolder.get();
+        int res = db.execute("update tb_sys_resource set operator = ?, deleted = 1 where id = ? and deleted = 0 ", credential.getId(), id);
+        assertChangeOne(res);
+    }
+
+    @Override
+    public List<SysResourceRes> list(SysResourceQueryReq req) {
+        String sql = ""/*{
+            select * from tb_sys_resource where deleted = 0
+            #if (null != #type && '' != #type)
+                and type = :type
+            #end
+            #if (null != #title && '' != #title)
+                and title like concat('%', :title, '%')
+            #end
+            #if (null != #uri && '' != #uri)
+                and uri like concat('%', :uri, '%')
+            #end
+            #if (null != #opened)
+                and opened = :opened
+            #end
+            order by parent_id, seq asc
+        }*/;
+        return db.select(SysResourceRes.class, sql, req);
+    }
+
+}

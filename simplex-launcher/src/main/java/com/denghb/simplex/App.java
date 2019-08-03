@@ -13,6 +13,6 @@ public class App {
     public static void main(String[] args) {
         long start = System.currentTimeMillis();
         SpringApplication.run(App.class, args);
-        System.out.println("started:" + (System.currentTimeMillis() - start) / 1000.0 + "s");
+        System.out.println("started:" + (System.currentTimeMillis() - start) + "ms");
     }
 }

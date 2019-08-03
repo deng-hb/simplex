@@ -19,8 +19,8 @@ import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.result.MockMvcResultHandlers;
 
 /**
- * @Auther: denghb
- * @Date: 2019/4/13 15:17
+ * @author denghb
+ * @since 2019/4/13 15:17
  */
 @Slf4j
 public class SysUserServiceTest extends BaseTest {

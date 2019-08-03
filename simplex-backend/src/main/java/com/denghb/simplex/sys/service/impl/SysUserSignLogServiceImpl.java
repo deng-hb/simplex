@@ -1,0 +1,32 @@
+package com.denghb.simplex.sys.service.impl;
+
+import com.denghb.simplex.sys.domain.SysUserSignLog;
+import com.denghb.simplex.sys.model.req.SysUserSignLogReq;
+import com.denghb.simplex.service.BaseService;
+import com.denghb.simplex.sys.service.SysUserSignLogService;
+import org.springframework.beans.BeanUtils;
+import org.springframework.stereotype.Service;
+
+/**
+ * @author denghb
+ * @since 2019/4/13 17:24
+ */
+@Service
+public class SysUserSignLogServiceImpl extends BaseService implements SysUserSignLogService {
+
+    @Override
+    public int add(SysUserSignLogReq req) {
+        SysUserSignLog sysUserSignLog = new SysUserSignLog();
+        BeanUtils.copyProperties(req, sysUserSignLog);
+        db.insert(sysUserSignLog);
+        return sysUserSignLog.getId();
+    }
+
+    @Override
+    public void setSuccess(int id) {
+        SysUserSignLog sysUserSignLog = new SysUserSignLog();
+        sysUserSignLog.setStatus(1);
+        sysUserSignLog.setId(id);
+        db.update(sysUserSignLog);
+    }
+}

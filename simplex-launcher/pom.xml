@@ -17,21 +17,16 @@
     <dependencies>
         <dependency>
             <groupId>com.denghb</groupId>
-            <artifactId>simplex-admin-heyui</artifactId>
+            <artifactId>simplex-frontend-vue-heyui</artifactId>
             <version>${project.version}</version>
         </dependency>
 
         <dependency>
             <groupId>com.denghb</groupId>
-            <artifactId>simplex-core</artifactId>
+            <artifactId>simplex-backend</artifactId>
             <version>${project.version}</version>
         </dependency>
 
-        <dependency>
-            <groupId>com.denghb</groupId>
-            <artifactId>simplex-service-impl</artifactId>
-            <version>${project.version}</version>
-        </dependency>
     </dependencies>
 
     <build>
