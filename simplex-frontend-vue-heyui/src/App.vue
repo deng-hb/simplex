@@ -314,6 +314,9 @@ export default {
     margin-top: -41px;
     position: relative;
     z-index: 10;
+    background: #eee;
+    width: 100px;
+    height: 40px;
   }
 }
 

@@ -25,15 +25,21 @@ public class SysRoleController {
     @Autowired
     private SysRoleService sysRoleService;
 
-    @PostMapping(name = "保存角色", value = "/save")
-    public JSONModel<String> save(@Valid @RequestBody SysRoleReq req) {
-        sysRoleService.save(req);
+    @PostMapping(name = "创建角色", value = "/add")
+    public JSONModel<String> add(@Valid @RequestBody SysRoleReq req) {
+        sysRoleService.doEdit(req);
+        return JSONModel.buildSuccess("操作成功");
+    }
+
+    @PostMapping(name = "编辑角色", value = "/edit")
+    public JSONModel<String> edit(@Valid @RequestBody SysRoleReq req) {
+        sysRoleService.doEdit(req);
         return JSONModel.buildSuccess("操作成功");
     }
 
     @PostMapping(name = "删除角色", value = "/del")
     public JSONModel<String> del(@Valid @RequestBody IdReq req) {
-        sysRoleService.del(req.getId());
+        sysRoleService.doDel(req.getId());
         return JSONModel.buildSuccess("操作成功");
     }
 

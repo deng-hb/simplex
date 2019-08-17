@@ -15,21 +15,16 @@ import org.springframework.http.converter.HttpMessageConverter;
 @Configuration
 public class WebConfig {
 
-    @Autowired
-    private AuthAccessService authAccessService;
-
     @Bean
     public FilterRegistrationBean authFilter() {
-        AuthAccessFilter aa = new AuthAccessFilter(authAccessService);
-
         FilterRegistrationBean reg = new FilterRegistrationBean();
-        reg.setFilter(aa);
+        reg.setFilter(new RequestFilter());
         reg.addUrlPatterns("/*");
         return reg;
     }
 
     // @Bean
-    public HttpMessageConverters fastJsonHttpMessageConverters(){
+    public HttpMessageConverters fastJsonHttpMessageConverters() {
         //1. 需要定义一个converter转换消息的对象
         FastJsonHttpMessageConverter fasHttpMessageConverter = new FastJsonHttpMessageConverter();
 

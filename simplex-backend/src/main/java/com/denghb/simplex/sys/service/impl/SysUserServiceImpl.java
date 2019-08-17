@@ -1,6 +1,7 @@
 package com.denghb.simplex.sys.service.impl;
 
 
+import com.denghb.eorm.Eorm;
 import com.denghb.eorm.domain.Paging;
 import com.denghb.eorm.domain.PagingResult;
 import com.denghb.simplex.base.BizException;
@@ -11,6 +12,7 @@ import com.denghb.simplex.holder.Credential;
 import com.denghb.simplex.holder.CredentialContextHolder;
 import com.denghb.simplex.model.PageReq;
 import com.denghb.simplex.model.PageRes;
+import com.denghb.simplex.service.impl.EserviceImpl;
 import com.denghb.simplex.sys.domain.SysUser;
 import com.denghb.simplex.sys.domain.SysUserPwd;
 import com.denghb.simplex.sys.domain.SysUserToken;
@@ -19,7 +21,7 @@ import com.denghb.simplex.sys.model.req.SysUserUpdatePasswordReq;
 import com.denghb.simplex.sys.model.res.SysMenuRes;
 import com.denghb.simplex.sys.model.res.SysUserRes;
 import com.denghb.simplex.sys.model.res.SysUserSignInRes;
-import com.denghb.simplex.service.BaseService;
+import com.denghb.simplex.service.Eservice;
 import com.denghb.simplex.sys.service.SysResourceService;
 import com.denghb.simplex.sys.service.SysUserService;
 import com.denghb.simplex.utils.Md5Utils;
@@ -29,6 +31,7 @@ import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.Assert;
 
 import java.util.Calendar;
 import java.util.List;
@@ -36,10 +39,13 @@ import java.util.UUID;
 
 @Slf4j
 @Service
-public class SysUserServiceImpl extends BaseService implements SysUserService {
+public class SysUserServiceImpl implements SysUserService {
 
     @Autowired
     private SysResourceService sysResourceService;
+
+    @Autowired
+    private Eorm db;
 
     @Transactional
     @Override
@@ -50,7 +56,10 @@ public class SysUserServiceImpl extends BaseService implements SysUserService {
         sysUser.setOperator(credential.getId());
 
         if (null == req.getId()) {
-            Integer id = db.selectOne(Integer.class, "select id from tb_sys_user where username = ? ", sysUser.getUsername());
+            String sql = ""/*{
+                select id from tb_sys_user where username = ?
+            }*/;
+            Integer id = db.selectOne(Integer.class, sql, sysUser.getUsername());
             if (null != id) {
                 throw new BizException("用户名已存在");
             }
@@ -92,10 +101,17 @@ public class SysUserServiceImpl extends BaseService implements SysUserService {
     @Override
     public void del(int sysUserId) {
         Credential credential = CredentialContextHolder.get();
-        int res = db.execute("update tb_sys_user set operator = ?, deleted = 1 where id = ? and deleted = 0 ", credential.getId(), sysUserId);
-        assertChangeOne(res);
-        res = db.execute("update tb_sys_user_pwd set deleted = 1 where sys_user_id = ? and deleted = 0 ", sysUserId);
-        assertChangeOne(res);
+        String sql1 = ""/*{
+            update tb_sys_user set operator = ?, deleted = 1 where id = ? and deleted = 0
+        }*/;
+        int r1 = db.execute(sql1, credential.getId(), sysUserId);
+        Assert.isTrue(1 == r1, "操作失败");
+
+        String sql2 = ""/*{
+            update tb_sys_user_pwd set deleted = 1 where sys_user_id = ? and deleted = 0
+        }*/;
+        int r2 = db.execute(sql2, sysUserId);
+        Assert.isTrue(1 == r2, "操作失败");
 
         signOut(sysUserId);
     }
@@ -111,7 +127,10 @@ public class SysUserServiceImpl extends BaseService implements SysUserService {
         paging.setPage(req.getPage());
         paging.setPageSize(req.getPageSize());
 
-        String sql = "select su.*,su2.name operatorName from tb_sys_user su left join tb_sys_user su2 on su2.id = su.operator where su.deleted = 0 ";
+        String sql = ""/*{
+            select su.*,su2.name operatorName from tb_sys_user su
+            left join tb_sys_user su2 on su2.id = su.operator where su.deleted = 0
+        }*/;
         PagingResult<SysUserRes> result = db.page(SysUserRes.class, new StringBuffer(sql), paging);
         List<SysUserRes> list = result.getList();
         if (null != list) {
@@ -125,7 +144,9 @@ public class SysUserServiceImpl extends BaseService implements SysUserService {
 
     private boolean validatePassword(int sysUserId, String password) {
         // 验证密码
-        String validPwdSql = "select * from tb_sys_user_pwd where sys_user_id = ? and deleted = 0";
+        String validPwdSql = ""/*{
+            select * from tb_sys_user_pwd where sys_user_id = ? and deleted = 0
+        }*/;
         SysUserPwd sysUserPwd = db.selectOne(SysUserPwd.class, validPwdSql, sysUserId);
         return (null != sysUserPwd && sysUserPwd.getPwd().equalsIgnoreCase(Md5Utils.md5(password + sysUserPwd.getSalt())));
     }
@@ -191,7 +212,7 @@ public class SysUserServiceImpl extends BaseService implements SysUserService {
         Credential credential = CredentialContextHolder.get();
         String sql = "update tb_sys_user set sign_error_size = 0, status = ?, operator = ? where id = ? and status = ?";
         int res = db.execute(sql, SysUserConsts.Status.NORMAL, credential.getId(), sysUserId, SysUserConsts.Status.LOCK_SIGN_ERR);
-        assertChangeOne(res);
+        Assert.isTrue(1 == res, "操作失败");
     }
 
     @Override
@@ -239,7 +260,10 @@ public class SysUserServiceImpl extends BaseService implements SysUserService {
     public void resetPassword(int sysUserId) {
 
         // 先将以前的删除
-        db.execute("update tb_sys_user_pwd set deleted = 1 where sys_user_id = ? and deleted = 0", sysUserId);
+        String sql = ""/*{
+            update tb_sys_user_pwd set deleted = 1 where sys_user_id = ? and deleted = 0
+        }*/;
+        db.execute(sql, sysUserId);
 
         randomPassword(sysUserId);
 
@@ -252,21 +276,28 @@ public class SysUserServiceImpl extends BaseService implements SysUserService {
         Credential credential = CredentialContextHolder.get();
         signOut(sysUserId);
 
-        String sql = "update tb_sys_user set status = ?, operator = ? where id = ? and status = ? and deleted = 0";
-        int res = db.execute(sql, SysUserConsts.Status.DISABLED, credential.getId(), sysUserId, SysUserConsts.Status.NORMAL);
-        assertChangeOne(res);
+        String sql = ""/*{
+            update tb_sys_user set status = ?, operator = ? where id = ? and status = ? and deleted = 0
+        }*/;
+        int r1 = db.execute(sql, SysUserConsts.Status.DISABLED, credential.getId(), sysUserId, SysUserConsts.Status.NORMAL);
+        Assert.isTrue(1 == r1, "操作失败");
     }
 
     @Override
     public void signOut(int sysUserId) {
-        db.execute("update tb_sys_user_token set deleted = 1 where sys_user_id = ? and deleted = 0", sysUserId);
+        String sql = ""/*{
+            update tb_sys_user_token set deleted = 1 where sys_user_id = ? and deleted = 0
+        }*/;
+        db.execute(sql, sysUserId);
     }
 
     @Override
     public void enabled(int sysUserId) {
         Credential credential = CredentialContextHolder.get();
-        String sql = "update tb_sys_user set status = ?, operator = ? where id = ? and status = ? and deleted = 0";
-        int res = db.execute(sql, SysUserConsts.Status.NORMAL, credential.getId(), sysUserId, SysUserConsts.Status.DISABLED);
-        assertChangeOne(res);
+        String sql = ""/*{
+            update tb_sys_user set status = ?, operator = ? where id = ? and status = ? and deleted = 0
+        }*/;
+        int r1 = db.execute(sql, SysUserConsts.Status.NORMAL, credential.getId(), sysUserId, SysUserConsts.Status.DISABLED);
+        Assert.isTrue(1 == r1, "操作失败");
     }
 }

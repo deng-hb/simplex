@@ -16,6 +16,9 @@ public class PageRes<T> {
     @ApiModelProperty("总数")
     private long total;
 
+    public PageRes() {
+    }
+
     public PageRes(List<T> list, long total) {
         this.list = list;
         this.total = total;

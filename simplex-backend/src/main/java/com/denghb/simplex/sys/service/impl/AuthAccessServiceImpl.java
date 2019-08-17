@@ -1,11 +1,13 @@
 package com.denghb.simplex.sys.service.impl;
 
+import com.denghb.eorm.Eorm;
 import com.denghb.simplex.base.SysException;
 import com.denghb.simplex.consts.SysResourceConsts;
 import com.denghb.simplex.consts.SysUserConsts;
 import com.denghb.simplex.holder.Credential;
 import com.denghb.simplex.holder.RequestInfo;
-import com.denghb.simplex.service.BaseService;
+import com.denghb.simplex.holder.RequestInfoContextHolder;
+import com.denghb.simplex.service.impl.EserviceImpl;
 import com.denghb.simplex.sys.domain.SysAccessLog;
 import com.denghb.simplex.sys.domain.SysUser;
 import com.denghb.simplex.sys.domain.SysUserToken;
@@ -13,15 +15,19 @@ import com.denghb.simplex.sys.model.req.SysAccessLogReq;
 import com.denghb.simplex.sys.service.AuthAccessService;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.BeanUtils;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.Date;
 import java.util.regex.Pattern;
 
 @Service
-public class AuthAccessServiceImpl extends BaseService implements AuthAccessService {
+public class AuthAccessServiceImpl implements AuthAccessService {
 
     private final static Pattern IGNORE_EXT = Pattern.compile(".*(.html|.png|.svg|.txt|.js|.css|.ico|.ttf|.eot|.woff|.woff2|.map)$", Pattern.CASE_INSENSITIVE);
+
+    @Autowired
+    private Eorm db;
 
     @Override
     public int addLog(SysAccessLogReq req) {
@@ -54,7 +60,8 @@ public class AuthAccessServiceImpl extends BaseService implements AuthAccessServ
     }
 
     @Override
-    public Credential validate(RequestInfo requestInfo) throws SysException {
+    public Credential validate() throws SysException {
+        RequestInfo requestInfo = RequestInfoContextHolder.get();
         String method = requestInfo.getMethod(), uri = requestInfo.getUri();
         if (isOpened(method, uri)) {
             return null;

@@ -13,7 +13,7 @@ import lombok.Data;
 @Builder
 public class RequestInfo {
 
-    private Long reqId;
+    private String reqId;
 
     private String uri;
 

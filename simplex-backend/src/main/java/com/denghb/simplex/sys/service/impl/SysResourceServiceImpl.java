@@ -1,15 +1,19 @@
 package com.denghb.simplex.sys.service.impl;
 
+import com.denghb.eorm.Eorm;
+import com.denghb.simplex.base.BizException;
 import com.denghb.simplex.holder.Credential;
 import com.denghb.simplex.holder.CredentialContextHolder;
-import com.denghb.simplex.service.BaseService;
+import com.denghb.simplex.service.Eservice;
 import com.denghb.simplex.sys.domain.SysResource;
 import com.denghb.simplex.sys.model.req.SysResourceQueryReq;
 import com.denghb.simplex.sys.model.req.SysResourceReq;
 import com.denghb.simplex.sys.model.res.SysResourceRes;
 import com.denghb.simplex.sys.service.SysResourceService;
 import org.springframework.beans.BeanUtils;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.util.Assert;
 
 import java.util.List;
 
@@ -18,7 +22,10 @@ import java.util.List;
  * @since 2019/4/13 21:55
  */
 @Service
-public class SysResourceServiceImpl extends BaseService implements SysResourceService {
+public class SysResourceServiceImpl implements SysResourceService {
+
+    @Autowired
+    private Eorm db;
 
     @Override
     public void save(SysResourceReq req) {
@@ -30,6 +37,9 @@ public class SysResourceServiceImpl extends BaseService implements SysResourceSe
         if (null == req.getId()) {
             db.insert(sysResource);
         } else {
+            if (null != req.getParentId() && req.getParentId().intValue() == req.getId()) {
+                throw new BizException("父节点不能是自己");
+            }
             db.update(sysResource);
         }
     }
@@ -37,8 +47,11 @@ public class SysResourceServiceImpl extends BaseService implements SysResourceSe
     @Override
     public void del(int id) {
         Credential credential = CredentialContextHolder.get();
-        int res = db.execute("update tb_sys_resource set operator = ?, deleted = 1 where id = ? and deleted = 0 ", credential.getId(), id);
-        assertChangeOne(res);
+        String sql = ""/*{
+            update tb_sys_resource set operator = ?, deleted = 1 where id = ? and deleted = 0
+        }*/;
+        int res = db.execute(sql, credential.getId(), id);
+        Assert.isTrue(1 == res, "删除失败");
     }
 
     @Override
