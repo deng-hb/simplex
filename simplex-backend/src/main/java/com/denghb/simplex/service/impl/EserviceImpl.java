@@ -92,9 +92,9 @@ public class EserviceImpl<T> implements Eservice<T> {
     }
 
     @Override
-    public PageRes selectPage(Class clazz, String sql, PageReq pageReq) {
+    public <R> PageRes<R> selectPage(Class<R> clazz, String sql, PageReq pageReq) {
         EormTraceSupport.start();
-        PageRes res = new PageRes();
+        PageRes<R> res = new PageRes<R>();
         String totalSql = MessageFormat.format("select count(*) from ({0}) temp", sql);
         int total = db.selectOne(int.class, totalSql, pageReq);
         res.setTotal(total);
@@ -108,7 +108,7 @@ public class EserviceImpl<T> implements Eservice<T> {
             sql += " limit :pageStart, :pageSize";
         }
 
-        List list = db.select(clazz, sql, pageReq);
+        List<R> list = db.select(clazz, sql, pageReq);
         res.setList(list);
         return res;
     }

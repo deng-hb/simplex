@@ -17,5 +17,5 @@ public interface Eservice<T> {
 
     T query(int id);
 
-    PageRes selectPage(Class clazz, String sql, PageReq req);
+    <R> PageRes<R> selectPage(Class<R> clazz, String sql, PageReq req);
 }
