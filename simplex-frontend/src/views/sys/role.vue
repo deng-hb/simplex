@@ -13,7 +13,7 @@
       </TableItem>
     </Table>
 
-    <Pagination  :cur="search.page" :total="total" @change="onPageChange"></Pagination>
+    <Pagination  :cur="search.page" :size="search.pageSize" :total="total" @change="onPageChange"></Pagination>
 
     <Modal v-model="roleModal.opened" :closeOnMask="false" :hasCloseIcon="true" :hasDivider="true">
       <div slot="header">{{null == roleModal.data.id?'编辑':'新建'}}角色</div>
@@ -49,7 +49,7 @@ export default {
     return {
       search: {
         page: 1,
-        pageSize: 10
+        pageSize: 20
       },
       total: 0,
       list: [],

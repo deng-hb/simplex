@@ -19,7 +19,7 @@
       </TableItem>
     </Table>
 
-    <Pagination  :cur="search.page" :total="total" @change="onPageChange"></Pagination>
+    <Pagination  :cur="search.page" :size="search.pageSize" :total="total" @change="onPageChange"></Pagination>
 
     <Modal v-model="userModal.opened" :closeOnMask="false" :hasCloseIcon="true" :hasDivider="true">
       <div slot="header">{{null == userModal.data.id?'编辑':'新建'}}用户</div>
@@ -58,7 +58,7 @@ export default {
     return {
       search: {
         page: 1,
-        pageSize: 10
+        pageSize: 20
       },
       total: 0,
       list: [],

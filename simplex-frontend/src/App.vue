@@ -16,9 +16,12 @@
           <Menu style="margin-top: 40px;" class="h-menu-white" :datas="menu" @click="onMenu" :option="{keyName:'uri'}" :inlineCollapsed="siderCollapsed"></Menu>
         </Sider>
         <Content style="padding: 0px 30px;">
+          <XTabs></XTabs>
           <Breadcrumb :datas="datas" style="margin: 16px 0px;"></Breadcrumb>
           <div style="background: rgb(255, 255, 255); padding: 20px; min-height: 480px;">
+            <keep-alive>
             <router-view/>
+            </keep-alive>
           </div>
           <HFooter class="text-center">Copyright © 2019</HFooter>
         </Content>
@@ -53,9 +56,13 @@
 
 
 <script>
-const MD5 = require('md5.js')
+const MD5 = require('md5.js');
+import XTabs from '@/components/x-tabs'
 
 export default {
+  components: {
+    XTabs
+  },
   data() {
     return {
       signIn: {
@@ -138,7 +145,7 @@ export default {
     onMenu(data) {
       console.log(data);
       if (data.children.length == 0)
-        this.$router.push(data.key);
+        this.$router.push({path:data.key,meta:{title:data.title}});
     },
     initMenu() {
       Api.get('/sys/user/menu').then(res=>{

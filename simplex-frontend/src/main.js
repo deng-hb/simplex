@@ -1,6 +1,6 @@
 import Vue from 'vue'
 import HeyUI from 'heyui'
-import App from '@/App.vue'
+import app from '@/app.vue'
 import router from '@/router'
 import store from '@/store'
 import HasApi from '@/api/hasApi'
@@ -15,5 +15,5 @@ Vue.config.productionTip = false
 new Vue({
   router,
   store,
-  render: h => h(App)
+  render: h => h(app)
 }).$mount('#app')
