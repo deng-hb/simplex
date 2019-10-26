@@ -17,7 +17,7 @@
     <dependencies>
         <dependency>
             <groupId>com.denghb</groupId>
-            <artifactId>simplex-frontend-vue-heyui</artifactId>
+            <artifactId>simplex-frontend</artifactId>
             <version>${project.version}</version>
         </dependency>
 

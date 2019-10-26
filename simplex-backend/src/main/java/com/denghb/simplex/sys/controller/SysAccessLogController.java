@@ -22,7 +22,7 @@ public class SysAccessLogController {
     @Autowired
     private SysAccessLogService sysAccessLogService;
 
-    @PostMapping(name = "角色列表", value = "/list")
+    @PostMapping(name = "访问列表", value = "/list")
     public JSONModel<PageRes<SysAccessLogRes>> list(@RequestBody PageReq req) {
 
         PageRes<SysAccessLogRes> res = sysAccessLogService.list(req);

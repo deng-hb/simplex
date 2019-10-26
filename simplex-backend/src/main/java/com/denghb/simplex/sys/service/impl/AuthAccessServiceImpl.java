@@ -13,6 +13,7 @@ import com.denghb.simplex.sys.domain.SysUser;
 import com.denghb.simplex.sys.domain.SysUserToken;
 import com.denghb.simplex.sys.model.req.SysAccessLogReq;
 import com.denghb.simplex.sys.service.AuthAccessService;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,6 +22,7 @@ import org.springframework.stereotype.Service;
 import java.util.Date;
 import java.util.regex.Pattern;
 
+@Slf4j
 @Service
 public class AuthAccessServiceImpl implements AuthAccessService {
 
@@ -104,6 +106,7 @@ public class AuthAccessServiceImpl implements AuthAccessService {
         }*/;
         String result = db.selectOne(String.class, sql, sysUserId, SysResourceConsts.Type.API, uri, method);
         if (null == result) {
+            log.error("账户无访问权限：{}", uri);
             throw new SysException(403, "账户无访问权限：" + uri);
         }
 

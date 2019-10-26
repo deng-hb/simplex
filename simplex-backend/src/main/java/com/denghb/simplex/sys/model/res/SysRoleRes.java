@@ -3,6 +3,8 @@ package com.denghb.simplex.sys.model.res;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 
+import java.util.List;
+
 /**
  * @author denghb
  * @since 2019/4/17 21:20
@@ -16,4 +18,6 @@ public class SysRoleRes extends SysBaseRes {
 
     @ApiModelProperty("操作人姓名")
     private String operatorName;
+
+    private List<Integer> sysResourceIds;
 }

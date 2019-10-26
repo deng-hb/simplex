@@ -25,21 +25,9 @@ public class SysRoleController {
     @Autowired
     private SysRoleService sysRoleService;
 
-    @PostMapping(name = "创建角色", value = "/add")
-    public JSONModel<String> add(@Valid @RequestBody SysRoleReq req) {
-        sysRoleService.doEdit(req);
-        return JSONModel.buildSuccess("操作成功");
-    }
-
-    @PostMapping(name = "编辑角色", value = "/edit")
-    public JSONModel<String> edit(@Valid @RequestBody SysRoleReq req) {
-        sysRoleService.doEdit(req);
-        return JSONModel.buildSuccess("操作成功");
-    }
-
-    @PostMapping(name = "删除角色", value = "/del")
-    public JSONModel<String> del(@Valid @RequestBody IdReq req) {
-        sysRoleService.doDel(req.getId());
+    @PostMapping(name = "保存角色", value = "/save")
+    public JSONModel<String> save(@Valid @RequestBody SysRoleReq req) {
+        sysRoleService.save(req);
         return JSONModel.buildSuccess("操作成功");
     }
 
@@ -48,18 +36,6 @@ public class SysRoleController {
 
         PageRes<SysRoleRes> res = sysRoleService.list(req);
         return JSONModel.buildSuccess("ok", res);
-    }
-
-    @PostMapping(name = "设置角色资源", value = "/setSysResourceIds")
-    public JSONModel<String> setSysResourceIds(@RequestParam("roleId") int roleId, @RequestBody List<Integer> sysResourceIds) {
-        sysRoleService.setSysResourceIds(roleId, sysResourceIds);
-        return JSONModel.buildSuccess("操作成功");
-    }
-
-    @GetMapping(name = "获取角色资源", value = "/listSysResourceId")
-    public JSONModel<List<Integer>> listSysResourceId(@RequestParam("roleId") int roleId) {
-        List<Integer> list = sysRoleService.listSysResourceId(roleId);
-        return JSONModel.buildSuccess("ok", list);
     }
 
     @GetMapping(name = "角基本信息", value = "/list")

@@ -5,8 +5,8 @@ import lombok.Data;
 import lombok.ToString;
 import org.hibernate.validator.constraints.Range;
 
-import java.util.HashSet;
-import java.util.Set;
+import java.util.ArrayList;
+import java.util.List;
 
 @Data
 @ToString
@@ -20,25 +20,35 @@ public class PageReq {
     @ApiModelProperty(value = "每页数量", example = "10")
     private int pageSize = 10;
 
-    @ApiModelProperty(value = "分页开始", hidden = true)
-    private int pageStart;
-
     @ApiModelProperty(value = "排序降序字段", hidden = true)
-    private Set<String> desc = new HashSet<String>();
+    private List<String> desc = new ArrayList<String>();
 
     @ApiModelProperty(value = "排序升序字段", hidden = true)
-    private Set<String> asc = new HashSet<String>();
+    private List<String> asc = new ArrayList<String>();
 
     @ApiModelProperty(value = "可排序字段", hidden = true)
-    private Set<String> sorts = new HashSet<String>();
+    private List<String> sorts = new ArrayList<String>();
 
-    /**
-     * 计算
-     *
-     * @return pageStart
-     */
-    public int getPageStart() {
-        return (page - 1) * pageSize;
+    public void setDefaultDescSort(String column) {
+        setDefaultSort(column, false);
+    }
+
+    public void setDefaultAscSort(String column) {
+        setDefaultSort(column, true);
+    }
+
+    private void setDefaultSort(String column, boolean isAsc) {
+        if (!asc.isEmpty() || !desc.isEmpty()) {
+            return;
+        }
+        if (!sorts.contains(column)) {
+            sorts.add(column);
+        }
+        if (isAsc) {
+            asc.add(column);
+        } else {
+            desc.add(column);
+        }
     }
 
 }

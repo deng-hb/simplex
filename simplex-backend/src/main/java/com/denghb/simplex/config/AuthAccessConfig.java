@@ -3,8 +3,6 @@ package com.denghb.simplex.config;
 
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.serializer.SerializerFeature;
-import com.denghb.simplex.base.JSONModel;
-import com.denghb.simplex.base.SysException;
 import com.denghb.simplex.holder.Credential;
 import com.denghb.simplex.holder.CredentialContextHolder;
 import com.denghb.simplex.holder.RequestInfo;
@@ -28,7 +26,7 @@ import java.lang.reflect.Method;
  */
 @Component
 @Aspect
-public class AuthAccessAspectConfig {
+public class AuthAccessConfig {
 
     @Autowired
     private AuthAccessService authAccessService;
@@ -36,22 +34,22 @@ public class AuthAccessAspectConfig {
     @Around("@annotation(org.springframework.web.bind.annotation.RequestMapping)")
     public Object requestMapping(ProceedingJoinPoint joinPoint) throws Throwable {
 
-        return doExe(joinPoint);
+        return doExec(joinPoint);
     }
 
     @Around("@annotation(org.springframework.web.bind.annotation.GetMapping)")
     public Object getMapping(ProceedingJoinPoint joinPoint) throws Throwable {
 
-        return doExe(joinPoint);
+        return doExec(joinPoint);
     }
 
     @Around("@annotation(org.springframework.web.bind.annotation.PostMapping)")
     public Object postMapping(ProceedingJoinPoint joinPoint) throws Throwable {
 
-        return doExe(joinPoint);
+        return doExec(joinPoint);
     }
 
-    private Object doExe(ProceedingJoinPoint joinPoint) throws Throwable {
+    private Object doExec(ProceedingJoinPoint joinPoint) throws Throwable {
 
         try {
             RequestInfo requestInfo = RequestInfoContextHolder.get();
@@ -67,7 +65,7 @@ public class AuthAccessAspectConfig {
                     .build();
             int id = authAccessService.addLog(logReq);
 
-            Object args[] = joinPoint.getArgs();
+            Object[] args = joinPoint.getArgs();
             MethodSignature signature = (MethodSignature) joinPoint.getSignature();
             Method method = signature.getMethod();
             Logger log = LoggerFactory.getLogger(method.getDeclaringClass());

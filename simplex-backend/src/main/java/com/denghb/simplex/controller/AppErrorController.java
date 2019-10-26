@@ -5,8 +5,10 @@ import com.denghb.simplex.base.JSONModel;
 import com.denghb.simplex.base.SysException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.boot.autoconfigure.web.ErrorController;
+import org.springframework.dao.DuplicateKeyException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.converter.HttpMessageNotReadableException;
+import org.springframework.jdbc.BadSqlGrammarException;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.ObjectError;
 import org.springframework.web.HttpRequestMethodNotSupportedException;
@@ -19,6 +21,7 @@ import org.springframework.web.servlet.ModelAndView;
 import springfox.documentation.annotations.ApiIgnore;
 
 import javax.servlet.http.HttpServletRequest;
+import java.net.MalformedURLException;
 import java.util.List;
 
 @Slf4j
@@ -56,24 +59,23 @@ public class AppErrorController implements ErrorController {
         HttpStatus status = getStatus(request);
 
         if (e instanceof BizException) {
-            log.warn(e.getMessage(), e);
             return JSONModel.buildFailure(e.getMessage());
         } else if (e instanceof SysException) {
-            log.error(e.getMessage(), e);
             return JSONModel.buildFailure(e.getMessage());
         } else if (e instanceof MethodArgumentNotValidException) {
-            log.warn(e.getMessage(), e);
             // 进来了肯定有错
             MethodArgumentNotValidException mane = (MethodArgumentNotValidException) e;
             List<ObjectError> errors = mane.getBindingResult().getAllErrors();
 
             return JSONModel.buildFailure(errors.get(0).getDefaultMessage());
         } else if (e instanceof HttpMessageNotReadableException) {
-            log.warn(e.getMessage(), e);
             return JSONModel.buildFailure("参数不匹配");
         } else if (e instanceof HttpRequestMethodNotSupportedException) {
-            log.warn(e.getMessage(), e);
             return JSONModel.buildFailure("请求方法错误");
+        } else if (e instanceof DuplicateKeyException) {
+            return JSONModel.buildFailure("请求数据重复");
+        } else if (e instanceof BadSqlGrammarException) {
+            return JSONModel.buildFailure("数据库脚本错误");
         }
         log.error(e.getMessage(), e);
         // 未知错误

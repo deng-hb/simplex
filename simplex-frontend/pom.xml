@@ -9,9 +9,9 @@
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
-    <artifactId>simplex-frontend-vue-heyui</artifactId>
+    <artifactId>simplex-frontend</artifactId>
 
-    <name>simplex-frontend-vue-heyui</name>
+    <name>simplex-frontend</name>
     <url>http://www.example.com</url>
 
     <dependencies>
@@ -19,7 +19,7 @@
     </dependencies>
 
     <build>
-        <finalName>simplex-frontend-vue-heyui</finalName>
+        <finalName>simplex-frontend</finalName>
 
         <plugins>
             <plugin>
@@ -36,7 +36,7 @@
                             <overwrite>true</overwrite>
                             <resources>
                                 <resource>
-                                    <directory>${project.parent.basedir}/simplex-frontend-vue-heyui/dist</directory>
+                                    <directory>${project.parent.basedir}/simplex-frontend/dist</directory>
                                     <includes>
                                         <include>css/</include>
                                         <include>js/</include>

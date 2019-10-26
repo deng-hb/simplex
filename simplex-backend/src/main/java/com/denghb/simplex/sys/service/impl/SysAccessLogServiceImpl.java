@@ -8,6 +8,7 @@ import com.denghb.simplex.sys.model.res.SysAccessLogRes;
 import com.denghb.simplex.sys.service.SysAccessLogService;
 import org.springframework.stereotype.Service;
 
+import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -19,13 +20,7 @@ import java.util.Set;
 public class SysAccessLogServiceImpl extends EserviceImpl<SysAccessLog> implements SysAccessLogService {
     @Override
     public PageRes<SysAccessLogRes> list(PageReq req) {
-
-        Set<String> sort = new HashSet<String>() {{
-            add("id");
-        }};
-
-        req.setSorts(sort);
-        req.setDesc(sort);
+        req.setDefaultDescSort("id");
         String sql = ""/*{
             select * from tb_sys_access_log where deleted = 0
         }*/;

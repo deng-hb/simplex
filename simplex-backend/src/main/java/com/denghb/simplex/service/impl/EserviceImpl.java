@@ -29,7 +29,7 @@ import java.util.concurrent.ConcurrentHashMap;
  * @author denghb 2019-06-24 23:59
  */
 @Slf4j
-public class EserviceImpl<T> implements Eservice<T> {
+public class EserviceImpl<T> extends EPageServiceImpl implements Eservice<T> {
 
     @Autowired
     public Eorm db;
@@ -91,79 +91,5 @@ public class EserviceImpl<T> implements Eservice<T> {
         return db.selectOne(getDomainClass(), sql, id);
     }
 
-    @Override
-    public <R> PageRes<R> selectPage(Class<R> clazz, String sql, PageReq pageReq) {
-        EormTraceSupport.start();
-        PageRes<R> res = new PageRes<R>();
-        String totalSql = MessageFormat.format("select count(*) from ({0}) temp", sql);
-        int total = db.selectOne(int.class, totalSql, pageReq);
-        res.setTotal(total);
-        if (0 == total) {
-            return res;
-        }
-
-        sql += buildOrderBy(pageReq);
-
-        if (0 < pageReq.getPage() && 0 < pageReq.getPageSize()) {
-            sql += " limit :pageStart, :pageSize";
-        }
-
-        List<R> list = db.select(clazz, sql, pageReq);
-        res.setList(list);
-        return res;
-    }
-
-    private String buildOrderBy(PageReq pageReq) {
-
-        //获取所有预置可排序字段
-        Set<String> sorts = pageReq.getSorts();
-        if (null == sorts || sorts.isEmpty()) {
-            return "";
-        }
-
-        // asc append
-        StringBuilder asb = new StringBuilder();
-        Set<String> asc = pageReq.getAsc();
-        if (null != asc && !asc.isEmpty()) {
-            for (String column : asc) {
-                if (!sorts.contains(column)) {
-                    throw new EormException("column [" + column + "] undefined sort!");
-                }
-                if (0 < asb.length()) {
-                    asb.append(',');
-                }
-                asb.append('`');
-                asb.append(column);
-                asb.append('`');
-            }
-            asb.append(" asc");
-        }
-
-        StringBuilder dsb = new StringBuilder();
-        Set<String> desc = pageReq.getDesc();
-        if (null != desc && !desc.isEmpty()) {
-            if (0 < asb.length()) {
-                asb.append(',');
-            }
-            for (String column : desc) {
-                if (!sorts.contains(column)) {
-                    throw new EormException("column [" + column + "] undefined sort!");
-                }
-                if (0 < dsb.length()) {
-                    dsb.append(',');
-                }
-                dsb.append('`');
-                dsb.append(column);
-                dsb.append('`');
-            }
-            dsb.append(" desc");
-
-        }
-
-        if (asb.length() > 0 || dsb.length() > 0) {
-            return " order by " + asb.toString() + dsb.toString();
-        }
-        return "";
-    }
 
 }

@@ -38,8 +38,8 @@ axios.interceptors.response.use(
 )
 
 export default {
-  get(url,params={}) {
-    return new Promise((resolve,reject) => {
+  get(url, params = {}) {
+    return new Promise((resolve, reject) => {
       axios.get(url,{
         params:params
       })
@@ -51,9 +51,9 @@ export default {
       })
     })
   },
-  post(url,data = {}){
-    return new Promise((resolve,reject) => {
-      axios.post(url,data)
+  post(url, data = {}){
+    return new Promise((resolve, reject) => {
+      axios.post(url, data)
           .then(response => {
             resolve(response.data);
           },err => {

@@ -2,9 +2,8 @@
   <div>
     <p><Button v-hasApi="'POST/sys/user/save'" color="blue" icon="h-icon-plus" @click="showAdd()">新建</Button></p>
 
-
     <Table :datas="list" stripe checkbox>
-      <TableItem title="No." :tooltip="true"><template slot-scope="{index}">{{(search.page - 1) * search.pageSize + index + 1}}</template></TableItem>
+      <TableItem title="No." :width="50" :tooltip="true"><template slot-scope="{index}">{{(search.page - 1) * search.pageSize + index + 1}}</template></TableItem>
       <TableItem title="姓名" prop="name" ></TableItem>
       <TableItem title="用户名" prop="username"></TableItem>
       <TableItem title="邮箱" prop="email"></TableItem>
@@ -23,7 +22,7 @@
     <Pagination  :cur="search.page" :total="total" @change="onPageChange"></Pagination>
 
     <Modal v-model="userModal.opened" :closeOnMask="false" :hasCloseIcon="true" :hasDivider="true">
-      <div slot="header">{{'' == userModal.data.id?'编辑':'新建'}}用户</div>
+      <div slot="header">{{null == userModal.data.id?'编辑':'新建'}}用户</div>
       <div >
         <Form ref="form" :labelWidth="110" :rules="userModal.rules" :model="userModal.data" >
           <FormItem label="姓名" prop="name">

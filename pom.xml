@@ -11,7 +11,9 @@
         <module>simplex-launcher</module>
         <module>simplex-test</module>
         <module>simplex-backend</module>
-        <module>simplex-frontend-vue-heyui</module>
+        <module>simplex-frontend</module>
+        <module>simplex-common</module>
+        <module>simplex-buildwar</module>
     </modules>
 
     <name>simplex</name>
@@ -65,7 +67,7 @@
         <dependency>
             <groupId>com.alibaba</groupId>
             <artifactId>druid-spring-boot-starter</artifactId>
-            <version>1.1.10</version>
+            <version>1.1.20</version>
         </dependency>
 
         <dependency>

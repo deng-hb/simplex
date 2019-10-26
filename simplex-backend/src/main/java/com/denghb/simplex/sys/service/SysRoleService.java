@@ -14,13 +14,11 @@ import java.util.List;
  * @author denghb
  * @since 2019/4/16 23:48
  */
-public interface SysRoleService extends Eservice<SysRole> {
+public interface SysRoleService {
 
     PageRes<SysRoleRes> list(PageReq req);
 
-    void setSysResourceIds(int roleId, List<Integer> sysResourceIds);
-
-    List<Integer> listSysResourceId(int roleId);
+    void save(SysRoleReq req);
 
     List<SysRoleInfoRes> list();
 }

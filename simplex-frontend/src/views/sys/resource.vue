@@ -44,7 +44,8 @@
       <div >
         <Form ref="form" :labelWidth="110" :rules="resourceModal.rules" :model="resourceModal.data" >
           <FormItem label="上级" prop="parentId">
-            <Select v-model="resourceModal.data.parentId" keyName="id" keyValue="title" :datas="list" :filterable="true"></Select>
+            <TreePicker v-model="resourceModal.data.parentId" ref="treepicker" :option="resourceTree"
+            useConfirm chooseMode="some" filterable></TreePicker>
           </FormItem>
           <FormItem label="名称" prop="title">
             <input type="text" v-model="resourceModal.data.title" />
@@ -80,12 +81,19 @@
   </div>
 </template>
 <script>
+import { parseTree } from "@/utils/sys-resource"
+
 export default {
   data() {
     return {
       search: {},
-      list: [],
       listTree: [],
+      resourceTree: {
+        keyName: 'id',
+        parentName: 'parent',
+        titleName: 'title',
+        dataMode: 'list'
+      },
       types: [],
       resourceModal: {
         opened: false,
@@ -115,30 +123,10 @@ export default {
     reloadData() {
 
       Api.post('/sys/resource/list', this.search).then(res=>{
-        let list = res.data;
-        list = null == list ? [] : list;
-
-        function findChildren(item, list) {
-          item.children = [];
-          for (let i in list) {
-            let item2 = list[i];
-            if (item.id == item2.parentId) {
-              item.children.push(item2);
-              findChildren(item2, list)
-            }
-          }
-        }
-
-        let listTree = [];
-        for (let i in list) {
-          let item = list[i];
-          if (null == item.parentId) {
-            findChildren(item, list);
-            listTree.push(item);
-          }
-        }
-        this.list = list;
+        let listTree = parseTree(res.data);
+        
         this.listTree = listTree;
+        this.resourceTree.datas = listTree;
       })
     },
     showAdd() {

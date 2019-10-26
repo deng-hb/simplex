@@ -1,8 +1,8 @@
 <template>
   <div>
 
-    <Table :datas="list" stripe checkbox>
-      <TableItem title="No." :tooltip="true"><template slot-scope="{index}">{{(search.page - 1) * search.pageSize + index + 1}}</template></TableItem>
+    <Table :datas="list" stripe >
+      <TableItem title="No." :width="50" :tooltip="true"><template slot-scope="{index}">{{(search.page - 1) * search.pageSize + index + 1}}</template></TableItem>
       <TableItem title="链接" prop="url" ></TableItem>
       <TableItem title="方法" prop="method"></TableItem>
       <TableItem title="IP" prop="ip"></TableItem>
