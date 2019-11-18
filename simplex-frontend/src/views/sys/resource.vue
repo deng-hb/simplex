@@ -84,6 +84,7 @@
 import { parseTree } from "@/utils/sys-resource"
 
 export default {
+  name: 'resource',
   data() {
     return {
       search: {},

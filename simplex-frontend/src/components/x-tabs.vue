@@ -160,7 +160,7 @@
 </style>
 
 <template>
-  <div class="sys-tabs-vue" :class="{'sys-tabs-oversize': tagList.length > 15}">
+  <div class="sys-tabs-vue" :class="{'sys-tabs-oversize': tagList.length > 3}">
     <div class="tabs-container" ref="scrollOuter">
       <div class="tabs-body">
         <DropdownMenu :datas="menus" @click="trigger" @show="show" trigger="contextMenu" :toggleIcon="false">
@@ -168,7 +168,7 @@
             <div class="tabs-item-background"></div>
             <div class="tabs-item-title">
               <span :class="item.meta.icon" class="tabs-item-icon"></span>
-              <span>{{item.name}}</span>
+              <span>{{item.meta.title}}</span>
             </div>
             <span class="tabs-item-close h-icon-close" @click.stop="handleClose(item)" v-if="homePage!=item.name"></span>
           </div>
@@ -301,6 +301,8 @@ export default {
       }
     },
     saveLocal() {
+      let names = this.tagList.map(v=>v.name)
+      this.$store.commit("setCachePage", names);
       Utils.saveLocal('SYS_TABS', this.tagList);
     }
   },

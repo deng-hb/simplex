@@ -54,6 +54,7 @@
 
 <script>
 export default {
+  name: 'user',
   data() {
     return {
       search: {

@@ -9,6 +9,9 @@ let router = new Router({
     {
       path: '/',
       name: 'home',
+      meta: {
+        title: 'Home'
+      },
       component: Home
     }, {
       path: '/about',
@@ -19,19 +22,31 @@ let router = new Router({
       component: () => import(/* webpackChunkName: "about" */ './views/About.vue')
     }, {
       path: '/sys/resource',
-      name: '系统资源',
+      name: 'resource',
+      meta: {
+        title: '系统资源'
+      },
       component: () => import('./views/sys/resource.vue')
     }, {
       path: '/sys/role',
-      name: '系统角色',
+      name: 'role',
+      meta: {
+        title: '系统角色'
+      },
       component: () => import('./views/sys/role.vue')
     }, {
       path: '/sys/user',
-      name: '系统用户',
+      name: 'user',
+      meta: {
+        title: '系统用户'
+      },
       component: () => import('./views/sys/user.vue')
     }, {
       path: '/sys/access-log',
-      name: '访问日志',
+      name: 'access-log',
+      meta: {
+        title: '访问日志'
+      },
       component: () => import('./views/sys/access-log.vue')
     }
   ]
@@ -39,8 +54,8 @@ let router = new Router({
 
 router.beforeEach((to, from, next) => {
   HeyUI.$LoadingBar.start();
-  if (to.name) {
-    document.title = to.name + ' - SimpleX';
+  if (to.meta) {
+    document.title = to.meta.title + ' - SimpleX';
   } else {
     document.title = 'SimpleX';
   }

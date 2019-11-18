@@ -13,14 +13,14 @@
       </HHeader>
       <Layout :siderFixed="siderFixed" :siderCollapsed="siderCollapsed">
         <Sider theme="white">
-          <Menu style="margin-top: 40px;" class="h-menu-white" :datas="menu" @click="onMenu" :option="{keyName:'uri'}" :inlineCollapsed="siderCollapsed"></Menu>
+          <Menu ref="menu" style="margin-top: 40px;" class="h-menu-white" :datas="menu" @click="onMenu" :option="{keyName:'uri'}" :inlineCollapsed="siderCollapsed"></Menu>
         </Sider>
-        <Content style="padding: 0px 30px;">
+        <Content>
           <XTabs></XTabs>
           <Breadcrumb :datas="datas" style="margin: 16px 0px;"></Breadcrumb>
           <div style="background: rgb(255, 255, 255); padding: 20px; min-height: 480px;">
-            <keep-alive>
-            <router-view/>
+            <keep-alive :include="cachePage">
+              <router-view/>
             </keep-alive>
           </div>
           <HFooter class="text-center">Copyright © 2019</HFooter>
@@ -73,7 +73,6 @@ export default {
       },
       loading: false,
       captcha: '',
-      signed: null != window.localStorage.getItem('token'),
       headerFixed: false,
       siderFixed: false,
       siderCollapsed: false,
@@ -85,11 +84,23 @@ export default {
       ]
     };
   },
+  computed: {
+    signed() {
+      return null != window.localStorage.getItem('token');
+    },
+    cachePage() {
+      return this.$store.state.cachePage;
+    }
+  },
   watch: {
     headerFixed() {
       if (!this.headerFixed) {
         this.siderFixed = false;
       }
+    },
+    $route(to) {
+      console.log("watch $route:%o",to)
+      this.menuSelect();
     }
   },
   methods: {
@@ -97,6 +108,11 @@ export default {
       window.localStorage.removeItem('token')
       window.localStorage.removeItem('APIs')
       this.signed = false;
+    },
+    menuSelect() {
+      if (this.$route.path) {
+        this.$refs.menu.select(this.$route.path);
+      }
     },
     doSignIn() {
       let username = this.signIn.username;
@@ -179,9 +195,6 @@ export default {
       });
     }
   },
-  computed: {
-    
-  },
   created() {
     this.reloadCaptcha();
     if (this.signed) {
@@ -190,10 +203,6 @@ export default {
         window.localStorage.setItem('APIs', res.data);
       })
     }
-    let _this = this;
-    setInterval(() => {
-      _this.signed = null != window.localStorage.getItem('token')
-    }, 1);
   },
 };
 </script>

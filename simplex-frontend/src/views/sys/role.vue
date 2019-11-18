@@ -45,6 +45,7 @@
 import { parseTree } from "@/utils/sys-resource"
 
 export default {
+  name: 'role',
   data() {
     return {
       search: {

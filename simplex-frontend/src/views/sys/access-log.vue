@@ -20,6 +20,7 @@
 
 <script>
 export default {
+  name: 'access-log',
   data() {
     return {
       search: {
