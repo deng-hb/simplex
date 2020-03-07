@@ -5,7 +5,7 @@ import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.TypeReference;
 import com.denghb.eorm.Eorm;
 import com.denghb.simplex.base.JSONModel;
-import com.denghb.simplex.base.SysException;
+import com.denghb.simplex.base.AuthException;
 import com.denghb.simplex.holder.Credential;
 import com.denghb.simplex.holder.CredentialContextHolder;
 import com.denghb.simplex.model.CaptchaRes;
@@ -49,7 +49,7 @@ public class BaseTest {
         String sql = "select access_token from tb_sys_user_token where expire_time > now() limit 1";
         String accessToken = db.selectOne(String.class, sql);
         if (StringUtils.isBlank(accessToken)) {
-            throw new SysException("暂无有效Access Token");
+            throw new AuthException("暂无有效Access Token");
         }
         return accessToken;
     }

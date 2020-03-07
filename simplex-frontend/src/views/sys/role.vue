@@ -8,12 +8,15 @@
       <TableItem title="描述" prop="description"></TableItem>
       <TableItem title="操作" align="center">
         <template slot-scope="{data}">
-          <Button v-hasApi="'POST/sys/role/save'" @click="showEdit(data)">编辑</Button>
+          <Button size="s" v-hasApi="'POST/sys/role/save'" @click="showEdit(data)">编辑</Button>
+          <Button size="s" v-hasApi="'POST/sys/role/del'" @click="showDel(data.id)">删除</Button>
         </template>
       </TableItem>
     </Table>
 
-    <Pagination  :cur="search.page" :size="search.pageSize" :total="total" @change="onPageChange"></Pagination>
+    <p>
+      <Pagination :cur="search.page" :size="search.pageSize" :total="total" @change="onPageChange"></Pagination>
+    </p>
 
     <Modal v-model="roleModal.opened" :closeOnMask="false" :hasCloseIcon="true" :hasDivider="true">
       <div slot="header">{{null == roleModal.data.id?'编辑':'新建'}}角色</div>
@@ -78,6 +81,16 @@ export default {
   },
   methods: {
     initData() {
+      
+      Api.post('/sys/resource/list', {}).then(res=>{
+        if (1 != res.code) {
+          return;
+        }
+        this.resourceTree.datas = parseTree(res.data);
+      })
+      this.reloadData();
+    },
+    reloadData() {
       Api.post('/sys/role/list',this.search).then(res=>{
         if (1 != res.code) {
           this.$Message(res.msg);
@@ -85,13 +98,6 @@ export default {
         }
         this.list = res.data.list;
         this.total = res.data.total;
-      })
-      Api.post('/sys/resource/list', {}).then(res=>{
-        if (1 != res.code) {
-          return;
-        }
-        
-        this.resourceTree.datas = parseTree(res.data);
       })
     },
     showAdd() {
@@ -116,7 +122,7 @@ export default {
       Api.post('/sys/role/save', this.roleModal.data).then(res=>{
         this.$Message(res.msg);
         if (1 == res.code) {
-          this.initData();
+          this.reloadData();
           this.roleModal.opened = false;
         }
       });
@@ -124,7 +130,18 @@ export default {
     onPageChange(e) {
       this.search.page = e.cur;
       this.search.pageSize = e.size;
-      this.initData();
+      this.reloadData();
+    },
+    showDel(id) {
+      this.$Confirm('确定删除？', '删除后无法恢复').then(() => {
+        Api.post('/sys/role/del', {id: id}).then(res=>{
+          this.$Message(res.msg);
+          if (1 == res.code) {
+            this.reloadData();
+          }
+        })
+      }).catch(() => {
+      });
     }
   }
 };

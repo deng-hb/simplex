@@ -8,6 +8,7 @@ import com.denghb.simplex.sys.model.req.SysRoleReq;
 import com.denghb.simplex.sys.model.res.SysRoleInfoRes;
 import com.denghb.simplex.sys.model.res.SysRoleRes;
 import com.denghb.simplex.sys.service.SysRoleService;
+import io.swagger.annotations.Api;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -18,6 +19,7 @@ import java.util.List;
  * @author denghb
  * @since 2019/4/17 21:58
  */
+@Api(tags = "系统角色管理")
 @RestController
 @RequestMapping("/sys/role")
 public class SysRoleController {
@@ -35,14 +37,20 @@ public class SysRoleController {
     public JSONModel<PageRes<SysRoleRes>> list(@RequestBody PageReq req) {
 
         PageRes<SysRoleRes> res = sysRoleService.list(req);
-        return JSONModel.buildSuccess("ok", res);
+        return JSONModel.buildSuccessData(res);
     }
 
-    @GetMapping(name = "角基本信息", value = "/list")
+    @GetMapping(name = "角色基本信息", value = "/list")
     public JSONModel<List<SysRoleInfoRes>> list() {
 
         List<SysRoleInfoRes> res = sysRoleService.list();
-        return JSONModel.buildSuccess("ok", res);
+        return JSONModel.buildSuccessData(res);
     }
 
+
+    @PostMapping(name = "删除资源", value = "/del")
+    public JSONModel<String> del(@Valid @RequestBody IdReq req) {
+        sysRoleService.del(req.getId());
+        return JSONModel.buildSuccess("操作成功");
+    }
 }

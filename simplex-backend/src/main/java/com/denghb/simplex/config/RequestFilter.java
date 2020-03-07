@@ -1,7 +1,6 @@
 package com.denghb.simplex.config;
 
 import com.denghb.simplex.base.Consts;
-import com.denghb.simplex.base.SysException;
 import com.denghb.simplex.holder.RequestInfo;
 import com.denghb.simplex.holder.RequestInfoContextHolder;
 import com.denghb.simplex.utils.WebUtils;

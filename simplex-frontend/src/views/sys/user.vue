@@ -10,16 +10,18 @@
       <TableItem title="生日" prop="birthday"></TableItem>
       <TableItem title="操作" align="center">
         <template slot-scope="{data}">
-          <Button v-hasApi="'POST/sys/user/save'" @click="showEdit(data)">编辑</Button>
-          <Button v-hasApi="'POST/sys/user/del'" @click="showDel(data.id)">删除</Button>
-          <Button v-hasApi="'POST/sys/user/unlockSignError'" v-if="data.status == 2" @click="showUnlockSignError(data.id)">解锁</Button>
-          <Button v-hasApi="'POST/sys/user/enabled'" v-if="data.status == 3" @click="showEnabled(data.id)">启用</Button>
-          <Button v-hasApi="'POST/sys/user/disabled'" v-if="data.status != 3" @click="showDisabled(data.id)">禁用</Button>
+          <Button size="s" v-hasApi="'POST/sys/user/save'" @click="showEdit(data)">编辑</Button>
+          <Button size="s" v-hasApi="'POST/sys/user/del'" @click="showDel(data.id)">删除</Button>
+          <Button size="s" v-hasApi="'POST/sys/user/unlockSignError'" v-if="data.status == 2" @click="showUnlockSignError(data.id)">解锁</Button>
+          <Button size="s" v-hasApi="'POST/sys/user/enabled'" v-if="data.status == 3" @click="showEnabled(data.id)">启用</Button>
+          <Button size="s" v-hasApi="'POST/sys/user/disabled'" v-if="data.status != 3" @click="showDisabled(data.id)">禁用</Button>
         </template>
       </TableItem>
     </Table>
 
-    <Pagination  :cur="search.page" :size="search.pageSize" :total="total" @change="onPageChange"></Pagination>
+    <p>
+      <Pagination :cur="search.page" :size="search.pageSize" :total="total" @change="onPageChange"></Pagination>
+    </p>
 
     <Modal v-model="userModal.opened" :closeOnMask="false" :hasCloseIcon="true" :hasDivider="true">
       <div slot="header">{{null == userModal.data.id?'编辑':'新建'}}用户</div>

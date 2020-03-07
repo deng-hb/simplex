@@ -15,6 +15,7 @@ import com.denghb.simplex.sys.service.SysRoleService;
 import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.Assert;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -121,5 +122,23 @@ public class SysRoleServiceImpl extends EPageServiceImpl implements SysRoleServi
             select id, name from tb_sys_role where deleted = 0
         }*/;
         return db.select(SysRoleInfoRes.class, sql);
+    }
+
+    @Override
+    public void del(int id) {
+
+        Credential credential = CredentialContextHolder.get();
+        int userId = credential.getId();
+        List<Integer> oldResourceIds = getSysResourceIds(id);
+        if (null != oldResourceIds && !oldResourceIds.isEmpty()) {
+            throw new BizException("删除失败，当前角色还有资源");
+        }
+
+        String sql = ""/*{
+            update tb_sys_role set operator = ?, deleted = 1 where id = ? and deleted = 0
+        }*/;
+        int res = db.execute(sql, userId, id);
+        Assert.isTrue(1 == res, "删除失败");
+
     }
 }

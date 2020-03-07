@@ -1,5 +1,10 @@
 package com.denghb.simplex.base;
 
+/**
+ * 返回模型
+ *
+ * @param <T>
+ */
 public class JSONModel<T> {
 
     private int code;
@@ -8,25 +13,25 @@ public class JSONModel<T> {
 
     private T data;
 
-    public JSONModel() {
-
-    }
-
     private JSONModel(int code, String msg, T data) {
         this.code = code;
         this.msg = msg;
         this.data = data;
     }
 
-
+    /**
+     * 返回
+     * @param msg
+     * @return
+     */
     public static JSONModel<String> buildSuccess(String msg) {
 
         return new JSONModel<String>(1, msg, null);
     }
 
-    public static <T> JSONModel<T> buildSuccess(String msg, T data) {
+    public static <T> JSONModel<T> buildSuccessData(T data) {
 
-        return new JSONModel<T>(1, msg, data);
+        return new JSONModel<T>(1, "ok", data);
     }
 
     public static JSONModel<String> buildFailure(String msg) {

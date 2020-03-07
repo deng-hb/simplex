@@ -14,7 +14,9 @@
       </template>
     </Table>
 
-    <Pagination  :cur="search.page" :size="search.pageSize" :total="total" @change="onPageChange"></Pagination>
+    <p>
+      <Pagination :cur="search.page" :size="search.pageSize" :total="total" @change="onPageChange"></Pagination>
+    </p>
   </div>
 </template>
 

@@ -5,11 +5,15 @@ Vue.use(Vuex)
 
 export default new Vuex.Store({
   state: {
-    cachePage: []
+    cachePage: [],
+    signed: null != window.localStorage.getItem('token'),
   },
   mutations: {
     setCachePage(state, args) {
       state.cachePage = args;
+    },
+    setSigned(state, args) {
+      state.signed = args;
     },
   },
   actions: {

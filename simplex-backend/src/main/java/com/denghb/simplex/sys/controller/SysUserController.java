@@ -18,6 +18,7 @@ import com.denghb.simplex.sys.model.res.SysUserRes;
 import com.denghb.simplex.sys.model.res.SysUserSignInRes;
 import com.denghb.simplex.sys.service.SysUserService;
 import com.denghb.simplex.sys.service.SysUserSignLogService;
+import io.swagger.annotations.Api;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -25,6 +26,7 @@ import org.springframework.web.bind.annotation.*;
 import javax.validation.Valid;
 import java.util.List;
 
+@Api(tags = "系统用户管理")
 @RestController
 @RequestMapping("/sys/user")
 public class SysUserController {
@@ -53,7 +55,7 @@ public class SysUserController {
     @PostMapping(name = "用户列表", value = "/list")
     public JSONModel<PageRes<SysUserRes>> list(@Valid @RequestBody PageReq req) {
         PageRes<SysUserRes> res = sysUserService.list(req);
-        return JSONModel.buildSuccess("ok", res);
+        return JSONModel.buildSuccessData(res);
     }
 
     @PostMapping(name = "登录", value = "/signIn")
@@ -73,7 +75,7 @@ public class SysUserController {
         SysUserSignInRes res = sysUserService.signIn(req.getUsername(), req.getPassword(), requestInfo.getIp(), requestInfo.getUserAgent());
 
         sysUserSignLogService.setSuccess(id);
-        return JSONModel.buildSuccess("ok", res);
+        return JSONModel.buildSuccessData(res);
     }
 
     @PostMapping(name = "解锁用户登录", value = "/unlockSignError")
@@ -85,13 +87,13 @@ public class SysUserController {
     @GetMapping(name = "用户菜单", value = "/menu")
     public JSONModel<List<SysMenuRes>> menu() {
         List<SysMenuRes> res = sysUserService.menu();
-        return JSONModel.buildSuccess("ok", res);
+        return JSONModel.buildSuccessData(res);
     }
 
     @GetMapping(name = "用户接口", value = "/api")
     public JSONModel<List<String>> api() {
         List<String> res = sysUserService.api();
-        return JSONModel.buildSuccess("ok", res);
+        return JSONModel.buildSuccessData(res);
     }
 
     @PostMapping(name = "修改密码", value = "/updatePassword")

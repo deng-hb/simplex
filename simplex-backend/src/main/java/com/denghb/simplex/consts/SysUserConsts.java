@@ -6,17 +6,17 @@ import com.denghb.simplex.base.ConstTag;
  * @author denghb
  * @since 2019/4/13 17:00
  */
-public class SysUserConsts {
+public interface SysUserConsts {
 
-    public static class Status {
+    interface Status {
 
         @ConstTag("正常")
-        public static int NORMAL = 1;
+        int NORMAL = 1;
 
         @ConstTag("登录密码错误过多锁住")
-        public static int LOCK_SIGN_ERR = 2;
+        int LOCK_SIGN_ERR = 2;
 
         @ConstTag("禁用")
-        public static int DISABLED = 3;
+        int DISABLED = 3;
     }
 }

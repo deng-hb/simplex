@@ -32,12 +32,15 @@ public class SysResourceServiceImpl implements SysResourceService {
         Credential credential = CredentialContextHolder.get();
         SysResource sysResource = new SysResource();
         BeanUtils.copyProperties(req, sysResource);
+        if (null == sysResource.getParentId()) {
+            sysResource.setParentId(0);
+        }
 
         sysResource.setOperator(credential.getId());
         if (null == req.getId()) {
             db.insert(sysResource);
         } else {
-            if (null != req.getParentId() && req.getParentId().intValue() == req.getId()) {
+            if (req.getParentId().intValue() == req.getId()) {
                 throw new BizException("父节点不能是自己");
             }
             db.update(sysResource);

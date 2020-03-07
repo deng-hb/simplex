@@ -1,14 +1,26 @@
 <template>
   <div>
   
-    <p><Button v-hasApi="'POST/sys/resource/save'" color="blue" icon="h-icon-plus" @click="showAdd({})">新建</Button></p>
+    <p><Button v-hasApi="'POST/sys/resource/save'" color="blue" icon="h-icon-plus" @click="showAdd(0)">新建</Button></p>
+
+    <div>
+      <Form mode="inline" :model="search" :top="0.2">
+        <FormItem label="类型">
+          <Select v-width="200" v-model="search.type" :datas="SysResourceConsts$Type"></Select>
+        </FormItem>
+        <FormItem>
+          <Button color="primary" @click="doSearch" ><i class="h-icon-search"></i> 查询</Button>
+        </FormItem>
+        
+      </Form>
+    </div>
 
     <Table ref="table" :datas="listTree" >
       <TableItem title="No." :width="50" ><template slot-scope="{index}">{{index + 1}}</template></TableItem>
       <TableItem title="名称" prop="title" treeOpener></TableItem>
       <TableItem title="类型">
         <template slot-scope="{data}">
-          {{types[data.type]}}
+          {{SysResourceConsts$Type[data.type]}}
         </template>
       </TableItem>
       <TableItem title="排序" prop="seq"></TableItem>
@@ -33,6 +45,7 @@
       </TableItem>
       <TableItem title="操作" align="center">
         <template slot-scope="{data}">
+          <Button v-hasApi="'POST/sys/resource/save'" @click="showAdd(data.id)" size="s" icon="h-icon-plus">新增</Button>
           <Button v-hasApi="'POST/sys/resource/save'" @click="showEdit(data)" size="s" icon="h-icon-edit">编辑</Button>
           <Button v-hasApi="'POST/sys/resource/del'" @click="showDel(data.id)" size="s" icon="h-icon-trash" text-color="red">删除</Button>
         </template>
@@ -54,7 +67,7 @@
             <input type="text" v-model="resourceModal.data.uri" />
           </FormItem>
           <FormItem label="类型" prop="type">
-            <Select v-model="resourceModal.data.type" :nullOption="false" :datas="types"></Select>
+            <Select v-model="resourceModal.data.type" :nullOption="false" :datas="SysResourceConsts$Type"></Select>
           </FormItem>
           <FormItem v-show="resourceModal.data.type == 'MENU'" label="图标" prop="icon">
             <input type="text" v-model="resourceModal.data.icon" />
@@ -82,12 +95,15 @@
 </template>
 <script>
 import { parseTree } from "@/utils/sys-resource"
+import { SysResourceConsts$Type } from "@/consts"
 
 export default {
   name: 'resource',
   data() {
     return {
-      search: {},
+      search: {
+        type: '',
+      },
       listTree: [],
       resourceTree: {
         keyName: 'id',
@@ -95,7 +111,6 @@ export default {
         titleName: 'title',
         dataMode: 'list'
       },
-      types: [],
       resourceModal: {
         opened: false,
         data: {
@@ -107,7 +122,8 @@ export default {
         rules: {
           required: ['title', 'uri', 'type']
         }
-      }
+      },
+      SysResourceConsts$Type
     };
   },
   created() {
@@ -130,7 +146,10 @@ export default {
         this.resourceTree.datas = listTree;
       })
     },
-    showAdd() {
+    doSearch() {
+      this.reloadData();
+    },
+    showAdd(parentId) {
       this.resourceModal.data.id = ''
       this.resourceModal.data.title = ''
       this.resourceModal.data.uri = ''
@@ -139,6 +158,7 @@ export default {
       this.resourceModal.data.opened = '0'
       this.resourceModal.data.seq = '0'
       this.resourceModal.data.method = '';
+      this.resourceModal.data.parentId = parentId;
       this.resourceModal.opened = true;
     },
     showEdit(data) {
@@ -151,7 +171,6 @@ export default {
       this.resourceModal.data.seq = data.seq;
       this.resourceModal.data.method = data.method;
       this.resourceModal.data.parentId = data.parentId;
-      this.resourceModal.data.parentName = data.parentName;
       this.resourceModal.opened = true;
     },
     doSave() {

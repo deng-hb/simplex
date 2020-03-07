@@ -2,7 +2,7 @@ package com.denghb.simplex.controller;
 
 import com.denghb.simplex.base.BizException;
 import com.denghb.simplex.base.JSONModel;
-import com.denghb.simplex.base.SysException;
+import com.denghb.simplex.base.AuthException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.boot.autoconfigure.web.ErrorController;
 import org.springframework.dao.DuplicateKeyException;
@@ -21,7 +21,6 @@ import org.springframework.web.servlet.ModelAndView;
 import springfox.documentation.annotations.ApiIgnore;
 
 import javax.servlet.http.HttpServletRequest;
-import java.net.MalformedURLException;
 import java.util.List;
 
 @Slf4j
@@ -47,7 +46,7 @@ public class AppErrorController implements ErrorController {
     @ResponseBody
     public JSONModel error(HttpServletRequest request) {
         HttpStatus status = getStatus(request);
-        return JSONModel.buildFailure(status.value(), status.getReasonPhrase());
+        return JSONModel.buildFailure(status.getReasonPhrase());
     }
 
     /**
@@ -57,11 +56,12 @@ public class AppErrorController implements ErrorController {
     @ResponseBody
     public JSONModel<String> error(HttpServletRequest request, Exception e) {
         HttpStatus status = getStatus(request);
+        log.error(e.getMessage(), e);
 
         if (e instanceof BizException) {
             return JSONModel.buildFailure(e.getMessage());
-        } else if (e instanceof SysException) {
-            return JSONModel.buildFailure(e.getMessage());
+        } else if (e instanceof AuthException) {
+            return JSONModel.buildFailure(2, e.getMessage());
         } else if (e instanceof MethodArgumentNotValidException) {
             // 进来了肯定有错
             MethodArgumentNotValidException mane = (MethodArgumentNotValidException) e;
@@ -77,7 +77,6 @@ public class AppErrorController implements ErrorController {
         } else if (e instanceof BadSqlGrammarException) {
             return JSONModel.buildFailure("数据库脚本错误");
         }
-        log.error(e.getMessage(), e);
         // 未知错误
         return JSONModel.buildFailure("服务器忙，请稍后重试");
     }

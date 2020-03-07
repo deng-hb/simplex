@@ -25,7 +25,7 @@ let parseTree = function(list) {
   let listTree = [];
   for (let i in list) {
     let item = list[i];
-    if (null == item.parentId) {
+    if (0 == item.parentId) {
       findChildren(item, list);
       listTree.push(showTitle(item));
     }

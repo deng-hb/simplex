@@ -1,6 +1,6 @@
 import axios from 'axios';
 import heyui from 'heyui';
-import router from '@/router'
+import store from '@/store'
 
 axios.defaults.timeout = 60 * 1000;// 1分钟
 axios.defaults.baseURL = '';
@@ -25,10 +25,12 @@ axios.interceptors.response.use(
   response => {
     // console.log(response);
     let res = response.data;
-    if (res.code > 2) {
+    if (res.code === 2) {
       heyui.$Message.error(res.msg);
       window.localStorage.removeItem('token');
-      router.push('/')
+      window.localStorage.removeItem('APIs')
+      window.localStorage.removeItem('SYS_TABS')
+      store.commit("setSigned", false);
     }
     return response;
   },

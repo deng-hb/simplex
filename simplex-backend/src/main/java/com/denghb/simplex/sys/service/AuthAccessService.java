@@ -1,6 +1,6 @@
 package com.denghb.simplex.sys.service;
 
-import com.denghb.simplex.base.SysException;
+import com.denghb.simplex.base.AuthException;
 import com.denghb.simplex.holder.Credential;
 import com.denghb.simplex.sys.model.req.SysAccessLogReq;
 
@@ -12,5 +12,5 @@ public interface AuthAccessService {
 
     boolean isOpened(String method, String uri);
 
-    Credential validate() throws SysException;
+    Credential validate() throws AuthException;
 }

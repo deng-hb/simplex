@@ -19,7 +19,7 @@ public class BaseController {
     public JSONModel<CaptchaRes> captcha() {
         CaptchaRes res = captchaService.generate();
 
-        return JSONModel.buildSuccess("ok", res);
+        return JSONModel.buildSuccessData(res);
     }
 
     @RequestMapping("/")

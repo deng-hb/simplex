@@ -1,6 +1,6 @@
 import Vue from 'vue'
 import Router from 'vue-router'
-import Home from './views/Home.vue'
+import Home from './views/home.vue'
 
 Vue.use(Router)
 
@@ -16,10 +16,7 @@ let router = new Router({
     }, {
       path: '/about',
       name: 'about',
-      // route level code-splitting
-      // this generates a separate chunk (about.[hash].js) for this route
-      // which is lazy-loaded when the route is visited.
-      component: () => import(/* webpackChunkName: "about" */ './views/About.vue')
+      component: () => import('./views/about.vue')
     }, {
       path: '/sys/resource',
       name: 'resource',
@@ -48,6 +45,97 @@ let router = new Router({
         title: '访问日志'
       },
       component: () => import('./views/sys/access-log.vue')
+    }, {
+      path: '/demo/demo1/demo1-1',
+      name: 'demo1-1',
+      meta: {
+        title: 'Demo1-1'
+      },
+      component: () => import('./views/demo/demo1/demo1-1.vue')
+    }, {
+      path: '/demo/demo1/demo1-2',
+      name: 'demo1-2',
+      meta: {
+        title: 'Demo1-2'
+      },
+      component: () => import('./views/demo/demo1/demo1-2.vue')
+    }, {
+      path: '/demo/demo1/demo1-3',
+      name: 'demo1-3',
+      meta: {
+        title: 'Demo1-3'
+      },
+      component: () => import('./views/demo/demo1/demo1-3.vue')
+    }, {
+      path: '/demo/demo2',
+      name: 'demo2',
+      meta: {
+        title: 'Demo2'
+      },
+      component: () => import('./views/demo/demo2.vue')
+    }, {
+      path: '/demo/demo3',
+      name: 'demo3',
+      meta: {
+        title: 'Demo3'
+      },
+      component: () => import('./views/demo/demo3.vue')
+    }, {
+      path: '/demo/demo3',
+      name: 'demo3',
+      meta: {
+        title: 'Demo3'
+      },
+      component: () => import('./views/demo/demo3.vue')
+    }, {
+      path: '/demo/demo4',
+      name: 'demo4',
+      meta: {
+        title: 'Demo4'
+      },
+      component: () => import('./views/demo/demo4.vue')
+    }, {
+      path: '/demo/demo5',
+      name: 'demo5',
+      meta: {
+        title: 'Demo5'
+      },
+      component: () => import('./views/demo/demo5.vue')
+    }, {
+      path: '/demo/demo6',
+      name: 'demo6',
+      meta: {
+        title: 'Demo6'
+      },
+      component: () => import('./views/demo/demo6.vue')
+    }, {
+      path: '/demo/demo7',
+      name: 'demo7',
+      meta: {
+        title: 'Demo7'
+      },
+      component: () => import('./views/demo/demo7.vue')
+    }, {
+      path: '/demo/demo8',
+      name: 'demo8',
+      meta: {
+        title: 'Demo8'
+      },
+      component: () => import('./views/demo/demo8.vue')
+    }, {
+      path: '/demo/demo9',
+      name: 'demo9',
+      meta: {
+        title: 'Demo9'
+      },
+      component: () => import('./views/demo/demo9.vue')
+    }, {
+      path: '/demo/demo10',
+      name: 'demo10',
+      meta: {
+        title: 'Demo10'
+      },
+      component: () => import('./views/demo/demo10.vue')
     }
   ]
 });

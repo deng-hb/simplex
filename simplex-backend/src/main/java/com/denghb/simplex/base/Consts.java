@@ -1,7 +1,16 @@
 package com.denghb.simplex.base;
 
 
+import com.alibaba.fastjson.JSON;
+import com.denghb.simplex.consts.SysResourceConsts;
+
+import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.io.PrintStream;
 import java.lang.reflect.Field;
+import java.net.URL;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
@@ -71,10 +80,61 @@ public class Consts {
 
     public static void main(String[] args) {
 
-        Map<Object, String> result = map(Test.class);
+        Map<Object, String> result = map(SysResourceConsts.Type.class);
         System.out.println(result);
+        String json = JSON.toJSONString(result);
+        System.out.println(json);
 
         String tag = get(Test.class, Test.TEST1);
         System.out.println(tag);
+
+        genJs("com.denghb.simplex.consts", "/Users/mac/IdeaProjects/simplex/simplex-frontend/src/consts.js");
+
+    }
+
+    /**
+     * 生成js常量文件(覆盖)
+     *
+     * @param packageName
+     * @param targetJs
+     * @return
+     */
+    private static void genJs(String packageName, String targetJs) {
+        String splashPath = packageName.replaceAll("\\.", "/");
+        URL url = Consts.class.getClassLoader().getResource(splashPath);
+        String filePath = url.getPath();
+        File file = new File(filePath);
+        String[] names = file.list();
+
+
+        StringBuilder js = new StringBuilder("/*! code generated don't edit */");
+        for (String name : names) {
+            String className = name.substring(0, name.length() - 6);
+            try {
+                Map<Object, String> result = map(Class.forName(packageName + '.' + className));
+                if (!result.isEmpty()) {
+                    String json = JSON.toJSONString(result);
+
+                    js.append(System.lineSeparator());
+                    js.append("export const ");
+                    js.append(className);
+                    js.append(" = ");
+                    js.append(json);
+                    js.append(";");
+                    js.append(System.lineSeparator());
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+        // System.out.println(js);
+        try {
+
+            PrintStream stream = new PrintStream(targetJs);//写入的文件path
+            stream.print(js.toString());//写入的字符串
+            stream.close();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 }

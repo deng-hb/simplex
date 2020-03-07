@@ -26,7 +26,7 @@ public class SysAccessLogController {
     public JSONModel<PageRes<SysAccessLogRes>> list(@RequestBody PageReq req) {
 
         PageRes<SysAccessLogRes> res = sysAccessLogService.list(req);
-        return JSONModel.buildSuccess("ok", res);
+        return JSONModel.buildSuccessData(res);
     }
 
 }

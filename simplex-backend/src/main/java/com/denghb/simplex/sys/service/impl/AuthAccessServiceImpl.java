@@ -1,13 +1,12 @@
 package com.denghb.simplex.sys.service.impl;
 
 import com.denghb.eorm.Eorm;
-import com.denghb.simplex.base.SysException;
+import com.denghb.simplex.base.AuthException;
 import com.denghb.simplex.consts.SysResourceConsts;
 import com.denghb.simplex.consts.SysUserConsts;
 import com.denghb.simplex.holder.Credential;
 import com.denghb.simplex.holder.RequestInfo;
 import com.denghb.simplex.holder.RequestInfoContextHolder;
-import com.denghb.simplex.service.impl.EserviceImpl;
 import com.denghb.simplex.sys.domain.SysAccessLog;
 import com.denghb.simplex.sys.domain.SysUser;
 import com.denghb.simplex.sys.domain.SysUserToken;
@@ -18,6 +17,8 @@ import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Propagation;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Date;
 import java.util.regex.Pattern;
@@ -31,6 +32,7 @@ public class AuthAccessServiceImpl implements AuthAccessService {
     @Autowired
     private Eorm db;
 
+    @Transactional(propagation = Propagation.REQUIRES_NEW)
     @Override
     public int addLog(SysAccessLogReq req) {
         SysAccessLog log = new SysAccessLog();
@@ -40,6 +42,7 @@ public class AuthAccessServiceImpl implements AuthAccessService {
         return log.getId();
     }
 
+    @Transactional(propagation = Propagation.REQUIRES_NEW)
     @Override
     public void setEndTime(int id) {
         SysAccessLog log = new SysAccessLog();
@@ -62,7 +65,7 @@ public class AuthAccessServiceImpl implements AuthAccessService {
     }
 
     @Override
-    public Credential validate() throws SysException {
+    public Credential validate() throws AuthException {
         RequestInfo requestInfo = RequestInfoContextHolder.get();
         String method = requestInfo.getMethod(), uri = requestInfo.getUri();
         if (isOpened(method, uri)) {
@@ -71,7 +74,7 @@ public class AuthAccessServiceImpl implements AuthAccessService {
 
         String accessToken = requestInfo.getAccessToken();
         if (StringUtils.isBlank(accessToken)) {
-            throw new SysException(403, "非法访问");
+            throw new AuthException("非法访问");
         }
 
         String sql1 = ""/*{
@@ -79,11 +82,11 @@ public class AuthAccessServiceImpl implements AuthAccessService {
         }*/;
         SysUserToken sysUserToken = db.selectOne(SysUserToken.class, sql1, accessToken);
         if (null == sysUserToken) {
-            throw new SysException(403, "登录失效，请重新登录");
+            throw new AuthException("登录失效，请重新登录");
         }
 
         if (!requestInfo.getIp().equals(sysUserToken.getIp())) {
-            throw new SysException(401, "登录的IP变了，请重新登录");
+            throw new AuthException("登录的IP变了，请重新登录");
         }
 
         int sysUserId = sysUserToken.getSysUserId();
@@ -93,7 +96,7 @@ public class AuthAccessServiceImpl implements AuthAccessService {
         }*/;
         SysUser sysUser = db.selectOne(SysUser.class, sql2, sysUserId);
         if (null == sysUser || SysUserConsts.Status.NORMAL != sysUser.getStatus()) {
-            throw new SysException(401, "账户状态有误，请重新登录");
+            throw new AuthException("账户状态有误，请重新登录");
         }
         // 校验uri权限
 
@@ -107,7 +110,7 @@ public class AuthAccessServiceImpl implements AuthAccessService {
         String result = db.selectOne(String.class, sql, sysUserId, SysResourceConsts.Type.API, uri, method);
         if (null == result) {
             log.error("账户无访问权限：{}", uri);
-            throw new SysException(403, "账户无访问权限：" + uri);
+            throw new AuthException("账户无访问权限：" + uri);
         }
 
         Credential credential = new Credential();

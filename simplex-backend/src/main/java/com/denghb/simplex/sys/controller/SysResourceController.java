@@ -8,6 +8,7 @@ import com.denghb.simplex.sys.model.req.SysResourceQueryReq;
 import com.denghb.simplex.sys.model.req.SysResourceReq;
 import com.denghb.simplex.sys.model.res.SysResourceRes;
 import com.denghb.simplex.sys.service.SysResourceService;
+import io.swagger.annotations.Api;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -19,19 +20,13 @@ import java.util.Map;
  * @author denghb
  * @since 2019/4/13 21:50
  */
+@Api(tags = "系统资源")
 @RestController
 @RequestMapping("/sys/resource")
 public class SysResourceController {
 
     @Autowired
     private SysResourceService sysResourceService;
-
-    @GetMapping(name = "资源类型", value = "/type")
-    public JSONModel<Map<Object, String>> type() {
-
-        Map<Object, String> list = Consts.map(SysResourceConsts.Type.class);
-        return JSONModel.buildSuccess("ok", list);
-    }
 
     @PostMapping(name = "保存资源", value = "/save")
     public JSONModel<String> save(@Valid @RequestBody SysResourceReq req) {
@@ -48,6 +43,6 @@ public class SysResourceController {
     @PostMapping(name = "资源列表", value = "/list")
     public JSONModel<List<SysResourceRes>> list(@RequestBody SysResourceQueryReq req) {
         List<SysResourceRes> res = sysResourceService.list(req);
-        return JSONModel.buildSuccess("ok", res);
+        return JSONModel.buildSuccessData(res);
     }
 }

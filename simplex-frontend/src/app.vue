@@ -16,7 +16,7 @@
           <Menu ref="menu" style="margin-top: 40px;" class="h-menu-white" :datas="menu" @click="onMenu" :option="{keyName:'uri'}" :inlineCollapsed="siderCollapsed"></Menu>
         </Sider>
         <Content>
-          <XTabs></XTabs>
+          <XTabs homePage="home"></XTabs>
           <Breadcrumb :datas="datas" style="margin: 16px 0px;"></Breadcrumb>
           <div style="background: rgb(255, 255, 255); padding: 20px; min-height: 480px;">
             <keep-alive :include="cachePage">
@@ -42,10 +42,11 @@
           <div class="signIn-captcha signIn-input">
             <input type="text" name="code" v-model="signIn.code" @keyup.enter="doSignIn" autocomplete="off"/>
             <span class="placeholder" :class="{fixed: signIn.code != '' && signIn.code != null}">验证码</span>
-            <img :src="captcha" class="captcha" @click="reloadCaptcha" />
+            <img :src="captcha" v-tooltip content="点击刷新" class="captcha" @click="reloadCaptcha" />
           </div>
           <div class="buttonDiv">
             <Button :loading="loading" block color="primary" size="l" @click="doSignIn">登录</Button>
+            su/P2V49fAp
           </div>
         </div>
       </div>
@@ -86,7 +87,7 @@ export default {
   },
   computed: {
     signed() {
-      return null != window.localStorage.getItem('token');
+      return this.$store.state.signed;
     },
     cachePage() {
       return this.$store.state.cachePage;
@@ -105,9 +106,16 @@ export default {
   },
   methods: {
     doSignOut() {
-      window.localStorage.removeItem('token')
-      window.localStorage.removeItem('APIs')
-      this.signed = false;
+      this.$Confirm('确认要退出登录？', '提示').then(() => {
+        window.localStorage.removeItem('token');
+        window.localStorage.removeItem('APIs')
+        window.localStorage.removeItem('SYS_TABS')
+        this.$store.commit("setSigned", false);
+        this.reloadCaptcha();
+      }).catch(() => {
+        // this.$Message.error('取消');
+      });
+      
     },
     menuSelect() {
       if (this.$route.path) {
@@ -133,7 +141,12 @@ export default {
       let password2 = new MD5().update(password).digest('hex')
       password2 = new MD5().update(password2).digest('hex')
       
-      let data = {username:username,password:password2,code:code,key:this.signIn.key};
+      let data = {
+        username: username,
+        password: password2,
+        code: code,
+        key: this.signIn.key
+      };
 
       Api.post('/sys/user/signIn', data).then(res=>{
         if (1 != res.code) {
@@ -143,7 +156,7 @@ export default {
         }
         this.signIn.password = '';
         window.localStorage.setItem('token', res.data.token);
-        this.signed = true;
+        this.$store.commit("setSigned", true);
         this.initMenu();
       })
     },
@@ -161,7 +174,7 @@ export default {
     onMenu(data) {
       console.log(data);
       if (data.children.length == 0)
-        this.$router.push({path:data.key,meta:{title:data.title}});
+        this.$router.push({path: data.key, meta: {title: data.title}});
     },
     initMenu() {
       Api.get('/sys/user/menu').then(res=>{
@@ -185,7 +198,7 @@ export default {
         let menu = [];
         for (let i in list) {
           let item = list[i];
-          if (null == item.parentId) {
+          if (0 == item.parentId) {
             findChildren(item, list);
             menu.push(item);
           }
@@ -196,12 +209,13 @@ export default {
     }
   },
   created() {
-    this.reloadCaptcha();
     if (this.signed) {
       this.initMenu();
       Api.get('/sys/user/api').then(res=>{
         window.localStorage.setItem('APIs', res.data);
       })
+    } else {
+      this.reloadCaptcha();
     }
   },
 };

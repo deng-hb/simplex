@@ -21,4 +21,6 @@ public interface SysRoleService {
     void save(SysRoleReq req);
 
     List<SysRoleInfoRes> list();
+
+    void del(int id);
 }

@@ -170,7 +170,7 @@
               <span :class="item.meta.icon" class="tabs-item-icon"></span>
               <span>{{item.meta.title}}</span>
             </div>
-            <span class="tabs-item-close h-icon-close" @click.stop="handleClose(item)" v-if="homePage!=item.name"></span>
+            <span class="tabs-item-close h-icon-close" @click.stop="handleClose(item)" v-if="homePage != item.name"></span>
           </div>
         </DropdownMenu>
       </div>
