@@ -1,27 +1,38 @@
 <template>
-  <div>
-    <p><Button v-hasApi="'POST/sys/user/save'" color="blue" icon="h-icon-plus" @click="showAdd()">新建</Button></p>
+  <div class="frame-page h-panel">
+    <div class="h-panel-bar">
+      <span class="h-panel-title">查询列表</span>
+      <div class="h-panel-right">
+        <Button size="s" v-hasApi="'POST/sys/user/save'" color="blue" icon="h-icon-plus" @click="showAdd()">新建</Button>
+      </div>
+    </div>
 
-    <Table :datas="list" stripe checkbox>
-      <TableItem title="No." :width="50" :tooltip="true"><template slot-scope="{index}">{{(search.page - 1) * search.pageSize + index + 1}}</template></TableItem>
-      <TableItem title="姓名" prop="name" ></TableItem>
-      <TableItem title="用户名" prop="username"></TableItem>
-      <TableItem title="邮箱" prop="email"></TableItem>
-      <TableItem title="生日" prop="birthday"></TableItem>
-      <TableItem title="操作" align="center">
-        <template slot-scope="{data}">
-          <Button size="s" v-hasApi="'POST/sys/user/save'" @click="showEdit(data)">编辑</Button>
-          <Button size="s" v-hasApi="'POST/sys/user/del'" @click="showDel(data.id)">删除</Button>
-          <Button size="s" v-hasApi="'POST/sys/user/unlockSignError'" v-if="data.status == 2" @click="showUnlockSignError(data.id)">解锁</Button>
-          <Button size="s" v-hasApi="'POST/sys/user/enabled'" v-if="data.status == 3" @click="showEnabled(data.id)">启用</Button>
-          <Button size="s" v-hasApi="'POST/sys/user/disabled'" v-if="data.status != 3" @click="showDisabled(data.id)">禁用</Button>
-        </template>
-      </TableItem>
-    </Table>
+    <div class="h-panel-bar">
+      
+    </div>
 
-    <p>
-      <Pagination :cur="search.page" :size="search.pageSize" :total="total" @change="onPageChange"></Pagination>
-    </p>
+    <div class="h-panel-body">
+      <Table :datas="list" stripe >
+        <TableItem title="No." :width="50" :tooltip="true"><template slot-scope="{index}">{{(search.page - 1) * search.pageSize + index + 1}}</template></TableItem>
+        <TableItem title="姓名" prop="name" ></TableItem>
+        <TableItem title="用户名" prop="username"></TableItem>
+        <TableItem title="邮箱" prop="email"></TableItem>
+        <TableItem title="生日" prop="birthday"></TableItem>
+        <TableItem title="操作" align="center">
+          <template slot-scope="{data}">
+            <Button size="s" v-hasApi="'POST/sys/user/save'" @click="showEdit(data)">编辑</Button>
+            <Button size="s" v-hasApi="'POST/sys/user/del'" @click="showDel(data.id)">删除</Button>
+            <Button size="s" v-hasApi="'POST/sys/user/unlockSignError'" v-if="data.status == 2" @click="showUnlockSignError(data.id)">解锁</Button>
+            <Button size="s" v-hasApi="'POST/sys/user/enabled'" v-if="data.status == 3" @click="showEnabled(data.id)">启用</Button>
+            <Button size="s" v-hasApi="'POST/sys/user/disabled'" v-if="data.status != 3" @click="showDisabled(data.id)">禁用</Button>
+          </template>
+        </TableItem>
+      </Table>
+
+      <p>
+        <Pagination :cur="search.page" :size="search.pageSize" :total="total" @change="onPageChange"></Pagination>
+      </p>
+    </div>
 
     <Modal v-model="userModal.opened" :closeOnMask="false" :hasCloseIcon="true" :hasDivider="true">
       <div slot="header">{{null == userModal.data.id?'编辑':'新建'}}用户</div>

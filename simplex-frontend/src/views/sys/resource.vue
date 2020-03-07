@@ -1,9 +1,13 @@
 <template>
-  <div>
-  
-    <p><Button v-hasApi="'POST/sys/resource/save'" color="blue" icon="h-icon-plus" @click="showAdd(0)">新建</Button></p>
+  <div class="frame-page h-panel">
+    <div class="h-panel-bar">
+      <span class="h-panel-title">查询列表</span>
+      <div class="h-panel-right">
+        <Button v-hasApi="'POST/sys/resource/save'" color="blue" icon="h-icon-plus" @click="showAdd(0)">新建</Button>
+      </div>
+    </div>
 
-    <div>
+    <div class="h-panel-bar">
       <Form mode="inline" :model="search" :top="0.2">
         <FormItem label="类型">
           <Select v-width="200" v-model="search.type" :datas="SysResourceConsts$Type"></Select>
@@ -15,42 +19,44 @@
       </Form>
     </div>
 
-    <Table ref="table" :datas="listTree" >
-      <TableItem title="No." :width="50" ><template slot-scope="{index}">{{index + 1}}</template></TableItem>
-      <TableItem title="名称" prop="title" treeOpener></TableItem>
-      <TableItem title="类型">
-        <template slot-scope="{data}">
-          {{SysResourceConsts$Type[data.type]}}
-        </template>
-      </TableItem>
-      <TableItem title="排序" prop="seq"></TableItem>
-      <TableItem title="路径" prop="uri"></TableItem>
-      <TableItem title="图标">
-        <template slot-scope="{data}">
-          <span v-if="data.type == 'MENU'">
-            <i :class="data.icon" ></i>
-          </span>
-        </template>
-      </TableItem>
-      <TableItem title="请求方法">
-        <template slot-scope="{data}">
-          <span>{{data.type == 'API' ? data.method : ''}}</span>
-        </template>
-      </TableItem>
-      <TableItem title="公开">
-        <template slot-scope="{data}">
-          <span v-if="data.type == 'API' && data.opened == 1" class="h-tag h-tag-green">是</span>
-          <span v-if="data.type == 'API' && data.opened == 0" class="h-tag h-tag-red">否</span>
-        </template>
-      </TableItem>
-      <TableItem title="操作" align="center">
-        <template slot-scope="{data}">
-          <Button v-hasApi="'POST/sys/resource/save'" @click="showAdd(data.id)" size="s" icon="h-icon-plus">新增</Button>
-          <Button v-hasApi="'POST/sys/resource/save'" @click="showEdit(data)" size="s" icon="h-icon-edit">编辑</Button>
-          <Button v-hasApi="'POST/sys/resource/del'" @click="showDel(data.id)" size="s" icon="h-icon-trash" text-color="red">删除</Button>
-        </template>
-      </TableItem>
-    </Table>
+    <div class="h-panel-body">
+      <Table ref="table" :datas="listTree" >
+        <TableItem title="No." :width="50" ><template slot-scope="{index}">{{index + 1}}</template></TableItem>
+        <TableItem title="名称" prop="title" treeOpener></TableItem>
+        <TableItem title="类型">
+          <template slot-scope="{data}">
+            {{SysResourceConsts$Type[data.type]}}
+          </template>
+        </TableItem>
+        <TableItem title="排序" prop="seq"></TableItem>
+        <TableItem title="路径" prop="uri"></TableItem>
+        <TableItem title="图标">
+          <template slot-scope="{data}">
+            <span v-if="data.type == 'MENU'">
+              <i :class="data.icon" ></i>
+            </span>
+          </template>
+        </TableItem>
+        <TableItem title="请求方法">
+          <template slot-scope="{data}">
+            <span>{{data.type == 'API' ? data.method : ''}}</span>
+          </template>
+        </TableItem>
+        <TableItem title="公开">
+          <template slot-scope="{data}">
+            <span v-if="data.type == 'API' && data.opened == 1" class="h-tag h-tag-green">是</span>
+            <span v-if="data.type == 'API' && data.opened == 0" class="h-tag h-tag-red">否</span>
+          </template>
+        </TableItem>
+        <TableItem title="操作" align="center">
+          <template slot-scope="{data}">
+            <Button v-hasApi="'POST/sys/resource/save'" @click="showAdd(data.id)" size="s" icon="h-icon-plus">新增</Button>
+            <Button v-hasApi="'POST/sys/resource/save'" @click="showEdit(data)" size="s" icon="h-icon-edit">编辑</Button>
+            <Button v-hasApi="'POST/sys/resource/del'" @click="showDel(data.id)" size="s" icon="h-icon-trash" text-color="red">删除</Button>
+          </template>
+        </TableItem>
+      </Table>
+    </div>
 
     <Modal v-model="resourceModal.opened" :closeOnMask="false" :hasCloseIcon="true" :hasDivider="true">
       <div slot="header">{{'' == resourceModal.data.id?'新建':'编辑'}}资源</div>
@@ -131,10 +137,6 @@ export default {
   },
   methods: {
     initData(){
-      Api.get('/sys/resource/type').then(res=>{
-        this.types = res.data;
-      })
-
       this.reloadData();
     },
     reloadData() {

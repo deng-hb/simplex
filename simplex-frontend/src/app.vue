@@ -1,33 +1,28 @@
 <template>
   <div id="app">
-    <Layout v-if="signed" :headerFixed="headerFixed">
-      <HHeader theme="dark">
-        <div class="layout-logo"></div>
-        <router-link to="/">Home</router-link> |
-        <router-link to="/about">About</router-link>
-        <h-switch v-model="headerFixed">固定header</h-switch>
-        <h-switch v-model="siderFixed" :disabled="!headerFixed">固定Sider</h-switch>
-        <h-switch v-model="siderCollapsed">收起菜单</h-switch>
-        <Button @click="doSignOut"> 退出 </Button>
-        
-      </HHeader>
-      <Layout :siderFixed="siderFixed" :siderCollapsed="siderCollapsed">
-        <Sider theme="white">
-          <Menu ref="menu" style="margin-top: 40px;" class="h-menu-white" :datas="menu" @click="onMenu" :option="{keyName:'uri'}" :inlineCollapsed="siderCollapsed"></Menu>
-        </Sider>
+    <Layout class="app-frame" v-if="signed" :siderCollapsed="siderCollapsed" :siderFixed="layoutConfig.siderFixed">
+      <Sider :theme="layoutConfig.siderTheme">
+        <MyMenu :theme="layoutConfig.siderTheme"></MyMenu>
+      </Sider>
+      <Layout :headerFixed="layoutConfig.headerFixed">
+        <HHeader theme="white">
+          <MyHeader @openSetting="openSetting=true" :layoutConfig="layoutConfig"></MyHeader>
+        </HHeader>
+        <MyTabs homePage="home"></MyTabs>
         <Content>
-          <XTabs homePage="home"></XTabs>
-          <Breadcrumb :datas="datas" style="margin: 16px 0px;"></Breadcrumb>
-          <div style="background: rgb(255, 255, 255); padding: 20px; min-height: 480px;">
+          <div class="app-frame-content">
             <keep-alive :include="cachePage">
               <router-view/>
             </keep-alive>
           </div>
-          <HFooter class="text-center">Copyright © 2019</HFooter>
+          <HFooter>
+            <MyFooter></MyFooter>
+          </HFooter>
         </Content>
       </Layout>
     </Layout>
     <div v-else>
+      <!-- 登录页 -->
       <div class="signIn-container">
         <div class="signIn-content">
           <div class="signIn-title">管理系统</div>
@@ -52,17 +47,30 @@
       </div>
 
     </div>
+
+    <Modal v-model="openSetting" type="drawer-right">
+      <MySettings :layoutConfig="layoutConfig"></MySettings>
+    </Modal>
   </div>
 </template>
 
 
 <script>
+import MyHeader from '@/components/header';
+import MyTabs from '@/components/tabs'
+import MyMenu from '@/components/menu';
+import MyFooter from '@/components/footer';
+import MySettings from '@/components/settings';
+
 const MD5 = require('md5.js');
-import XTabs from '@/components/x-tabs'
 
 export default {
   components: {
-    XTabs
+    MyHeader,
+    MyTabs,
+    MyMenu,
+    MyFooter,
+    MySettings
   },
   data() {
     return {
@@ -72,12 +80,15 @@ export default {
         code: '',
         key: ''
       },
+      openSetting: false,
+      layoutConfig: {
+        siderTheme: 'white',
+        showSystab: false,
+        headerFixed: true,
+        siderFixed: true
+      },
       loading: false,
       captcha: '',
-      headerFixed: false,
-      siderFixed: false,
-      siderCollapsed: false,
-      menu: [],
       datas: [
         { icon: 'h-icon-home' },
         { title: 'Component', icon: 'h-icon-complete', route: { name: 'Component' } },
@@ -91,18 +102,12 @@ export default {
     },
     cachePage() {
       return this.$store.state.cachePage;
-    }
+    },
+    siderCollapsed() {
+      return this.$store.state.siderCollapsed;
+    },
   },
   watch: {
-    headerFixed() {
-      if (!this.headerFixed) {
-        this.siderFixed = false;
-      }
-    },
-    $route(to) {
-      console.log("watch $route:%o",to)
-      this.menuSelect();
-    }
   },
   methods: {
     doSignOut() {
@@ -116,11 +121,6 @@ export default {
         // this.$Message.error('取消');
       });
       
-    },
-    menuSelect() {
-      if (this.$route.path) {
-        this.$refs.menu.select(this.$route.path);
-      }
     },
     doSignIn() {
       let username = this.signIn.username;
@@ -171,46 +171,9 @@ export default {
         this.signIn.code = '';
       })
     },
-    onMenu(data) {
-      console.log(data);
-      if (data.children.length == 0)
-        this.$router.push({path: data.key, meta: {title: data.title}});
-    },
-    initMenu() {
-      Api.get('/sys/user/menu').then(res=>{
-        if (1 != res.code) {
-          return;
-        }
-        let list = res.data;
-        list = null == list ? [] : list;
-
-        function findChildren(item, list) {
-          item.children = [];
-          for (let i in list) {
-            let item2 = list[i];
-            if (item.id == item2.parentId) {
-              item.children.push(item2);
-              findChildren(item2, list)
-            }
-          }
-        }
-
-        let menu = [];
-        for (let i in list) {
-          let item = list[i];
-          if (0 == item.parentId) {
-            findChildren(item, list);
-            menu.push(item);
-          }
-        }
-
-        this.menu = menu;
-      });
-    }
   },
   created() {
     if (this.signed) {
-      this.initMenu();
       Api.get('/sys/user/api').then(res=>{
         window.localStorage.setItem('APIs', res.data);
       })
@@ -223,31 +186,12 @@ export default {
 
 
 <style lang="less">
-.h-layout {
-  background: #f0f2f5;
-}
-.layout-logo {
-  width: 120px;
-  height: 31px;
-  background: rgba(255, 255, 255, 0.2);
-  margin: 16px 24px 16px 0;
-  float: left;
-}
-
-.h-layout-header {
-  padding: 0 50px;
-}
-
-.h-layout-footer {
-  padding: 24px 50px;
-  color: rgba(0, 0, 0, 0.65);
-  font-size: 14px;
-}
 @gradient-color: #3788ee;
 @bg-color: #f7f8fa;
 @title-color:#3a3a3a;
 @text-color: #7e7e7e;
 @placeholder-color: #7e7e7e;
+
 .signIn-container {
   text-align: center;
   position: absolute;
@@ -348,6 +292,7 @@ export default {
     width: 100px;
     height: 40px;
   }
+  
 }
 
 </style>

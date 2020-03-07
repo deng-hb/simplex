@@ -1,18 +1,18 @@
-import Vue from 'vue'
-import HeyUI from 'heyui'
-import app from '@/app.vue'
+import vue from 'vue'
+import heyui from 'heyui'
 import router from '@/router'
 import store from '@/store'
-import HasApi from '@/api/hasApi'
+import app from '@/app'
+import hasApi from '@/api/hasApi'
 
-require("heyui/themes/index.css")
+require('./css/app.less');
 
-Vue.use(HeyUI)
-Vue.use(HasApi)
+vue.use(heyui)
+vue.use(hasApi)
 
-Vue.config.productionTip = false
+vue.config.productionTip = false
 
-new Vue({
+new vue({
   router,
   store,
   render: h => h(app)

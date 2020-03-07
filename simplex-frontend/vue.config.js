@@ -1,5 +1,6 @@
 const path = require('path');
 const webpack = require('webpack');
+const globalVars = require('./src/css/var.js');
 
 const resolve = (dir) => path.join(__dirname, dir);
 
@@ -26,5 +27,12 @@ module.exports = {
         'HeyUI': 'heyui'
       })
     ]
-  }
+  },
+  css: {
+    loaderOptions: {
+      less: {
+        globalVars
+      }
+    }
+  },
 }
