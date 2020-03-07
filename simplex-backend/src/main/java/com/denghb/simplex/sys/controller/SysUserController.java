@@ -19,6 +19,7 @@ import com.denghb.simplex.sys.model.res.SysUserSignInRes;
 import com.denghb.simplex.sys.service.SysUserService;
 import com.denghb.simplex.sys.service.SysUserSignLogService;
 import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -40,25 +41,29 @@ public class SysUserController {
     @Autowired
     private SysUserSignLogService sysUserSignLogService;
 
-    @PostMapping(name = "保存用户", value = "/save")
+    @ApiOperation("保存用户")
+    @PostMapping("/save")
     public JSONModel<String> save(@Valid @RequestBody SysUserReq req) {
         sysUserService.save(req);
         return JSONModel.buildSuccess("操作成功");
     }
 
-    @PostMapping(name = "删除用户", value = "/del")
+    @ApiOperation("删除用户")
+    @PostMapping("/del")
     public JSONModel<String> del(@Valid @RequestBody IdReq req) {
         sysUserService.del(req.getId());
         return JSONModel.buildSuccess("操作成功");
     }
 
-    @PostMapping(name = "用户列表", value = "/list")
+    @ApiOperation("用户列表")
+    @PostMapping("/list")
     public JSONModel<PageRes<SysUserRes>> list(@Valid @RequestBody PageReq req) {
         PageRes<SysUserRes> res = sysUserService.list(req);
         return JSONModel.buildSuccessData(res);
     }
 
-    @PostMapping(name = "登录", value = "/signIn")
+    @ApiOperation("登录")
+    @PostMapping("/signIn")
     public JSONModel<SysUserSignInRes> signIn(@Valid @RequestBody SysUserSignInReq req) {
 
         boolean valid = captchaService.validate(req.getKey(), req.getCode());
@@ -78,49 +83,57 @@ public class SysUserController {
         return JSONModel.buildSuccessData(res);
     }
 
-    @PostMapping(name = "解锁用户登录", value = "/unlockSignError")
+    @ApiOperation("解锁用户登录")
+    @PostMapping("/unlockSignError")
     public JSONModel<String> unlockSignError(@Valid @RequestBody IdReq req) {
         sysUserService.unlockSignError(req.getId());
         return JSONModel.buildSuccess("操作成功");
     }
 
-    @GetMapping(name = "用户菜单", value = "/menu")
+    @ApiOperation("用户菜单")
+    @GetMapping("/menu")
     public JSONModel<List<SysMenuRes>> menu() {
         List<SysMenuRes> res = sysUserService.menu();
         return JSONModel.buildSuccessData(res);
     }
 
-    @GetMapping(name = "用户接口", value = "/api")
+    @ApiOperation("用户接口")
+    @GetMapping("/api")
     public JSONModel<List<String>> api() {
         List<String> res = sysUserService.api();
         return JSONModel.buildSuccessData(res);
     }
 
-    @PostMapping(name = "修改密码", value = "/updatePassword")
+    @ApiOperation("修改密码")
+    @PostMapping("/updatePassword")
     public JSONModel<String> updatePassword(@Valid @RequestBody SysUserUpdatePasswordReq req) {
         sysUserService.updatePassword(req);
         return JSONModel.buildSuccess("修改成功，请重新登录");
     }
 
-    @PostMapping(name = "重置密码", value = "/resetPassword")
+    @ApiOperation("重置密码")
+    @PostMapping("/resetPassword")
     public JSONModel<String> resetPassword(@Valid @RequestBody IdReq req) {
         sysUserService.resetPassword(req.getId());
         return JSONModel.buildSuccess("操作成功");
     }
 
-    @PostMapping(name = "禁用用户", value = "/disabled")
+    @ApiOperation("禁用用户")
+    @PostMapping("/disabled")
     public JSONModel<String> disabled(@Valid @RequestBody IdReq req) {
         sysUserService.disabled(req.getId());
         return JSONModel.buildSuccess("操作成功");
     }
 
-    @PostMapping(name = "启用用户", value = "/enabled")
+    @ApiOperation("启用用户")
+    @PostMapping("/enabled")
     public JSONModel<String> enabled(@Valid @RequestBody IdReq req) {
         sysUserService.enabled(req.getId());
         return JSONModel.buildSuccess("操作成功");
     }
 
-    @GetMapping(name = "安全登出", value = "/signOut")
+    @ApiOperation("安全登出")
+    @GetMapping("/signOut")
     public JSONModel<String> signOut() {
         int sysUserId = CredentialContextHolder.get().getId();
         sysUserService.signOut(sysUserId);
