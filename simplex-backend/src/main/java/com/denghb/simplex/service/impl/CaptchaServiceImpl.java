@@ -2,7 +2,7 @@ package com.denghb.simplex.service.impl;
 
 import com.denghb.simplex.model.CaptchaRes;
 import com.denghb.simplex.service.CaptchaService;
-import com.denghb.simplex.utils.CaptchaUtils;
+import com.denghb.simplex.common.utils.CaptchaUtils;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.RedisTemplate;

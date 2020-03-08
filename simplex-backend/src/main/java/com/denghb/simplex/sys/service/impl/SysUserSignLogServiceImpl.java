@@ -1,10 +1,8 @@
 package com.denghb.simplex.sys.service.impl;
 
 import com.denghb.eorm.Eorm;
-import com.denghb.simplex.service.impl.EserviceImpl;
 import com.denghb.simplex.sys.domain.SysUserSignLog;
 import com.denghb.simplex.sys.model.req.SysUserSignLogReq;
-import com.denghb.simplex.service.Eservice;
 import com.denghb.simplex.sys.service.SysUserSignLogService;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;

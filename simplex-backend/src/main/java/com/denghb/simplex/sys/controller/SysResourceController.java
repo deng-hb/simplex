@@ -1,9 +1,7 @@
 package com.denghb.simplex.sys.controller;
 
-import com.denghb.simplex.base.Consts;
-import com.denghb.simplex.base.JSONModel;
-import com.denghb.simplex.consts.SysResourceConsts;
-import com.denghb.simplex.model.IdReq;
+import com.denghb.simplex.common.base.JSONModel;
+import com.denghb.simplex.common.model.IdReq;
 import com.denghb.simplex.sys.model.req.SysResourceQueryReq;
 import com.denghb.simplex.sys.model.req.SysResourceReq;
 import com.denghb.simplex.sys.model.res.SysResourceRes;
@@ -15,7 +13,6 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 import java.util.List;
-import java.util.Map;
 
 /**
  * @author denghb

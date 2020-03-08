@@ -21,6 +21,11 @@
     </properties>
 
     <dependencies>
+        <dependency>
+            <groupId>com.denghb</groupId>
+            <artifactId>simplex-launcher</artifactId>
+            <version>${project.version}</version>
+        </dependency>
     </dependencies>
 
     <build>

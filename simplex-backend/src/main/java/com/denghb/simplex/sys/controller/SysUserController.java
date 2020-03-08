@@ -1,13 +1,15 @@
 package com.denghb.simplex.sys.controller;
 
-import com.denghb.simplex.base.BizException;
-import com.denghb.simplex.base.JSONModel;
-import com.denghb.simplex.holder.CredentialContextHolder;
-import com.denghb.simplex.holder.RequestInfo;
-import com.denghb.simplex.holder.RequestInfoContextHolder;
-import com.denghb.simplex.model.IdReq;
-import com.denghb.simplex.model.PageReq;
-import com.denghb.simplex.model.PageRes;
+import com.denghb.simplex.common.annotation.RequestRateLimit;
+import com.denghb.simplex.common.annotation.RequestResubmitLimit;
+import com.denghb.simplex.common.base.BizException;
+import com.denghb.simplex.common.base.JSONModel;
+import com.denghb.simplex.common.holder.CredentialContextHolder;
+import com.denghb.simplex.common.holder.RequestInfo;
+import com.denghb.simplex.common.holder.RequestInfoContextHolder;
+import com.denghb.simplex.common.model.IdReq;
+import com.denghb.simplex.common.model.PageReq;
+import com.denghb.simplex.common.model.PageRes;
 import com.denghb.simplex.service.CaptchaService;
 import com.denghb.simplex.sys.model.req.SysUserReq;
 import com.denghb.simplex.sys.model.req.SysUserSignInReq;
@@ -62,6 +64,8 @@ public class SysUserController {
         return JSONModel.buildSuccessData(res);
     }
 
+    @RequestRateLimit(name = "signIn", count = 1, period = 3)
+    @RequestResubmitLimit(name = "signIn", fields = {"username"})
     @ApiOperation("登录")
     @PostMapping("/signIn")
     public JSONModel<SysUserSignInRes> signIn(@Valid @RequestBody SysUserSignInReq req) {

@@ -1,8 +1,8 @@
 package com.denghb.simplex.sys.controller;
 
-import com.denghb.simplex.base.JSONModel;
-import com.denghb.simplex.model.PageReq;
-import com.denghb.simplex.model.PageRes;
+import com.denghb.simplex.common.base.JSONModel;
+import com.denghb.simplex.common.model.PageReq;
+import com.denghb.simplex.common.model.PageRes;
 import com.denghb.simplex.sys.model.res.SysAccessLogRes;
 import com.denghb.simplex.sys.service.SysAccessLogService;
 import io.swagger.annotations.Api;

@@ -1,5 +1,8 @@
 ## Simplex
 
+### 项目简介
+这个项目主要是为了推广(https://github.com/deng-hb/eorm-spring)[eorm-spring]这个基于Spring JDBC的ORM框架。
+
 
 ```
 mvn clean install -Dmaven.test.skip=true

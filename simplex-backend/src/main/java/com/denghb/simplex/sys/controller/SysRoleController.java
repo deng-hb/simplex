@@ -1,9 +1,9 @@
 package com.denghb.simplex.sys.controller;
 
-import com.denghb.simplex.base.JSONModel;
-import com.denghb.simplex.model.IdReq;
-import com.denghb.simplex.model.PageReq;
-import com.denghb.simplex.model.PageRes;
+import com.denghb.simplex.common.base.JSONModel;
+import com.denghb.simplex.common.model.IdReq;
+import com.denghb.simplex.common.model.PageReq;
+import com.denghb.simplex.common.model.PageRes;
 import com.denghb.simplex.sys.model.req.SysRoleReq;
 import com.denghb.simplex.sys.model.res.SysRoleInfoRes;
 import com.denghb.simplex.sys.model.res.SysRoleRes;

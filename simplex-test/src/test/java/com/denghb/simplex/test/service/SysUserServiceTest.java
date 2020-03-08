@@ -2,13 +2,13 @@ package com.denghb.simplex.test.service;
 
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.TypeReference;
-import com.denghb.simplex.base.Consts;
-import com.denghb.simplex.base.JSONModel;
+import com.denghb.simplex.common.base.Consts;
+import com.denghb.simplex.common.base.JSONModel;
 import com.denghb.simplex.sys.model.req.SysUserReq;
 import com.denghb.simplex.sys.model.res.SysUserSignInRes;
 import com.denghb.simplex.sys.service.SysUserService;
 import com.denghb.simplex.test.BaseTest;
-import com.denghb.simplex.utils.Md5Utils;
+import com.denghb.simplex.common.utils.Md5Utils;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.Assert;
 import org.junit.Test;

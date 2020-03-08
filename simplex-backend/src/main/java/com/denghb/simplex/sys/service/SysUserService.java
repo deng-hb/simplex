@@ -1,7 +1,7 @@
 package com.denghb.simplex.sys.service;
 
-import com.denghb.simplex.model.PageReq;
-import com.denghb.simplex.model.PageRes;
+import com.denghb.simplex.common.model.PageReq;
+import com.denghb.simplex.common.model.PageRes;
 import com.denghb.simplex.sys.model.req.SysUserReq;
 import com.denghb.simplex.sys.model.req.SysUserUpdatePasswordReq;
 import com.denghb.simplex.sys.model.res.SysMenuRes;

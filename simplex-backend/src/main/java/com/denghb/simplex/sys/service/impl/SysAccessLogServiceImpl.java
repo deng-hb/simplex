@@ -1,16 +1,12 @@
 package com.denghb.simplex.sys.service.impl;
 
-import com.denghb.simplex.model.PageReq;
-import com.denghb.simplex.model.PageRes;
-import com.denghb.simplex.service.impl.EserviceImpl;
+import com.denghb.simplex.common.model.PageReq;
+import com.denghb.simplex.common.model.PageRes;
+import com.denghb.simplex.common.service.impl.EserviceImpl;
 import com.denghb.simplex.sys.domain.SysAccessLog;
 import com.denghb.simplex.sys.model.res.SysAccessLogRes;
 import com.denghb.simplex.sys.service.SysAccessLogService;
 import org.springframework.stereotype.Service;
-
-import java.util.Arrays;
-import java.util.HashSet;
-import java.util.Set;
 
 /**
  * @author denghb

@@ -1,11 +1,11 @@
 package com.denghb.simplex.sys.service.impl;
 
-import com.denghb.simplex.base.BizException;
-import com.denghb.simplex.holder.Credential;
-import com.denghb.simplex.holder.CredentialContextHolder;
-import com.denghb.simplex.model.PageReq;
-import com.denghb.simplex.model.PageRes;
-import com.denghb.simplex.service.impl.EPageServiceImpl;
+import com.denghb.simplex.common.base.BizException;
+import com.denghb.simplex.common.holder.Credential;
+import com.denghb.simplex.common.holder.CredentialContextHolder;
+import com.denghb.simplex.common.model.PageReq;
+import com.denghb.simplex.common.model.PageRes;
+import com.denghb.simplex.common.service.impl.EPageServiceImpl;
 import com.denghb.simplex.sys.domain.SysRole;
 import com.denghb.simplex.sys.domain.SysRoleResource;
 import com.denghb.simplex.sys.model.req.SysRoleReq;

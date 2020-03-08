@@ -1,10 +1,9 @@
 package com.denghb.simplex.sys.service.impl;
 
 import com.denghb.eorm.Eorm;
-import com.denghb.simplex.base.BizException;
-import com.denghb.simplex.holder.Credential;
-import com.denghb.simplex.holder.CredentialContextHolder;
-import com.denghb.simplex.service.Eservice;
+import com.denghb.simplex.common.base.BizException;
+import com.denghb.simplex.common.holder.Credential;
+import com.denghb.simplex.common.holder.CredentialContextHolder;
 import com.denghb.simplex.sys.domain.SysResource;
 import com.denghb.simplex.sys.model.req.SysResourceQueryReq;
 import com.denghb.simplex.sys.model.req.SysResourceReq;
