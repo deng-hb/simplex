@@ -1,11 +1,13 @@
-package com.denghb.simplex.service.impl;
+package com.denghb.simplex.common.service.impl;
 
-import com.denghb.simplex.model.CaptchaRes;
-import com.denghb.simplex.service.CaptchaService;
+
+import com.denghb.simplex.common.model.CaptchaRes;
+import com.denghb.simplex.common.service.CaptchaService;
 import com.denghb.simplex.common.utils.CaptchaUtils;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.RedisTemplate;
+import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.stereotype.Service;
 
 import java.util.UUID;
@@ -18,7 +20,7 @@ public class CaptchaServiceImpl implements CaptchaService {
     private final static String REDIS_KEY_CAPTCHA = "captcha#";
 
     @Autowired
-    private RedisTemplate<String, String> redisTemplate;
+    private StringRedisTemplate stringRedisTemplate;
 
     @Override
     public CaptchaRes generate() {
@@ -32,7 +34,7 @@ public class CaptchaServiceImpl implements CaptchaService {
             res.setKey(key);
 
             // 5分钟有效
-            redisTemplate.boundValueOps(REDIS_KEY_CAPTCHA + key).set(result.getCode(), 5, TimeUnit.MINUTES);
+            stringRedisTemplate.boundValueOps(REDIS_KEY_CAPTCHA + key).set(result.getCode(), 5, TimeUnit.MINUTES);
             return res;
         } catch (Exception e) {
             log.error(e.getMessage(), e);
@@ -43,8 +45,8 @@ public class CaptchaServiceImpl implements CaptchaService {
     @Override
     public boolean validate(String key, String code) {
         String rkey = REDIS_KEY_CAPTCHA + key;
-        String oldCode = redisTemplate.boundValueOps(rkey).get();
-        redisTemplate.delete(rkey);
+        String oldCode = stringRedisTemplate.boundValueOps(rkey).get();
+        stringRedisTemplate.delete(rkey);
         return null != oldCode && oldCode.equalsIgnoreCase(code);
     }
 }

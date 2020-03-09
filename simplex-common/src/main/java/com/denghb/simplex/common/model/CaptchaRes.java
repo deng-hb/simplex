@@ -1,4 +1,4 @@
-package com.denghb.simplex.model;
+package com.denghb.simplex.common.model;
 
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;

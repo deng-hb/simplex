@@ -10,7 +10,7 @@ import com.denghb.simplex.common.holder.RequestInfoContextHolder;
 import com.denghb.simplex.common.model.IdReq;
 import com.denghb.simplex.common.model.PageReq;
 import com.denghb.simplex.common.model.PageRes;
-import com.denghb.simplex.service.CaptchaService;
+import com.denghb.simplex.common.service.CaptchaService;
 import com.denghb.simplex.sys.model.req.SysUserReq;
 import com.denghb.simplex.sys.model.req.SysUserSignInReq;
 import com.denghb.simplex.sys.model.req.SysUserSignLogReq;
@@ -64,8 +64,8 @@ public class SysUserController {
         return JSONModel.buildSuccessData(res);
     }
 
-    @RequestRateLimit(name = "signIn", count = 1, period = 3)
-    @RequestResubmitLimit(name = "signIn", fields = {"username"})
+    @RequestRateLimit(name = "signIn", max = 1, period = 3, ip = true)
+    @RequestResubmitLimit(name = "signIn", fields = {"username"}, expire = 3)
     @ApiOperation("登录")
     @PostMapping("/signIn")
     public JSONModel<SysUserSignInRes> signIn(@Valid @RequestBody SysUserSignInReq req) {

@@ -3,6 +3,7 @@ package com.denghb.simplex.common.aspect;
 import com.denghb.simplex.common.annotation.RequestResubmitLimit;
 import com.denghb.simplex.common.base.BizException;
 import com.denghb.simplex.common.enums.RedisKey;
+import com.denghb.simplex.common.service.RedisLockService;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.codec.digest.DigestUtils;
 import org.apache.commons.lang3.reflect.FieldUtils;
@@ -32,7 +33,7 @@ import java.util.concurrent.TimeUnit;
 public class RequestResubmitLimitAspect {
 
     @Autowired
-    private RedisTemplate<String, String> redisTemplate;
+    private RedisLockService redisLockService;
 
     @Around("@annotation(com.denghb.simplex.common.annotation.RequestResubmitLimit)")
     public Object interceptor(ProceedingJoinPoint pjp) {
@@ -45,11 +46,11 @@ public class RequestResubmitLimitAspect {
 
             key = buildKey(ann, pjp.getArgs(), method.getParameterAnnotations());
             if (null != key) {
-                String value = redisTemplate.opsForValue().get(key);
-                if (null != value) {
-                    throw new BizException("请勿重复提交");
+                boolean r = redisLockService.lock(key, ann.expire());
+                if (!r) {
+                    log.info("RequestResubmitLimit:{}", ann);
+                    throw new BizException("重复请求");
                 }
-                redisTemplate.opsForValue().set(key, "", ann.expire(), TimeUnit.SECONDS);
             }
             return pjp.proceed();
         } catch (Throwable e) {
@@ -59,7 +60,7 @@ public class RequestResubmitLimitAspect {
             throw new RuntimeException(e);
         } finally {
             if (null != key) {
-                redisTemplate.delete(key);
+                redisLockService.unlock(key);
             }
         }
     }

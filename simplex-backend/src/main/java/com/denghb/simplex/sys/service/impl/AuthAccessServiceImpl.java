@@ -2,6 +2,7 @@ package com.denghb.simplex.sys.service.impl;
 
 import com.denghb.eorm.Eorm;
 import com.denghb.simplex.common.base.AuthException;
+import com.denghb.simplex.common.base.BizException;
 import com.denghb.simplex.common.consts.SysResourceConsts;
 import com.denghb.simplex.common.consts.SysUserConsts;
 import com.denghb.simplex.common.holder.Credential;
@@ -67,6 +68,9 @@ public class AuthAccessServiceImpl implements AuthAccessService {
     @Override
     public Credential validate() throws AuthException {
         RequestInfo requestInfo = RequestInfoContextHolder.get();
+        if (null == requestInfo) {
+            throw new BizException("404");
+        }
         String method = requestInfo.getMethod(), uri = requestInfo.getUri();
         if (isOpened(method, uri)) {
             return null;

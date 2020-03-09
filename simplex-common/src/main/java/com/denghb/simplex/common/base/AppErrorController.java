@@ -1,4 +1,4 @@
-package com.denghb.simplex.controller;
+package com.denghb.simplex.common.base;
 
 import com.denghb.simplex.common.base.BizException;
 import com.denghb.simplex.common.base.JSONModel;

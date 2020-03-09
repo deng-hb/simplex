@@ -1,6 +1,7 @@
-package com.denghb.simplex.service;
+package com.denghb.simplex.common.service;
 
-import com.denghb.simplex.model.CaptchaRes;
+
+import com.denghb.simplex.common.model.CaptchaRes;
 
 public interface CaptchaService {
 

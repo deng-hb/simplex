@@ -19,14 +19,14 @@ public @interface RequestRateLimit {
     String name();
 
     /**
+     * 最大访问次数
+     */
+    int max();
+
+    /**
      * 时间段(秒)
      */
     int period() default 1;
-
-    /**
-     * 访问限制次数
-     */
-    int count();
 
     /**
      * 限制IP

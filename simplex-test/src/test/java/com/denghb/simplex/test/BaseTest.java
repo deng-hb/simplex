@@ -8,7 +8,7 @@ import com.denghb.simplex.common.base.JSONModel;
 import com.denghb.simplex.common.base.AuthException;
 import com.denghb.simplex.common.holder.Credential;
 import com.denghb.simplex.common.holder.CredentialContextHolder;
-import com.denghb.simplex.model.CaptchaRes;
+import com.denghb.simplex.common.model.CaptchaRes;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.junit.After;

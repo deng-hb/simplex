@@ -30,5 +30,15 @@ CREATE TABLE `tb_表名` (
 + 每个字段都必须有描述
 + 字符编码utf8mb4
 
+### docker redis mysql 服务
+```
+docker pull redis:latest
+docker run -itd --name redis-server -p 6379:6379 redis
+
+docker pull mysql:5.6
+docker run -itd --name mysql-56 -p 3306:3306 -e MYSQL_ROOT_PASSWORD=123 mysql:5.6
+
+```
+
 ### note
 service 方法超过3个参数考虑使用对象来传递
