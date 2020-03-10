@@ -1,22 +1,34 @@
 <template>
-  <div>
-    <p><Button v-hasApi="'POST/sys/role/save'" color="blue" icon="h-icon-plus" @click="showAdd()">新建</Button></p>
+  <div class="frame-page h-panel">
+    <div class="h-panel-bar">
+      <span class="h-panel-title">{{$route.meta.title}}</span>
+      <div class="h-panel-right">
+        <Button v-hasApi="'POST/sys/role/save'" color="blue" icon="h-icon-plus" @click="showAdd()">新建</Button>
+      </div>
+    </div>
 
-    <Table :datas="list" stripe checkbox>
-      <TableItem title="No." :width="50" :tooltip="true"><template slot-scope="{index}">{{(search.page - 1) * search.pageSize + index + 1}}</template></TableItem>
-      <TableItem title="名称" prop="name" sort="auto"></TableItem>
-      <TableItem title="描述" prop="description"></TableItem>
-      <TableItem title="操作" align="center">
-        <template slot-scope="{data}">
-          <Button size="s" v-hasApi="'POST/sys/role/save'" @click="showEdit(data)">编辑</Button>
-          <Button size="s" v-hasApi="'POST/sys/role/del'" @click="showDel(data.id)">删除</Button>
-        </template>
-      </TableItem>
-    </Table>
+    <div class="h-panel-bar">
+      
+    </div>
 
-    <p>
-      <Pagination :cur="search.page" :size="search.pageSize" :total="total" @change="onPageChange"></Pagination>
-    </p>
+    <div class="h-panel-body">
+
+      <Table :datas="list" stripe checkbox>
+        <TableItem title="No." :width="50" :tooltip="true"><template slot-scope="{index}">{{(search.page - 1) * search.pageSize + index + 1}}</template></TableItem>
+        <TableItem title="名称" prop="name" sort="auto"></TableItem>
+        <TableItem title="描述" prop="description"></TableItem>
+        <TableItem title="操作" align="center">
+          <template slot-scope="{data}">
+            <Button size="s" v-hasApi="'POST/sys/role/save'" @click="showEdit(data)">编辑</Button>
+            <Button size="s" v-hasApi="'POST/sys/role/del'" @click="showDel(data.id)">删除</Button>
+          </template>
+        </TableItem>
+      </Table>
+
+      <p>
+        <Pagination :cur="search.page" :size="search.pageSize" :total="total" @change="onPageChange"></Pagination>
+      </p>
+    </div>
 
     <Modal v-model="roleModal.opened" :closeOnMask="false" :hasCloseIcon="true" :hasDivider="true">
       <div slot="header">{{null == roleModal.data.id?'编辑':'新建'}}角色</div>

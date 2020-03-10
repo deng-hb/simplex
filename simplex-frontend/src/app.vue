@@ -82,7 +82,7 @@ export default {
       },
       openSetting: false,
       layoutConfig: {
-        siderTheme: 'white',
+        siderTheme: 'dark',
         showSystab: false,
         headerFixed: true,
         siderFixed: true
