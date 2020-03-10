@@ -41,6 +41,7 @@
                                         <include>css/</include>
                                         <include>js/</include>
                                         <include>img/</include>
+                                        <include>fonts/</include>
                                         <include>index.html</include>
                                     </includes>
                                 </resource>

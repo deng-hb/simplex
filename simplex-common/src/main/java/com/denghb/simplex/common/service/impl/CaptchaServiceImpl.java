@@ -34,7 +34,7 @@ public class CaptchaServiceImpl implements CaptchaService {
             res.setKey(key);
 
             // 5分钟有效
-            stringRedisTemplate.boundValueOps(REDIS_KEY_CAPTCHA + key).set(result.getCode(), 5, TimeUnit.MINUTES);
+            stringRedisTemplate.opsForValue().set(REDIS_KEY_CAPTCHA + key, result.getCode(), 5, TimeUnit.MINUTES);
             return res;
         } catch (Exception e) {
             log.error(e.getMessage(), e);
@@ -45,7 +45,7 @@ public class CaptchaServiceImpl implements CaptchaService {
     @Override
     public boolean validate(String key, String code) {
         String rkey = REDIS_KEY_CAPTCHA + key;
-        String oldCode = stringRedisTemplate.boundValueOps(rkey).get();
+        String oldCode = stringRedisTemplate.opsForValue().get(rkey);
         stringRedisTemplate.delete(rkey);
         return null != oldCode && oldCode.equalsIgnoreCase(code);
     }
