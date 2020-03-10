@@ -4,6 +4,7 @@ package com.denghb.simplex.test;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.TypeReference;
 import com.denghb.eorm.Eorm;
+import com.denghb.simplex.App;
 import com.denghb.simplex.common.base.JSONModel;
 import com.denghb.simplex.common.base.AuthException;
 import com.denghb.simplex.common.holder.Credential;
@@ -30,7 +31,7 @@ import org.springframework.test.web.servlet.result.MockMvcResultHandlers;
  */
 @RunWith(SpringRunner.class)
 @Slf4j
-@SpringBootTest(classes = com.denghb.simplex.App.class, webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
+@SpringBootTest(classes = App.class, webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @AutoConfigureMockMvc
 public class BaseTest {
 

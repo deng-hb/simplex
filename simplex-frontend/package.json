@@ -1,6 +1,6 @@
 {
-  "name": "simplex-admin-heyui",
-  "version": "0.1.0",
+  "name": "simplex-frontend",
+  "version": "1.0.0",
   "private": true,
   "scripts": {
     "serve": "vue-cli-service serve",
