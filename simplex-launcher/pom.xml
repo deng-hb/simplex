@@ -43,11 +43,14 @@
                 <artifactId>docker-maven-plugin</artifactId>
                 <version>0.4.13</version>
                 <configuration>
-                    <imageName>127.0.0.1:5000/simplex/${project.artifactId}</imageName>
+                    <imageName>127.0.0.1:8091/simplex/${project.artifactId}:v1.0.0</imageName>
                     <baseImage>java:8</baseImage>
                     <forceTags>true</forceTags>
+                    <maintainer>SimpleX denghb</maintainer>
+                    <!-- eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE1ODY1ODE5OTEsImlhdCI6MTU4Mzk4OTk5MSwiaXNzIjoiaGFyYm9yLXRva2VuLWRlZmF1bHRJc3N1ZXIiLCJpZCI6MSwicGlkIjoyLCJhY2Nlc3MiOlt7IlJlc291cmNlIjoiL3Byb2plY3QvMi9yZXBvc2l0b3J5IiwiQWN0aW9uIjoicHVzaCIsIkVmZmVjdCI6IiJ9XX0.Uw94fIM-iYVzgcwS89PJcCxFdt5sF9YtXIoPhqT0uFvMgXYwDAX5eOhxx7HhQh2Vgq-KcoUOlG-GbwgOTkRinEhpO2MuTRNCWqA-JoOZAg82TFo3S0Nn7xXSfAJlHDTX5PfTYy9xHKWmbKCe8IKyJsTfJrg_jX8KD-jbaLCj9VTlL0UVfmeaYstvTIba5BK-8YpATxma4S6wRbBkyMhHwrEjftWskwFWGpUxqYmd26-kCC_qtA_y3yygviNWZNyTEqzJW_IMfQMULPv3DneUCpxRIU3p03bwZsILGAhb1pyTGIGV45kbI2DWKzSm397t-whzinpFPvORW9glculYVoMVw55A6UR47ofN4NoQaIivxkJeyVVeYHm9xVZpsYsl7NitBzaGhNYw9a1PsR6fsICt1dRdliNy4I33eKQYhqkl8EqHIKlUlwkTS6ljhqsHbEiUk5Vxl1bBDkdbiSjU4_-viKQ8OSROc7170oWlVeH2JBqXT4hnLeCiNrUkdkoO-ttHiC9EAh1WV5LCDjGeBUUlReW7ECuVBDymwundnWJMcFlbBytLHvFTngCvJeZa8uyiUB-MnOu8L13b3E_lT7Amo8rftrueysgfL7Juo7BFPOAyjuFWYcWEG7gCDI4xDRjnnpn9byEm8AirUmhrsKlEZ7j9r_8RQYRWHGfOP_w -->
                     <entryPoint>["java", "-jar", "/${project.build.finalName}.jar"]</entryPoint>
                     <!--<dockerDirectory>${project.basedir}/src/main/docker</dockerDirectory>-->
+                    <serverId>my-dockerid</serverId>
                     <resources>
                         <resource>
                             <targetPath>/</targetPath>
@@ -55,8 +58,6 @@
                             <include>${project.build.finalName}.jar</include>
                         </resource>
                     </resources>
-                    <dockerHost>https://207.246.117.90:2376</dockerHost>
-                    <dockerCertPath>/Users/senssic/.docker/</dockerCertPath>
                 </configuration>
             </plugin>
         </plugins>
