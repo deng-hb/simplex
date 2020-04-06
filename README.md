@@ -39,10 +39,6 @@ docker pull mysql:5.6
 docker run -itd --name mysql-56 -p 3306:3306 -e MYSQL_ROOT_PASSWORD=123 mysql:5.6
 
 ```
-### package
-```
-mvn clean install -DskipTests=true
-```
 
 ### note
 service 方法超过3个参数考虑使用对象来传递
